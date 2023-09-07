@@ -1,9 +1,8 @@
 // import React, { useEffect, useRef, useState } from 'react'
 import React, { useEffect, useRef } from 'react'
-import Peer from 'peerjs'
+import Peer, { MediaConnection, PeerOptions } from 'peerjs'
 import useStorage from './useStorage'
 import { BsFillMicFill, BsFillMicMuteFill } from './icons'
-import { MediaConnection, PeerOptions } from '../node_modules/peerjs/dist/types'
 
 type Id = string | number
 

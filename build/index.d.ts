@@ -1,5 +1,5 @@
 import React from 'react';
-import { PeerOptions } from '../node_modules/peerjs/dist/types';
+import { PeerOptions } from 'peerjs';
 type Id = string | number;
 type Props = {
     peerId: Id;
