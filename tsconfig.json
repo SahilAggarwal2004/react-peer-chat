@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
     "target": "ES6",
-    "module": "ES2015",
+    "module": "ES2022",
     "declaration": true,
     "noUnusedLocals": true,
     "removeComments": true,
@@ -12,6 +12,6 @@
     "jsx": "react",
     "rootDir": "./src",
     "outDir": "./build",
-    "moduleResolution": "node"
+    "moduleResolution": "Node"
   }
 }

@@ -1,7 +1,8 @@
 import React, { useEffect, useRef } from 'react';
+import Peer from 'peerjs';
 import useStorage from './useStorage';
 import { BsFillMicFill, BsFillMicMuteFill } from './icons';
-export default function Chat({ peerId, remotePeerId, peerOptions = {}, onError = () => console.error("Can not access microphone!") }) {
+export default function Chat({ peerId, remotePeerId, peerOptions, onError = () => console.error("Can not access microphone!") }) {
     const [audio, setAudio] = useStorage('rpc-audio', false, { local: true, save: true });
     const streamRef = useRef(null);
     const localStream = useRef();
@@ -9,7 +10,6 @@ export default function Chat({ peerId, remotePeerId, peerOptions = {}, onError =
     useEffect(() => {
         if (!audio)
             return;
-        const Peer = require('peerjs').default;
         const peer = new Peer(`rpc-${peerId}`, peerOptions);
         let call;
         peer.on('open', () => {
