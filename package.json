@@ -1,0 +1,41 @@
+{
+  "name": "react-peer-chat",
+  "version": "0.1.0",
+  "description": "An easy to use react component for impleting peer-to-peer chatting.",
+  "main": "./build/index.js",
+  "scripts": {
+    "build": "npm i && tsc"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/SahilAggarwal2004/react-peer-chat.git"
+  },
+  "keywords": [
+    "react",
+    "chat",
+    "component",
+    "peer",
+    "peerjs",
+    "p2p",
+    "peer-to-peer",
+    "webrtc",
+    "react-peer-chat"
+  ],
+  "author": "Sahil Aggarwal",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/SahilAggarwal2004/react-peer-chat/issues"
+  },
+  "homepage": "https://github.com/SahilAggarwal2004/react-peer-chat#readme",
+  "peerDependencies": {
+    "react": ">=16.0.0",
+    "react-dom": ">=16.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.5.9",
+    "@types/react": "^18.2.21"
+  },
+  "dependencies": {
+    "peerjs": "^1.5.0"
+  }
+}
