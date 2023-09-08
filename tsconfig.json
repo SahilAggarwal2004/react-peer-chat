@@ -20,7 +20,7 @@
     "forceConsistentCasingInFileNames": true,
     "moduleResolution": "node",
     "resolveJsonModule": true,
-    "isolatedModules": true,
+    "isolatedModules": false,
     "strictNullChecks": true,
     "downlevelIteration": true,
     "jsx": "react"
