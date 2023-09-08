@@ -10,7 +10,7 @@ const getStorage = (key, fallbackValue, local = false) => {
             throw new Error("Value doesn't exist");
         value = JSON.parse(value);
     }
-    catch {
+    catch (_a) {
         if (fallbackValue !== undefined) {
             value = fallbackValue;
             setStorage(key, value, local);
@@ -23,7 +23,7 @@ const getStorage = (key, fallbackValue, local = false) => {
     return value;
 };
 export default function useStorage(key, initialValue, { local = false, save = false } = {}) {
-    save ||= getStorage('mode') !== 'online';
+    save || (save = getStorage('mode') !== 'online');
     const [storedValue, setStoredValue] = useState(save ? getStorage(key, initialValue, local) : initialValue);
     const setValue = (value) => {
         setStoredValue((old) => {

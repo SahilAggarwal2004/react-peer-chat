@@ -1,6 +1,6 @@
 // import React, { useEffect, useRef, useState } from 'react'
-import React, { useEffect, useRef } from 'react'
-import { MediaConnection, PeerOptions } from 'peerjs'
+import React, { useEffect, useRef, useState } from 'react'
+import Peer, { MediaConnection, PeerOptions } from 'peerjs'
 import useStorage from './useStorage'
 import { BsFillMicFill, BsFillMicMuteFill } from './icons'
 
@@ -12,6 +12,7 @@ export default function Chat({
     peerId, remotePeerId, peerOptions,
     onError = () => console.error("Can not access microphone!")
 }: Props) {
+    const [peer, setPeer] = useState<Peer>();
     const [audio, setAudio] = useStorage('rpc-audio', false, { local: true, save: true })
     // const [messages, setMessages] = useStorage<{ name: string, text: string }[]>('rpc-messages', [], { save: true })
     // const [notification, setNotification] = useState(false)
@@ -22,8 +23,15 @@ export default function Chat({
 
     useEffect(() => {
         if (!audio) return
-        const Peer = require('peerjs').default;
-        const peer = new Peer(`rpc-${peerId}`, peerOptions)
+        (async function loadPeer() {
+            const Peer = (await import('peerjs')).default;
+            const peer = new Peer(`rpc-${peerId}`, peerOptions)
+            setPeer(peer)
+        })();
+    }, [audio])
+
+    useEffect(() => {
+        if (!peer) return
         let call: MediaConnection;
         peer.on('open', () => {
             // @ts-ignore
@@ -55,7 +63,7 @@ export default function Chat({
             peer.removeAllListeners()
             peer.destroy()
         }
-    }, [audio])
+    }, [peer])
 
     return <button onClick={() => setAudio(audio => !audio)}>
         {audio ? <>

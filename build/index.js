@@ -1,7 +1,17 @@
-import React, { useEffect, useRef } from 'react';
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+import React, { useEffect, useRef, useState } from 'react';
 import useStorage from './useStorage';
 import { BsFillMicFill, BsFillMicMuteFill } from './icons';
 export default function Chat({ peerId, remotePeerId, peerOptions, onError = () => console.error("Can not access microphone!") }) {
+    const [peer, setPeer] = useState();
     const [audio, setAudio] = useStorage('rpc-audio', false, { local: true, save: true });
     const streamRef = useRef(null);
     const localStream = useRef();
@@ -9,8 +19,17 @@ export default function Chat({ peerId, remotePeerId, peerOptions, onError = () =
     useEffect(() => {
         if (!audio)
             return;
-        const Peer = require('peerjs').default;
-        const peer = new Peer(`rpc-${peerId}`, peerOptions);
+        (function loadPeer() {
+            return __awaiter(this, void 0, void 0, function* () {
+                const Peer = (yield import('peerjs')).default;
+                const peer = new Peer(`rpc-${peerId}`, peerOptions);
+                setPeer(peer);
+            });
+        })();
+    }, [audio]);
+    useEffect(() => {
+        if (!peer)
+            return;
         let call;
         peer.on('open', () => {
             const getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia;
@@ -35,13 +54,14 @@ export default function Chat({ peerId, remotePeerId, peerOptions, onError = () =
             }, onError);
         });
         return () => {
-            localStream.current?.getTracks().forEach(track => track.stop());
-            call?.removeAllListeners();
-            call?.close();
+            var _a;
+            (_a = localStream.current) === null || _a === void 0 ? void 0 : _a.getTracks().forEach(track => track.stop());
+            call === null || call === void 0 ? void 0 : call.removeAllListeners();
+            call === null || call === void 0 ? void 0 : call.close();
             peer.removeAllListeners();
             peer.destroy();
         };
-    }, [audio]);
+    }, [peer]);
     return React.createElement("button", { onClick: () => setAudio(audio => !audio) }, audio ? React.createElement(React.Fragment, null,
         React.createElement("audio", { ref: streamRef, autoPlay: true, className: 'hidden' }),
         React.createElement(BsFillMicFill, { title: "Turn mic off" })) : React.createElement(BsFillMicMuteFill, { title: "Turn mic on" }));

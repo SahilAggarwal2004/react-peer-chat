@@ -1,28 +1,17 @@
 {
   "compilerOptions": {
-    "module": "ESNext",
-    "target": "ESNext",
-    "skipLibCheck": true,
-    "lib": [
-      "DOM",
-      "DOM.Iterable",
-      "ESNext"
-    ],
-    "rootDir": "./src",
-    "outDir": "./build",
+    "target": "ES6",
+    "module": "ES2022",
+    "moduleResolution": "Node",
     "declaration": true,
     "noUnusedLocals": true,
-    "allowJs": true,
     "removeComments": true,
     "esModuleInterop": true,
-    "allowSyntheticDefaultImports": true,
-    "strict": true,
     "forceConsistentCasingInFileNames": true,
-    "moduleResolution": "Node",
-    "resolveJsonModule": true,
-    "isolatedModules": false,
-    "strictNullChecks": true,
-    "downlevelIteration": true,
-    "jsx": "react"
+    "strict": true,
+    "skipLibCheck": true,
+    "jsx": "react",
+    "rootDir": "./src",
+    "outDir": "./build"
   }
 }
