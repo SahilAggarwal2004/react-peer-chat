@@ -1,6 +1,6 @@
 {
   "name": "react-peer-chat",
-  "version": "0.1.5",
+  "version": "0.1.6",
   "description": "An easy to use react component for impleting peer-to-peer chatting.",
   "main": "./build/index.js",
   "scripts": {
