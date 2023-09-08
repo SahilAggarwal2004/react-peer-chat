@@ -43,7 +43,10 @@ export default function Chat({ peerId, remotePeerId, peerOptions, onError = () =
             peer.destroy();
         };
     }, [audio]);
-    return React.createElement("button", { onClick: () => setAudio(audio => !audio) }, audio ? React.createElement(React.Fragment, null,
-        React.createElement("audio", { ref: streamRef, autoPlay: true, className: 'hidden' }),
-        React.createElement(BsFillMicFill, { title: "Turn mic off" })) : React.createElement(BsFillMicMuteFill, { title: "Turn mic on" }));
+    return <button onClick={() => setAudio(audio => !audio)}>
+        {audio ? <>
+            <audio ref={streamRef} autoPlay className='hidden'/>
+            <BsFillMicFill title="Turn mic off"/>
+        </> : <BsFillMicMuteFill title="Turn mic on"/>}
+    </button>;
 }
