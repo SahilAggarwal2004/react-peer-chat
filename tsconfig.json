@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
-    "module": "esnext",
-    "target": "es5",
+    "module": "ESNext",
+    "target": "ESNext",
     "skipLibCheck": true,
     "lib": [
       "DOM",
@@ -18,7 +18,7 @@
     "allowSyntheticDefaultImports": true,
     "strict": true,
     "forceConsistentCasingInFileNames": true,
-    "moduleResolution": "node",
+    "moduleResolution": "Node",
     "resolveJsonModule": true,
     "isolatedModules": false,
     "strictNullChecks": true,
