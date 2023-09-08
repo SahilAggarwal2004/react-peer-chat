@@ -22,7 +22,10 @@ export default function Chat({
     const handleRemoteStream = (remoteStream: MediaStream) => streamRef.current!.srcObject = remoteStream
 
     useEffect(() => {
-        if (!audio) return
+        if (!audio) {
+            setPeer(undefined);
+            return
+        }
         (async function loadPeer() {
             const Peer = (await import('peerjs')).default;
             const peer = new Peer(`rpc-${peerId}`, peerOptions)

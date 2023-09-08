@@ -17,8 +17,10 @@ export default function Chat({ peerId, remotePeerId, peerOptions, onError = () =
     const localStream = useRef();
     const handleRemoteStream = (remoteStream) => streamRef.current.srcObject = remoteStream;
     useEffect(() => {
-        if (!audio)
+        if (!audio) {
+            setPeer(undefined);
             return;
+        }
         (function loadPeer() {
             return __awaiter(this, void 0, void 0, function* () {
                 const Peer = (yield import('peerjs')).default;
