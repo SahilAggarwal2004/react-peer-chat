@@ -23,6 +23,6 @@
     "isolatedModules": true,
     "strictNullChecks": true,
     "downlevelIteration": true,
-    "jsx": "react-native"
+    "jsx": "react"
   }
 }
