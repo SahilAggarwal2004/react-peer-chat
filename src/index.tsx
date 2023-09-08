@@ -1,6 +1,6 @@
 // import React, { useEffect, useRef, useState } from 'react'
 import React, { useEffect, useRef } from 'react'
-import Peer, { MediaConnection, PeerOptions } from 'peerjs'
+import { MediaConnection, PeerOptions } from 'peerjs'
 import useStorage from './useStorage'
 import { BsFillMicFill, BsFillMicMuteFill } from './icons'
 
@@ -22,6 +22,7 @@ export default function Chat({
 
     useEffect(() => {
         if (!audio) return
+        const Peer = require('peerjs').default;
         const peer = new Peer(`rpc-${peerId}`, peerOptions)
         let call: MediaConnection;
         peer.on('open', () => {
