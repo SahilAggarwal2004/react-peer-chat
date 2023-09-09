@@ -21,7 +21,6 @@ var __rest = (this && this.__rest) || function (s, e) {
 import React, { useEffect, useRef, useState } from 'react';
 import useStorage, { removeStorage } from './storage';
 import { BiSolidMessageDetail, BiSolidMessageX, BsFillMicFill, BsFillMicMuteFill, GrSend } from './icons';
-import './index.css';
 export default function Chat(_a) {
     var { name, peerId, remotePeerId, peerOptions, text = true, voice = true, dialogOptions, onError = () => console.error("Can not access microphone!"), children } = _a, props = __rest(_a, ["name", "peerId", "remotePeerId", "peerOptions", "text", "voice", "dialogOptions", "onError", "children"]);
     const [peer, setPeer] = useState();
@@ -132,27 +131,27 @@ export default function Chat(_a) {
         if (container)
             container.scrollTop = container.scrollHeight;
     }, [dialog, opponentName, messages]);
-    return React.createElement("div", Object.assign({ className: 'main' }, props),
+    return React.createElement("div", Object.assign({ className: 'rpc-main' }, props),
         typeof children === 'function' ? children({ notification, messages, addMessage, dialogRef, audio, setAudio }) : React.createElement(React.Fragment, null,
             text && React.createElement("div", null,
                 dialog ? React.createElement(BiSolidMessageX, { onClick: () => setDialog(false) })
-                    : React.createElement("div", { className: 'notification' },
+                    : React.createElement("div", { className: 'rpc-notification' },
                         React.createElement(BiSolidMessageDetail, { onClick: () => {
                                 setNotification(false);
                                 setDialog(true);
                             } }),
-                        notification && React.createElement("span", { className: 'badge' })),
+                        notification && React.createElement("span", { className: 'rpc-badge' })),
                 React.createElement("dialog", { ref: dialogRef, className: `${dialog ? 'dialog' : ''} position-${(dialogOptions === null || dialogOptions === void 0 ? void 0 : dialogOptions.position) || 'center'}`, style: dialogOptions === null || dialogOptions === void 0 ? void 0 : dialogOptions.style },
-                    React.createElement("div", { className: 'heading' }, "Chat"),
+                    React.createElement("div", { className: 'rpc-heading' }, "Chat"),
                     React.createElement("hr", null),
                     React.createElement("div", null,
-                        React.createElement("div", { ref: containerRef, className: 'message-container' }, opponentName && messages.map(({ id, text }, i) => React.createElement("div", { key: i },
+                        React.createElement("div", { ref: containerRef, className: 'rpc-message-container' }, opponentName && messages.map(({ id, text }, i) => React.createElement("div", { key: i },
                             React.createElement("strong", null,
                                 id === peerId ? 'You' : opponentName,
                                 ": "),
                             React.createElement("span", null, text)))),
                         React.createElement("hr", null),
-                        React.createElement("form", { className: 'input-container', onSubmit: e => {
+                        React.createElement("form", { className: 'rpc-input-container', onSubmit: e => {
                                 var _a;
                                 e.preventDefault();
                                 const text = (_a = inputRef.current) === null || _a === void 0 ? void 0 : _a.value;
@@ -161,7 +160,7 @@ export default function Chat(_a) {
                                     addMessage({ id: peerId, text }, true);
                                 }
                             } },
-                            React.createElement("input", { ref: inputRef, className: 'input', placeholder: 'Enter a message' }),
+                            React.createElement("input", { ref: inputRef, className: 'rpc-input', placeholder: 'Enter a message' }),
                             React.createElement("button", { type: 'submit' },
                                 React.createElement(GrSend, null)))))),
             voice && React.createElement("div", null, audio ? React.createElement(BsFillMicFill, { title: "Turn mic off", onClick: () => setAudio(false) }) : React.createElement(BsFillMicMuteFill, { title: "Turn mic on", onClick: () => setAudio(true) }))),

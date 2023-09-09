@@ -2,7 +2,6 @@ import React, { CSSProperties, DetailedHTMLProps, HTMLAttributes, ReactNode, Ref
 import Peer, { DataConnection, MediaConnection, PeerOptions } from 'peerjs'
 import useStorage, { removeStorage } from './storage'
 import { BiSolidMessageDetail, BiSolidMessageX, BsFillMicFill, BsFillMicMuteFill, GrSend } from './icons'
-import './index.css'
 
 type Message = { id: string, text: string }
 
@@ -128,29 +127,29 @@ export default function Chat({
         if (container) container.scrollTop = container.scrollHeight
     }, [dialog, opponentName, messages]);
 
-    return <div className='main' {...props}>
+    return <div className='rpc-main' {...props}>
         {typeof children === 'function' ? children({ notification, messages, addMessage, dialogRef, audio, setAudio }) : <>
             {text && <div>
                 {dialog ? <BiSolidMessageX onClick={() => setDialog(false)} />
-                    : <div className='notification'>
+                    : <div className='rpc-notification'>
                         <BiSolidMessageDetail onClick={() => {
                             setNotification(false);
                             setDialog(true);
                         }} />
-                        {notification && <span className='badge' />}
+                        {notification && <span className='rpc-badge' />}
                     </div>}
                 <dialog ref={dialogRef} className={`${dialog ? 'dialog' : ''} position-${dialogOptions?.position || 'center'}`} style={dialogOptions?.style}>
-                    <div className='heading'>Chat</div>
+                    <div className='rpc-heading'>Chat</div>
                     <hr />
                     <div>
-                        <div ref={containerRef} className='message-container'>
+                        <div ref={containerRef} className='rpc-message-container'>
                             {opponentName && messages.map(({ id, text }, i) => <div key={i}>
                                 <strong>{id === peerId ? 'You' : opponentName}: </strong>
                                 <span>{text}</span>
                             </div>)}
                         </div>
                         <hr />
-                        <form className='input-container' onSubmit={e => {
+                        <form className='rpc-input-container' onSubmit={e => {
                             e.preventDefault()
                             const text = inputRef.current?.value
                             if (text) {
@@ -158,7 +157,7 @@ export default function Chat({
                                 addMessage({ id: peerId, text }, true)
                             }
                         }}>
-                            <input ref={inputRef} className='input' placeholder='Enter a message' />
+                            <input ref={inputRef} className='rpc-input' placeholder='Enter a message' />
                             <button type='submit'><GrSend /></button>
                         </form>
                     </div>

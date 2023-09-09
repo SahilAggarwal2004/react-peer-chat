@@ -1,14 +1,14 @@
-.main {
+.rpc-main {
     display: flex;
     align-items: center;
     column-gap: 0.5rem;
 }
 
-.notification {
+.rpc-notification {
     position: relative;
 }
 
-.notification .badge {
+.rpc-notification .rpc-badge {
     background-color: red;
     position: absolute;
     top: 0.25rem;
@@ -18,7 +18,7 @@
     border-radius: 100%;
 }
 
-.dialog {
+.rpc-dialog {
     display: flex;
     flex-direction: column;
     row-gap: 0.25rem;
@@ -30,52 +30,52 @@
     font-size: smaller;
 }
 
-.position-left {
+.rpc-position-left {
     left: 0.5rem;
     translate: -100%;
 }
 
-.position-center {
+.rpc-position-center {
     translate: -50%;
 }
 
-.position-right {
+.rpc-position-right {
     left: 0.5rem;
 }
 
-.message-container {
+.rpc-message-container {
     height: 6rem;
     overflow-y: scroll;
     padding-inline: 0.5rem;
     margin-bottom: 0.25rem;
 }
 
-.message-container::-webkit-scrollbar {
+.rpc-message-container::-webkit-scrollbar {
     width: 2.5px;
 }
 
-.message-container::-webkit-scrollbar-track {
+.rpc-message-container::-webkit-scrollbar-track {
     background: gray;
 }
 
-.message-container::-webkit-scrollbar-thumb {
+.rpc-message-container::-webkit-scrollbar-thumb {
     background-color: white;
 }
 
-.heading {
+.rpc-heading {
     text-align: center;
     font-weight: bold;
     padding-inline: 0.5rem;
 }
 
-.input-container {
+.rpc-input-container {
     display: flex;
     column-gap: 0.25rem;
     padding-inline: 0.5rem;
     padding-block: 0.4rem;
 }
 
-.input {
+.rpc-input {
     background-color: black;
     border: none;
     outline: 1px solid rgba(255, 255, 255, 0.8);
@@ -83,6 +83,14 @@
     padding-inline: 0.25rem;
 }
 
-.input:focus {
+.rpc-input:focus {
     outline: 2px solid white;
+}
+
+.rpc-scale-down {
+    scale: calc(2/3);
+}
+
+.rpc-invert {
+    filter: invert(100%);
 }

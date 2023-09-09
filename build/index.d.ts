@@ -1,6 +1,5 @@
 import React, { CSSProperties, DetailedHTMLProps, HTMLAttributes, ReactNode, RefObject } from 'react';
 import { PeerOptions } from 'peerjs';
-import './index.css';
 type Message = {
     id: string;
     text: string;
