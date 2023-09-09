@@ -1,7 +1,7 @@
 import React, { CSSProperties, DetailedHTMLProps, HTMLAttributes, ReactNode, RefObject, useEffect, useRef, useState } from 'react'
-import Peer, { DataConnection, MediaConnection, PeerOptions } from 'peerjs'
-import useStorage, { removeStorage } from './storage'
-import { BiSolidMessageDetail, BiSolidMessageX, BsFillMicFill, BsFillMicMuteFill, GrSend } from './icons'
+import { Peer, DataConnection, MediaConnection, PeerOptions } from 'peerjs'
+import useStorage, { removeStorage } from './storage.js'
+import { BiSolidMessageDetail, BiSolidMessageX, BsFillMicFill, BsFillMicMuteFill, GrSend } from './icons.js'
 
 type Message = { id: string, text: string }
 
@@ -68,7 +68,7 @@ export default function Chat({
             return
         }
         (async function loadPeer() {
-            const Peer = (await import('peerjs')).default;
+            const { Peer } = await import('peerjs');
             const peer = new Peer(`rpc-${peerId}`, peerOptions)
             setPeer(peer)
         })();

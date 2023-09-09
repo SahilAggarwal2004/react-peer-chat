@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
-import useStorage, { removeStorage } from './storage';
-import { BiSolidMessageDetail, BiSolidMessageX, BsFillMicFill, BsFillMicMuteFill, GrSend } from './icons';
+import useStorage, { removeStorage } from './storage.js';
+import { BiSolidMessageDetail, BiSolidMessageX, BsFillMicFill, BsFillMicMuteFill, GrSend } from './icons.js';
 export default function Chat({ name, peerId, remotePeerId, peerOptions, text = true, voice = true, dialogOptions, onError = () => console.error("Can not access microphone!"), children, ...props }) {
     const [peer, setPeer] = useState();
     const [opponentName, setOpponentName] = useState();
@@ -48,7 +48,7 @@ export default function Chat({ name, peerId, remotePeerId, peerOptions, text = t
             return;
         }
         (async function loadPeer() {
-            const Peer = (await import('peerjs')).default;
+            const { Peer } = await import('peerjs');
             const peer = new Peer(`rpc-${peerId}`, peerOptions);
             setPeer(peer);
         })();
