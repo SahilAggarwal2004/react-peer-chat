@@ -28,8 +28,19 @@
     outline: 2px solid white;
     border-radius: 0.25rem;
     font-size: smaller;
+}
+
+.position-left {
+    left: 0.5rem;
+    translate: -100%;
+}
+
+.position-center {
     translate: -50%;
-    left: 50%;
+}
+
+.position-right {
+    left: 0.5rem;
 }
 
 .message-container {

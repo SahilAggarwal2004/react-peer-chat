@@ -172,4 +172,4 @@ export default function Chat({
     </div>
 }
 
-export const cleanStorage = () => removeStorage('rpc-messages')
+export const clearChat = () => removeStorage('rpc-messages')

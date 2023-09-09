@@ -132,48 +132,39 @@ export default function Chat(_a) {
         if (container)
             container.scrollTop = container.scrollHeight;
     }, [dialog, opponentName, messages]);
-    return <div className='main' {...props}>
-        {typeof children === 'function' ? children({ notification, messages, addMessage, dialogRef, audio, setAudio }) : <>
-            {text && <div>
-                {dialog ? <BiSolidMessageX onClick={() => setDialog(false)}/>
-                    : <div className='notification'>
-                        <BiSolidMessageDetail onClick={() => {
-                            setNotification(false);
-                            setDialog(true);
-                        }}/>
-                        {notification && <span className='badge'/>}
-                    </div>}
-                <dialog ref={dialogRef} className={`${dialog ? 'dialog' : ''} position-${(dialogOptions === null || dialogOptions === void 0 ? void 0 : dialogOptions.position) || 'center'}`} style={dialogOptions === null || dialogOptions === void 0 ? void 0 : dialogOptions.style}>
-                    <div className='heading'>Chat</div>
-                    <hr />
-                    <div>
-                        <div ref={containerRef} className='message-container'>
-                            {opponentName && messages.map(({ id, text }, i) => <div key={i}>
-                                <strong>{id === peerId ? 'You' : opponentName}: </strong>
-                                <span>{text}</span>
-                            </div>)}
-                        </div>
-                        <hr />
-                        <form className='input-container' onSubmit={e => {
-                    var _a;
-                    e.preventDefault();
-                    const text = (_a = inputRef.current) === null || _a === void 0 ? void 0 : _a.value;
-                    if (text) {
-                        inputRef.current.value = '';
-                        addMessage({ id: peerId, text }, true);
-                    }
-                }}>
-                            <input ref={inputRef} className='input' placeholder='Enter a message'/>
-                            <button type='submit'><GrSend /></button>
-                        </form>
-                    </div>
-                </dialog>
-            </div>}
-            {voice && <div>
-                {audio ? <BsFillMicFill title="Turn mic off" onClick={() => setAudio(false)}/> : <BsFillMicMuteFill title="Turn mic on" onClick={() => setAudio(true)}/>}
-            </div>}
-        </>}
-        {voice && audio && <audio ref={streamRef} autoPlay style={{ display: 'none' }}/>}
-    </div>;
+    return React.createElement("div", Object.assign({ className: 'main' }, props),
+        typeof children === 'function' ? children({ notification, messages, addMessage, dialogRef, audio, setAudio }) : React.createElement(React.Fragment, null,
+            text && React.createElement("div", null,
+                dialog ? React.createElement(BiSolidMessageX, { onClick: () => setDialog(false) })
+                    : React.createElement("div", { className: 'notification' },
+                        React.createElement(BiSolidMessageDetail, { onClick: () => {
+                                setNotification(false);
+                                setDialog(true);
+                            } }),
+                        notification && React.createElement("span", { className: 'badge' })),
+                React.createElement("dialog", { ref: dialogRef, className: `${dialog ? 'dialog' : ''} position-${(dialogOptions === null || dialogOptions === void 0 ? void 0 : dialogOptions.position) || 'center'}`, style: dialogOptions === null || dialogOptions === void 0 ? void 0 : dialogOptions.style },
+                    React.createElement("div", { className: 'heading' }, "Chat"),
+                    React.createElement("hr", null),
+                    React.createElement("div", null,
+                        React.createElement("div", { ref: containerRef, className: 'message-container' }, opponentName && messages.map(({ id, text }, i) => React.createElement("div", { key: i },
+                            React.createElement("strong", null,
+                                id === peerId ? 'You' : opponentName,
+                                ": "),
+                            React.createElement("span", null, text)))),
+                        React.createElement("hr", null),
+                        React.createElement("form", { className: 'input-container', onSubmit: e => {
+                                var _a;
+                                e.preventDefault();
+                                const text = (_a = inputRef.current) === null || _a === void 0 ? void 0 : _a.value;
+                                if (text) {
+                                    inputRef.current.value = '';
+                                    addMessage({ id: peerId, text }, true);
+                                }
+                            } },
+                            React.createElement("input", { ref: inputRef, className: 'input', placeholder: 'Enter a message' }),
+                            React.createElement("button", { type: 'submit' },
+                                React.createElement(GrSend, null)))))),
+            voice && React.createElement("div", null, audio ? React.createElement(BsFillMicFill, { title: "Turn mic off", onClick: () => setAudio(false) }) : React.createElement(BsFillMicMuteFill, { title: "Turn mic on", onClick: () => setAudio(true) }))),
+        voice && audio && React.createElement("audio", { ref: streamRef, autoPlay: true, style: { display: 'none' } }));
 }
-export const cleanStorage = () => removeStorage('rpc-messages');
+export const clearChat = () => removeStorage('rpc-messages');
