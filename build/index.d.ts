@@ -1,11 +1,34 @@
-import React from 'react';
+import React, { CSSProperties, DetailedHTMLProps, HTMLAttributes, ReactNode, RefObject } from 'react';
 import { PeerOptions } from 'peerjs';
-type Id = string | number;
-type Props = {
-    peerId: Id;
-    remotePeerId: Id;
-    peerOptions?: PeerOptions;
-    onError?: () => void;
+import './index.css';
+type Message = {
+    id: string;
+    text: string;
 };
-export default function Chat({ peerId, remotePeerId, peerOptions, onError }: Props): React.JSX.Element;
+type ChildrenOptions = {
+    notification?: boolean;
+    messages?: Message[];
+    addMessage?: (message: Message) => void;
+    dialogRef?: RefObject<HTMLDialogElement>;
+    audio?: boolean;
+    setAudio?: (audio: boolean) => void;
+};
+type DialogPosition = 'left' | 'center' | 'up';
+type DialogOptions = {
+    position: DialogPosition;
+    style: CSSProperties;
+};
+type Props = {
+    name?: string;
+    peerId: string;
+    remotePeerId: string;
+    text?: boolean;
+    voice?: boolean;
+    peerOptions?: PeerOptions;
+    dialogOptions?: DialogOptions;
+    onError?: () => void;
+    children?: ReactNode | ((childrenOptions: ChildrenOptions) => ReactNode);
+} & DetailedHTMLProps<HTMLAttributes<HTMLDivElement>, HTMLDivElement>;
+export default function Chat({ name, peerId, remotePeerId, peerOptions, text, voice, dialogOptions, onError, children, ...props }: Props): React.JSX.Element;
+export declare const cleanStorage: () => void;
 export {};

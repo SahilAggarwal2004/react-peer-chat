@@ -1,0 +1,77 @@
+.main {
+    display: flex;
+    align-items: center;
+    column-gap: 0.5rem;
+}
+
+.notification {
+    position: relative;
+}
+
+.notification .badge {
+    background-color: red;
+    position: absolute;
+    top: 0.25rem;
+    right: 0.25rem;
+    width: 0.25rem;
+    height: 0.25rem;
+    border-radius: 100%;
+}
+
+.dialog {
+    display: flex;
+    flex-direction: column;
+    row-gap: 0.25rem;
+    background-color: black;
+    color: white;
+    padding-top: 0.25rem;
+    outline: 2px solid white;
+    border-radius: 0.25rem;
+    font-size: smaller;
+    translate: -50%;
+    left: 50%;
+}
+
+.message-container {
+    height: 6rem;
+    overflow-y: scroll;
+    padding-inline: 0.5rem;
+    margin-bottom: 0.25rem;
+}
+
+.message-container::-webkit-scrollbar {
+    width: 2.5px;
+}
+
+.message-container::-webkit-scrollbar-track {
+    background: gray;
+}
+
+.message-container::-webkit-scrollbar-thumb {
+    background-color: white;
+}
+
+.heading {
+    text-align: center;
+    font-weight: bold;
+    padding-inline: 0.5rem;
+}
+
+.input-container {
+    display: flex;
+    column-gap: 0.25rem;
+    padding-inline: 0.5rem;
+    padding-block: 0.4rem;
+}
+
+.input {
+    background-color: black;
+    border: none;
+    outline: 1px solid rgba(255, 255, 255, 0.8);
+    border-radius: 0.25rem;
+    padding-inline: 0.25rem;
+}
+
+.input:focus {
+    outline: 2px solid white;
+}

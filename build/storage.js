@@ -1,6 +1,6 @@
 import { useState } from "react";
 const setStorage = (key, value, local = false) => (local ? localStorage : sessionStorage).setItem(key, JSON.stringify(value));
-const removeStorage = (key, local = false) => (local ? localStorage : sessionStorage).removeItem(key);
+export const removeStorage = (key, local = false) => (local ? localStorage : sessionStorage).removeItem(key);
 const getStorage = (key, fallbackValue, local = false) => {
     if (typeof window === "undefined")
         return fallbackValue;
