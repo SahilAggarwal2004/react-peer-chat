@@ -7,7 +7,7 @@ type Message = { id: string, text: string }
 
 type ChildrenOptions = { notification?: boolean, messages?: Message[], addMessage?: (message: Message) => void, dialogRef?: RefObject<HTMLDialogElement>, audio?: boolean, setAudio?: (audio: boolean) => void }
 
-type DialogPosition = 'left' | 'center' | 'up'
+type DialogPosition = 'left' | 'center' | 'right'
 
 type DialogOptions = { position: DialogPosition, style: CSSProperties }
 
@@ -138,7 +138,7 @@ export default function Chat({
                         }} />
                         {notification && <span className='rpc-badge' />}
                     </div>}
-                <dialog ref={dialogRef} className={`${dialog ? 'dialog' : ''} position-${dialogOptions?.position || 'center'}`} style={dialogOptions?.style}>
+                <dialog ref={dialogRef} className={`${dialog ? 'rpc-dialog' : ''} rpc-position-${dialogOptions?.position || 'center'}`} style={dialogOptions?.style}>
                     <div className='rpc-heading'>Chat</div>
                     <hr />
                     <div>

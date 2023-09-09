@@ -12,7 +12,7 @@ type ChildrenOptions = {
     audio?: boolean;
     setAudio?: (audio: boolean) => void;
 };
-type DialogPosition = 'left' | 'center' | 'up';
+type DialogPosition = 'left' | 'center' | 'right';
 type DialogOptions = {
     position: DialogPosition;
     style: CSSProperties;

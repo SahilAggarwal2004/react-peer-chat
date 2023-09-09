@@ -115,7 +115,7 @@ export default function Chat({ name, peerId, remotePeerId, peerOptions, text = t
                                 setDialog(true);
                             } }),
                         notification && React.createElement("span", { className: 'rpc-badge' })),
-                React.createElement("dialog", { ref: dialogRef, className: `${dialog ? 'dialog' : ''} position-${dialogOptions?.position || 'center'}`, style: dialogOptions?.style },
+                React.createElement("dialog", { ref: dialogRef, className: `${dialog ? 'rpc-dialog' : ''} rpc-position-${dialogOptions?.position || 'center'}`, style: dialogOptions?.style },
                     React.createElement("div", { className: 'rpc-heading' }, "Chat"),
                     React.createElement("hr", null),
                     React.createElement("div", null,
