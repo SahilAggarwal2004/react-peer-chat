@@ -14,13 +14,13 @@ export default function Chat({ name, peerId, remotePeerId, peerOptions, text = t
     const [audio, setAudio] = useStorage('rpc-audio', false, { local: true, save: true });
     const streamRef = useRef(null);
     const localStream = useRef();
-    remotePeerId = `rpc-${remotePeerId}`;
     const handleRemoteStream = (remoteStream) => streamRef.current.srcObject = remoteStream;
-    function addMessage(message, send = false) {
+    function addMessage(message, sendToRemotePeer = false) {
+        var _a, _b;
         setMessages(old => old.concat(message));
-        if (send)
-            connRef.current?.send({ type: 'message', message });
-        else if (!dialogRef.current?.open)
+        if (sendToRemotePeer)
+            (_a = connRef.current) === null || _a === void 0 ? void 0 : _a.send({ type: 'message', message });
+        else if (!((_b = dialogRef.current) === null || _b === void 0 ? void 0 : _b.open))
             setNotification(true);
     }
     function handleConnection(conn, setName = false) {
@@ -58,8 +58,11 @@ export default function Chat({ name, peerId, remotePeerId, peerOptions, text = t
             return;
         let call;
         peer.on('open', () => {
-            if (text)
-                handleConnection(peer.connect(remotePeerId, { metadata: name }), true);
+            if (remotePeerId) {
+                remotePeerId = `rpc-${remotePeerId}`;
+                if (text)
+                    handleConnection(peer.connect(remotePeerId, { metadata: name }), true);
+            }
             if (audio) {
                 const getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia;
                 getUserMedia({
@@ -71,9 +74,11 @@ export default function Chat({ name, peerId, remotePeerId, peerOptions, text = t
                     }
                 }, (stream) => {
                     localStream.current = stream;
-                    call = peer.call(remotePeerId, stream);
-                    call.on('stream', handleRemoteStream);
-                    call.on('close', call.removeAllListeners);
+                    if (remotePeerId) {
+                        call = peer.call(remotePeerId, stream);
+                        call.on('stream', handleRemoteStream);
+                        call.on('close', call.removeAllListeners);
+                    }
                     peer.on('call', e => {
                         call = e;
                         call.answer(stream);
@@ -85,20 +90,22 @@ export default function Chat({ name, peerId, remotePeerId, peerOptions, text = t
         });
         peer.on('connection', handleConnection);
         return () => {
-            localStream.current?.getTracks().forEach(track => track.stop());
-            connRef.current?.removeAllListeners();
-            connRef.current?.close();
-            call?.removeAllListeners();
-            call?.close();
+            var _a, _b, _c;
+            (_a = localStream.current) === null || _a === void 0 ? void 0 : _a.getTracks().forEach(track => track.stop());
+            (_b = connRef.current) === null || _b === void 0 ? void 0 : _b.removeAllListeners();
+            (_c = connRef.current) === null || _c === void 0 ? void 0 : _c.close();
+            call === null || call === void 0 ? void 0 : call.removeAllListeners();
+            call === null || call === void 0 ? void 0 : call.close();
             peer.removeAllListeners();
             peer.destroy();
         };
     }, [peer]);
     useEffect(() => {
+        var _a, _b;
         if (dialog)
-            dialogRef.current?.show();
+            (_a = dialogRef.current) === null || _a === void 0 ? void 0 : _a.show();
         else
-            dialogRef.current?.close();
+            (_b = dialogRef.current) === null || _b === void 0 ? void 0 : _b.close();
     }, [dialog]);
     useEffect(() => {
         const container = containerRef.current;
@@ -106,7 +113,7 @@ export default function Chat({ name, peerId, remotePeerId, peerOptions, text = t
             container.scrollTop = container.scrollHeight;
     }, [dialog, opponentName, messages]);
     return React.createElement("div", { className: 'rpc-main', ...props },
-        typeof children === 'function' ? children({ notification, messages, addMessage, dialogRef, audio, setAudio }) : React.createElement(React.Fragment, null,
+        typeof children === 'function' ? children({ opponentName, messages, addMessage, audio, setAudio }) : React.createElement(React.Fragment, null,
             text && React.createElement("div", null,
                 dialog ? React.createElement(BiSolidMessageX, { onClick: () => setDialog(false) })
                     : React.createElement("div", { className: 'rpc-notification' },
@@ -115,7 +122,7 @@ export default function Chat({ name, peerId, remotePeerId, peerOptions, text = t
                                 setDialog(true);
                             } }),
                         notification && React.createElement("span", { className: 'rpc-badge' })),
-                React.createElement("dialog", { ref: dialogRef, className: `${dialog ? 'rpc-dialog' : ''} rpc-position-${dialogOptions?.position || 'center'}`, style: dialogOptions?.style },
+                React.createElement("dialog", { ref: dialogRef, className: `${dialog ? 'rpc-dialog' : ''} rpc-position-${(dialogOptions === null || dialogOptions === void 0 ? void 0 : dialogOptions.position) || 'center'}`, style: dialogOptions === null || dialogOptions === void 0 ? void 0 : dialogOptions.style },
                     React.createElement("div", { className: 'rpc-heading' }, "Chat"),
                     React.createElement("hr", null),
                     React.createElement("div", null,
@@ -126,8 +133,9 @@ export default function Chat({ name, peerId, remotePeerId, peerOptions, text = t
                             React.createElement("span", null, text)))),
                         React.createElement("hr", null),
                         React.createElement("form", { className: 'rpc-input-container', onSubmit: e => {
+                                var _a;
                                 e.preventDefault();
-                                const text = inputRef.current?.value;
+                                const text = (_a = inputRef.current) === null || _a === void 0 ? void 0 : _a.value;
                                 if (text) {
                                     inputRef.current.value = '';
                                     addMessage({ id: peerId, text }, true);

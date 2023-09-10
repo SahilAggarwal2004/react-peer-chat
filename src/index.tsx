@@ -1,20 +1,20 @@
-import React, { CSSProperties, DetailedHTMLProps, HTMLAttributes, ReactNode, RefObject, useEffect, useRef, useState } from 'react'
+import React, { CSSProperties, DetailedHTMLProps, HTMLAttributes, ReactNode, useEffect, useRef, useState } from 'react'
 import { Peer, DataConnection, MediaConnection, PeerOptions } from 'peerjs'
 import useStorage, { removeStorage } from './storage.js'
 import { BiSolidMessageDetail, BiSolidMessageX, BsFillMicFill, BsFillMicMuteFill, GrSend } from './icons.js'
 
 type Message = { id: string, text: string }
 
-type ChildrenOptions = { notification?: boolean, messages?: Message[], addMessage?: (message: Message) => void, dialogRef?: RefObject<HTMLDialogElement>, audio?: boolean, setAudio?: (audio: boolean) => void }
+type ChildrenOptions = { opponentName?: string, messages?: Message[], addMessage?: (message: Message, sendToRemotePeer?: boolean) => void, audio?: boolean, setAudio?: (audio: boolean) => void }
 
 type DialogPosition = 'left' | 'center' | 'right'
 
 type DialogOptions = { position: DialogPosition, style: CSSProperties }
 
 type Props = {
-    name?: string, peerId: string, remotePeerId: string, text?: boolean, voice?: boolean, peerOptions?: PeerOptions,
+    name?: string, peerId: string, remotePeerId?: string, text?: boolean, voice?: boolean, peerOptions?: PeerOptions,
     dialogOptions?: DialogOptions, onError?: () => void,
-    children?: ReactNode | ((childrenOptions: ChildrenOptions) => ReactNode)
+    children?: (childrenOptions: ChildrenOptions) => ReactNode
 } & DetailedHTMLProps<HTMLAttributes<HTMLDivElement>, HTMLDivElement>
 
 export default function Chat({
@@ -35,13 +35,11 @@ export default function Chat({
     const streamRef = useRef<HTMLMediaElement>(null);
     const localStream = useRef<MediaStream>();
 
-    remotePeerId = `rpc-${remotePeerId}`
-
     const handleRemoteStream = (remoteStream: MediaStream) => streamRef.current!.srcObject = remoteStream
 
-    function addMessage(message: Message, send: boolean = false) {
+    function addMessage(message: Message, sendToRemotePeer: boolean = false) {
         setMessages(old => old.concat(message))
-        if (send) connRef.current?.send({ type: 'message', message })
+        if (sendToRemotePeer) connRef.current?.send({ type: 'message', message })
         else if (!dialogRef.current?.open) setNotification(true)
     }
 
@@ -78,7 +76,10 @@ export default function Chat({
         if (!peer) return
         let call: MediaConnection;
         peer.on('open', () => {
-            if (text) handleConnection(peer.connect(remotePeerId, { metadata: name }), true)
+            if (remotePeerId) {
+                remotePeerId = `rpc-${remotePeerId}`
+                if (text) handleConnection(peer.connect(remotePeerId, { metadata: name }), true)
+            }
             if (audio) {
                 // @ts-ignore
                 const getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia;
@@ -91,9 +92,11 @@ export default function Chat({
                     }
                 }, (stream: MediaStream) => {
                     localStream.current = stream
-                    call = peer.call(remotePeerId, stream);
-                    call.on('stream', handleRemoteStream);
-                    call.on('close', call.removeAllListeners)
+                    if (remotePeerId) {
+                        call = peer.call(remotePeerId, stream);
+                        call.on('stream', handleRemoteStream);
+                        call.on('close', call.removeAllListeners)
+                    }
                     peer.on('call', e => {
                         call = e
                         call.answer(stream) // Answer the call with an A/V stream.
@@ -128,7 +131,7 @@ export default function Chat({
     }, [dialog, opponentName, messages]);
 
     return <div className='rpc-main' {...props}>
-        {typeof children === 'function' ? children({ notification, messages, addMessage, dialogRef, audio, setAudio }) : <>
+        {typeof children === 'function' ? children({ opponentName, messages, addMessage, audio, setAudio }) : <>
             {text && <div>
                 {dialog ? <BiSolidMessageX onClick={() => setDialog(false)} />
                     : <div className='rpc-notification'>
