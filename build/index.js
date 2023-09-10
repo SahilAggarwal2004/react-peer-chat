@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import useStorage, { removeStorage } from './storage.js';
 import { BiSolidMessageDetail, BiSolidMessageX, BsFillMicFill, BsFillMicMuteFill, GrSend } from './icons.js';
-export default function Chat({ name, peerId, remotePeerId, peerOptions, text = true, voice = true, dialogOptions, onError = () => console.error("Can not access microphone!"), children, props = {} }) {
+export default function Chat({ name, peerId, remotePeerId, peerOptions, text = true, voice = true, dialogOptions, onError = () => alert("Microphone not accessible!"), children, props = {} }) {
     const [peer, setPeer] = useState();
     const [notification, setNotification] = useState(false);
     const [remotePeer, setRemotePeer] = useStorage('rpc-remote-peer', '', { save: true });
@@ -64,27 +64,32 @@ export default function Chat({ name, peerId, remotePeerId, peerOptions, text = t
             }
             if (audio) {
                 const getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia;
-                getUserMedia({
-                    video: false,
-                    audio: {
-                        autoGainControl: false,
-                        noiseSuppression: true,
-                        echoCancellation: true
-                    }
-                }, (stream) => {
-                    localStream.current = stream;
-                    if (remotePeerId) {
-                        call = peer.call(remotePeerId, stream);
-                        call.on('stream', handleRemoteStream);
-                        call.on('close', call.removeAllListeners);
-                    }
-                    peer.on('call', e => {
-                        call = e;
-                        call.answer(stream);
-                        call.on('stream', handleRemoteStream);
-                        call.on('close', call.removeAllListeners);
-                    });
-                }, onError);
+                try {
+                    getUserMedia({
+                        video: false,
+                        audio: {
+                            autoGainControl: false,
+                            noiseSuppression: true,
+                            echoCancellation: true
+                        }
+                    }, (stream) => {
+                        localStream.current = stream;
+                        if (remotePeerId) {
+                            call = peer.call(remotePeerId, stream);
+                            call.on('stream', handleRemoteStream);
+                            call.on('close', call.removeAllListeners);
+                        }
+                        peer.on('call', e => {
+                            call = e;
+                            call.answer(stream);
+                            call.on('stream', handleRemoteStream);
+                            call.on('close', call.removeAllListeners);
+                        });
+                    }, onError);
+                }
+                catch (_a) {
+                    onError();
+                }
             }
         });
         peer.on('connection', handleConnection);

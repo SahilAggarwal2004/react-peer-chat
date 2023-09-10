@@ -20,7 +20,7 @@ type Props = {
 
 export default function Chat({
     name, peerId, remotePeerId, peerOptions, text = true, voice = true,
-    dialogOptions, onError = () => console.error("Can not access microphone!"),
+    dialogOptions, onError = () => alert("Microphone not accessible!"),
     children, props = {}
 }: Props) {
     const [peer, setPeer] = useState<Peer>();
@@ -84,27 +84,29 @@ export default function Chat({
             if (audio) {
                 // @ts-ignore
                 const getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia;
-                getUserMedia({
-                    video: false,
-                    audio: {
-                        autoGainControl: false, // Disable automatic gain control
-                        noiseSuppression: true, // Enable noise suppression
-                        echoCancellation: true // Enable echo cancellation
-                    }
-                }, (stream: MediaStream) => {
-                    localStream.current = stream
-                    if (remotePeerId) {
-                        call = peer.call(remotePeerId, stream);
-                        call.on('stream', handleRemoteStream);
-                        call.on('close', call.removeAllListeners)
-                    }
-                    peer.on('call', e => {
-                        call = e
-                        call.answer(stream) // Answer the call with an A/V stream.
-                        call.on('stream', handleRemoteStream);
-                        call.on('close', call.removeAllListeners)
-                    })
-                }, onError);
+                try {
+                    getUserMedia({
+                        video: false,
+                        audio: {
+                            autoGainControl: false, // Disable automatic gain control
+                            noiseSuppression: true, // Enable noise suppression
+                            echoCancellation: true // Enable echo cancellation
+                        }
+                    }, (stream: MediaStream) => {
+                        localStream.current = stream
+                        if (remotePeerId) {
+                            call = peer.call(remotePeerId, stream);
+                            call.on('stream', handleRemoteStream);
+                            call.on('close', call.removeAllListeners)
+                        }
+                        peer.on('call', e => {
+                            call = e
+                            call.answer(stream) // Answer the call with an A/V stream.
+                            call.on('stream', handleRemoteStream);
+                            call.on('close', call.removeAllListeners)
+                        })
+                    }, onError);
+                } catch { onError() }
             }
         })
 
