@@ -14,13 +14,14 @@ type DialogOptions = { position: DialogPosition, style: CSSProperties }
 type Props = {
     name?: string, peerId: string, remotePeerId?: string, text?: boolean, voice?: boolean, peerOptions?: PeerOptions,
     dialogOptions?: DialogOptions, onError?: () => void,
-    children?: (childrenOptions: ChildrenOptions) => ReactNode
-} & DetailedHTMLProps<HTMLAttributes<HTMLDivElement>, HTMLDivElement>
+    children?: (childrenOptions: ChildrenOptions) => ReactNode,
+    props: DetailedHTMLProps<HTMLAttributes<HTMLDivElement>, HTMLDivElement>
+}
 
 export default function Chat({
     name, peerId, remotePeerId, peerOptions, text = true, voice = true,
     dialogOptions, onError = () => console.error("Can not access microphone!"),
-    children, ...props
+    children, props
 }: Props) {
     const [peer, setPeer] = useState<Peer>();
     const [opponentName, setOpponentName] = useState<string>();
@@ -133,14 +134,13 @@ export default function Chat({
     return <div className='rpc-main' {...props}>
         {typeof children === 'function' ? children({ opponentName, messages, addMessage, audio, setAudio }) : <>
             {text && <div>
-                {dialog ? <BiSolidMessageX onClick={() => setDialog(false)} />
-                    : <div className='rpc-notification'>
-                        <BiSolidMessageDetail onClick={() => {
-                            setNotification(false);
-                            setDialog(true);
-                        }} />
-                        {notification && <span className='rpc-badge' />}
-                    </div>}
+                {dialog ? <BiSolidMessageX onClick={() => setDialog(false)} /> : <div className='rpc-notification'>
+                    <BiSolidMessageDetail onClick={() => {
+                        setNotification(false);
+                        setDialog(true);
+                    }} />
+                    {notification && <span className='rpc-badge' />}
+                </div>}
                 <dialog ref={dialogRef} className={`${dialog ? 'rpc-dialog' : ''} rpc-position-${dialogOptions?.position || 'center'}`} style={dialogOptions?.style}>
                     <div className='rpc-heading'>Chat</div>
                     <hr />

@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import useStorage, { removeStorage } from './storage.js';
 import { BiSolidMessageDetail, BiSolidMessageX, BsFillMicFill, BsFillMicMuteFill, GrSend } from './icons.js';
-export default function Chat({ name, peerId, remotePeerId, peerOptions, text = true, voice = true, dialogOptions, onError = () => console.error("Can not access microphone!"), children, ...props }) {
+export default function Chat({ name, peerId, remotePeerId, peerOptions, text = true, voice = true, dialogOptions, onError = () => console.error("Can not access microphone!"), children, props }) {
     const [peer, setPeer] = useState();
     const [opponentName, setOpponentName] = useState();
     const [notification, setNotification] = useState(false);
@@ -115,13 +115,12 @@ export default function Chat({ name, peerId, remotePeerId, peerOptions, text = t
     return React.createElement("div", { className: 'rpc-main', ...props },
         typeof children === 'function' ? children({ opponentName, messages, addMessage, audio, setAudio }) : React.createElement(React.Fragment, null,
             text && React.createElement("div", null,
-                dialog ? React.createElement(BiSolidMessageX, { onClick: () => setDialog(false) })
-                    : React.createElement("div", { className: 'rpc-notification' },
-                        React.createElement(BiSolidMessageDetail, { onClick: () => {
-                                setNotification(false);
-                                setDialog(true);
-                            } }),
-                        notification && React.createElement("span", { className: 'rpc-badge' })),
+                dialog ? React.createElement(BiSolidMessageX, { onClick: () => setDialog(false) }) : React.createElement("div", { className: 'rpc-notification' },
+                    React.createElement(BiSolidMessageDetail, { onClick: () => {
+                            setNotification(false);
+                            setDialog(true);
+                        } }),
+                    notification && React.createElement("span", { className: 'rpc-badge' })),
                 React.createElement("dialog", { ref: dialogRef, className: `${dialog ? 'rpc-dialog' : ''} rpc-position-${(dialogOptions === null || dialogOptions === void 0 ? void 0 : dialogOptions.position) || 'center'}`, style: dialogOptions === null || dialogOptions === void 0 ? void 0 : dialogOptions.style },
                     React.createElement("div", { className: 'rpc-heading' }, "Chat"),
                     React.createElement("hr", null),

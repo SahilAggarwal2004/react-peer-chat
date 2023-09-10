@@ -26,7 +26,8 @@ type Props = {
     dialogOptions?: DialogOptions;
     onError?: () => void;
     children?: (childrenOptions: ChildrenOptions) => ReactNode;
-} & DetailedHTMLProps<HTMLAttributes<HTMLDivElement>, HTMLDivElement>;
-export default function Chat({ name, peerId, remotePeerId, peerOptions, text, voice, dialogOptions, onError, children, ...props }: Props): React.JSX.Element;
+    props: DetailedHTMLProps<HTMLAttributes<HTMLDivElement>, HTMLDivElement>;
+};
+export default function Chat({ name, peerId, remotePeerId, peerOptions, text, voice, dialogOptions, onError, children, props }: Props): React.JSX.Element;
 export declare const clearChat: () => void;
 export {};
