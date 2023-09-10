@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import useStorage, { removeStorage } from './storage.js';
 import { BiSolidMessageDetail, BiSolidMessageX, BsFillMicFill, BsFillMicMuteFill, GrSend } from './icons.js';
-export default function Chat({ name, peerId, remotePeerId, peerOptions, text = true, voice = true, dialogOptions, onError = () => console.error("Can not access microphone!"), children, props }) {
+export default function Chat({ name, peerId, remotePeerId, peerOptions, text = true, voice = true, dialogOptions, onError = () => console.error("Can not access microphone!"), children, props = {} }) {
     const [peer, setPeer] = useState();
     const [notification, setNotification] = useState(false);
     const [remotePeer, setRemotePeer] = useStorage('rpc-remote-peer', '', { save: true });

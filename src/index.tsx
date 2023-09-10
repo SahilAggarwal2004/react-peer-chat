@@ -15,13 +15,13 @@ type Props = {
     name?: string, peerId: string, remotePeerId?: string, text?: boolean, voice?: boolean, peerOptions?: PeerOptions,
     dialogOptions?: DialogOptions, onError?: () => void,
     children?: (childrenOptions: ChildrenOptions) => ReactNode,
-    props: DetailedHTMLProps<HTMLAttributes<HTMLDivElement>, HTMLDivElement>
+    props?: DetailedHTMLProps<HTMLAttributes<HTMLDivElement>, HTMLDivElement>
 }
 
 export default function Chat({
     name, peerId, remotePeerId, peerOptions, text = true, voice = true,
     dialogOptions, onError = () => console.error("Can not access microphone!"),
-    children, props
+    children, props = {}
 }: Props) {
     const [peer, setPeer] = useState<Peer>();
     const [notification, setNotification] = useState(false)
