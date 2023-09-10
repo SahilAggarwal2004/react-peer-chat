@@ -5,7 +5,7 @@ type Message = {
     text: string;
 };
 type ChildrenOptions = {
-    opponentName?: string;
+    remotePeer?: string;
     messages?: Message[];
     addMessage?: (message: Message, sendToRemotePeer?: boolean) => void;
     audio?: boolean;

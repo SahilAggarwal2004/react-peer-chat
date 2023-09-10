@@ -5,7 +5,7 @@ import { BiSolidMessageDetail, BiSolidMessageX, BsFillMicFill, BsFillMicMuteFill
 
 type Message = { id: string, text: string }
 
-type ChildrenOptions = { opponentName?: string, messages?: Message[], addMessage?: (message: Message, sendToRemotePeer?: boolean) => void, audio?: boolean, setAudio?: (audio: boolean) => void }
+type ChildrenOptions = { remotePeer?: string, messages?: Message[], addMessage?: (message: Message, sendToRemotePeer?: boolean) => void, audio?: boolean, setAudio?: (audio: boolean) => void }
 
 type DialogPosition = 'left' | 'center' | 'right'
 
@@ -24,8 +24,8 @@ export default function Chat({
     children, props
 }: Props) {
     const [peer, setPeer] = useState<Peer>();
-    const [opponentName, setOpponentName] = useState<string>();
     const [notification, setNotification] = useState(false)
+    const [remotePeer, setRemotePeer] = useStorage<string>('rpc-remote-peer', '', { save: true });
     const [messages, setMessages] = useStorage<Message[]>('rpc-messages', [], { save: true })
     const connRef = useRef<DataConnection>()
     const [dialog, setDialog] = useState(false);
@@ -44,20 +44,20 @@ export default function Chat({
         else if (!dialogRef.current?.open) setNotification(true)
     }
 
-    function handleConnection(conn: DataConnection, setName: boolean = false) {
-        if (setName) setOpponentName(conn.metadata || 'Anonymous User')
+    function handleConnection(conn: DataConnection) {
         connRef.current = conn
         conn.on('open', () => {
-            conn.send({ type: 'messages', messages })
-            conn.on('data', ({ type, message, messages }: any) => {
+            conn.on('data', ({ type, message, remotePeer, messages }: any) => {
                 if (type === 'message') addMessage(message)
-                else if (type === 'messages') {
+                else if (type === 'init') {
+                    setRemotePeer(remotePeer || 'Anonymous User')
                     setMessages(old => {
                         if (messages.length > old.length) return messages
                         return old
                     })
                 }
             })
+            conn.send({ type: 'init', remotePeer: name, messages })
         })
     }
 
@@ -79,7 +79,7 @@ export default function Chat({
         peer.on('open', () => {
             if (remotePeerId) {
                 remotePeerId = `rpc-${remotePeerId}`
-                if (text) handleConnection(peer.connect(remotePeerId, { metadata: name }), true)
+                if (text) handleConnection(peer.connect(remotePeerId, { metadata: name }))
             }
             if (audio) {
                 // @ts-ignore
@@ -129,10 +129,10 @@ export default function Chat({
     useEffect(() => {
         const container = containerRef.current
         if (container) container.scrollTop = container.scrollHeight
-    }, [dialog, opponentName, messages]);
+    }, [dialog, remotePeer, messages]);
 
     return <div className='rpc-main' {...props}>
-        {typeof children === 'function' ? children({ opponentName, messages, addMessage, audio, setAudio }) : <>
+        {typeof children === 'function' ? children({ remotePeer, messages, addMessage, audio, setAudio }) : <>
             {text && <div>
                 {dialog ? <BiSolidMessageX onClick={() => setDialog(false)} /> : <div className='rpc-notification'>
                     <BiSolidMessageDetail onClick={() => {
@@ -146,8 +146,8 @@ export default function Chat({
                     <hr />
                     <div>
                         <div ref={containerRef} className='rpc-message-container'>
-                            {opponentName && messages.map(({ id, text }, i) => <div key={i}>
-                                <strong>{id === peerId ? 'You' : opponentName}: </strong>
+                            {messages.map(({ id, text }, i) => <div key={i}>
+                                <strong>{id === peerId ? 'You' : remotePeer}: </strong>
                                 <span>{text}</span>
                             </div>)}
                         </div>
@@ -174,4 +174,7 @@ export default function Chat({
     </div>
 }
 
-export const clearChat = () => removeStorage('rpc-messages')
+export const clearChat = () => {
+    removeStorage('rpc-remote-peer')
+    removeStorage('rpc-messages')
+}
