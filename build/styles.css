@@ -55,7 +55,7 @@
 }
 
 .rpc-message-container {
-    height: 8rem;
+    height: 7rem;
     overflow-y: scroll;
     padding-inline: 0.5rem;
     margin-bottom: 0.25rem;
@@ -95,7 +95,7 @@
     border: none;
     outline: 1px solid rgba(255, 255, 255, 0.8);
     border-radius: 0.25rem;
-    padding: 0.35rem 0.25rem;
+    padding: 0.3rem 0.25rem;
 }
 
 .rpc-input::placeholder {
