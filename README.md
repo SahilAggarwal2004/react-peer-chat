@@ -1,2 +1,140 @@
 # react-peer-chat
-An easy to use react component for impleting peer-to-peer chatting.
+An easy to use react component for impleting peer-to-peer chatting using [peerjs](https://peerjs.com/) under the hood.
+
+It is as easy as to import a React component!
+## Features
+- Peer-to-peer chat without need to have any knowledge about WebRTC
+- Easy to use
+- Supports text chat that persists on page reload
+- Supports voice chat
+- Fully Customizable. See [usage with FoC](#Full-Customization)
+## Installation
+To install react-peer-chat
+```bash
+  # with npm:
+  npm install react-peer-chat --save
+
+  # with yarn:
+  yarn add react-peer-chat
+
+  # with pnpm:
+  pnpm add react-peer-chat
+
+  # with bun:
+  bun add react-peer-chat
+```
+## Usage
+When you use the `<Chat>` component of `react-peer-chat`, initially the user will see 2 buttons(svg icons), one for text chat and other for voice chat.
+#### Basic Usage
+```jsx
+import React, { useEffect } from 'react';
+import Chat, { clearChat } from 'react-peer-chat';
+import 'react-peer-chat/build/styles.css';
+
+function App() {
+    useEffect(() => {
+        return clearChat // clear the chat when app is unmounted
+    }, [])
+
+    return <Chat
+        name='John Doe'
+        peerId='some-unique-id' 
+        remotePeerId='another-unique-id'
+    />
+}
+```
+#### Partial Customization
+Use props provided by `<Chat>` component to customize it.
+```jsx
+import React from 'react';
+import Chat from 'react-peer-chat';
+import 'react-peer-chat/build/styles.css';
+
+function App() {
+    return <Chat 
+        name='John Doe'
+        peerId='some-unique-id'
+        remotePeerId='another-unique-id'
+        dialogOptions={{ 
+            position: 'left',
+            style: { padding: '4px' }
+        }}
+        props={{ title: 'React Peer Chat Component' }}
+        onError={() => {
+            console.error('Microphone not accessible!');
+        }}
+    />
+}
+```
+#### Full Customization 
+Use Function as Children(FoC) to fully customize the `<Chat>` component.
+```jsx
+import React from 'react'
+import Chat from 'react-peer-chat'
+// import 'react-peer-chat/build/styles.css' (No need to import CSS when using custom component)
+
+function App() {
+    return <Chat
+        name='John Doe'
+        peerId='some-unique-id'
+        remotePeerId='another-unique-id'
+        onError={() => {
+            console.error('Microphone not accessible!');
+        }}
+    >
+        {({ remotePeerName, messages, addMessage, audio, setAudio }) => (
+            <YourCustomComponent>
+                {...}
+            </YourCustomComponent>
+        )}
+    </Chat>
+}
+```
+## Chat Component API Reference
+Here is the full API for the `<Chat>` component, these properties can be set on an instance of Chat:
+| Parameter | Type | Required | Default | Description |
+| - | - | - | - | - |
+| `name` | `String` | No | Anonymous User | Name of the peer which will be shown to the remote peer. |
+| `peerId` | `String` | Yes | - | It is the unique id that is alloted to a peer. It uniquely identifies a peer from other peers. |
+| `remotePeerId` | `String` | No | - | It is the unique id of the remote peer. If provided, the peer will try to connect to the remote peer. |
+| `text` | `Boolean` | No | `true` | Text chat will be enabled if this property is set to true. |
+| `voice` | `Boolean` | No | `true` | Voice chat will be enabled if this property is set to true. |
+| `peerOptions` | [`PeerOptions`](#PeerOptions) | No | - | Options to customize peerjs Peer instance. |
+| `dialogOptions` | [`DialogOptions`](#DialogOptions) | No | { position: 'center' } | Options to customize text dialog box styling. |
+| `onError` | `Function` | No | `() => alert('Microphone not accessible!')` | Function to be executed when microphone is not accessible. |
+| `props` | `React.DetailedHTMLProps` | No | - | Props to customize the `<Chat>` component. |
+| `children` | [`Children`](#Children) | No | - | Props to customize the `<Chat>` component. |
+### Types
+#### PeerOptions
+```typescript
+import { PeerOptions } from 'peerjs'
+```
+#### DialogOptions
+```typescript
+import { CSSProperties } from 'react';
+type DialogPosition = 'left' | 'center' | 'right';
+type DialogOptions = {
+    position: DialogPosition;
+    style: CSSProperties;
+};
+```
+#### Children
+```typescript
+import { ReactNode } from 'react';
+type Message = {
+    id: string;
+    text: string;
+};
+type ChildrenOptions = {
+    remotePeerName?: string;
+    messages?: Message[];
+    addMessage?: (message: Message, sendToRemotePeer?: boolean) => void;
+    audio?: boolean;
+    setAudio?: (audio: boolean) => void;
+};
+type Children = (childrenOptions: ChildrenOptions) => ReactNode;
+```
+## Used By
+- [StarWars](https://starwarsgame.vercel.app/)
+## Author
+[Sahil Aggarwal](https://www.github.com/SahilAggarwal2004)

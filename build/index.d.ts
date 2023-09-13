@@ -5,7 +5,7 @@ type Message = {
     text: string;
 };
 type ChildrenOptions = {
-    remotePeer?: string;
+    remotePeerName?: string;
     messages?: Message[];
     addMessage?: (message: Message, sendToRemotePeer?: boolean) => void;
     audio?: boolean;
@@ -24,7 +24,7 @@ type Props = {
     voice?: boolean;
     peerOptions?: PeerOptions;
     dialogOptions?: DialogOptions;
-    onError?: () => void;
+    onError?: Function;
     children?: (childrenOptions: ChildrenOptions) => ReactNode;
     props?: DetailedHTMLProps<HTMLAttributes<HTMLDivElement>, HTMLDivElement>;
 };

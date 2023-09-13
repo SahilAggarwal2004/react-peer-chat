@@ -5,7 +5,7 @@ import { BiSolidMessageDetail, BiSolidMessageX, BsFillMicFill, BsFillMicMuteFill
 
 type Message = { id: string, text: string }
 
-type ChildrenOptions = { remotePeer?: string, messages?: Message[], addMessage?: (message: Message, sendToRemotePeer?: boolean) => void, audio?: boolean, setAudio?: (audio: boolean) => void }
+type ChildrenOptions = { remotePeerName?: string, messages?: Message[], addMessage?: (message: Message, sendToRemotePeer?: boolean) => void, audio?: boolean, setAudio?: (audio: boolean) => void }
 
 type DialogPosition = 'left' | 'center' | 'right'
 
@@ -13,7 +13,7 @@ type DialogOptions = { position: DialogPosition, style: CSSProperties }
 
 type Props = {
     name?: string, peerId: string, remotePeerId?: string, text?: boolean, voice?: boolean, peerOptions?: PeerOptions,
-    dialogOptions?: DialogOptions, onError?: () => void,
+    dialogOptions?: DialogOptions, onError?: Function,
     children?: (childrenOptions: ChildrenOptions) => ReactNode,
     props?: DetailedHTMLProps<HTMLAttributes<HTMLDivElement>, HTMLDivElement>
 }
@@ -25,7 +25,7 @@ export default function Chat({
 }: Props) {
     const [peer, setPeer] = useState<Peer>();
     const [notification, setNotification] = useState(false)
-    const [remotePeer, setRemotePeer] = useStorage<string>('rpc-remote-peer', '', { save: true });
+    const [remotePeerName, setRemotePeer] = useStorage<string>('rpc-remote-peer', '', { save: true });
     const [messages, setMessages] = useStorage<Message[]>('rpc-messages', [], { save: true })
     const connRef = useRef<DataConnection>()
     const [dialog, setDialog] = useState(false);
@@ -47,17 +47,17 @@ export default function Chat({
     function handleConnection(conn: DataConnection) {
         connRef.current = conn
         conn.on('open', () => {
-            conn.on('data', ({ type, message, remotePeer, messages }: any) => {
+            conn.on('data', ({ type, message, remotePeerName, messages }: any) => {
                 if (type === 'message') addMessage(message)
                 else if (type === 'init') {
-                    setRemotePeer(remotePeer || 'Anonymous User')
+                    setRemotePeer(remotePeerName || 'Anonymous User')
                     setMessages(old => {
                         if (messages.length > old.length) return messages
                         return old
                     })
                 }
             })
-            conn.send({ type: 'init', remotePeer: name, messages })
+            conn.send({ type: 'init', remotePeerName: name, messages })
         })
     }
 
@@ -131,10 +131,10 @@ export default function Chat({
     useEffect(() => {
         const container = containerRef.current
         if (container) container.scrollTop = container.scrollHeight
-    }, [dialog, remotePeer, messages]);
+    }, [dialog, remotePeerName, messages]);
 
     return <div className='rpc-main' {...props}>
-        {typeof children === 'function' ? children({ remotePeer, messages, addMessage, audio, setAudio }) : <>
+        {typeof children === 'function' ? children({ remotePeerName, messages, addMessage, audio, setAudio }) : <>
             {text && <div>
                 {dialog ? <BiSolidMessageX onClick={() => setDialog(false)} /> : <div className='rpc-notification'>
                     <BiSolidMessageDetail onClick={() => {
@@ -149,7 +149,7 @@ export default function Chat({
                     <div>
                         <div ref={containerRef} className='rpc-message-container'>
                             {messages.map(({ id, text }, i) => <div key={i}>
-                                <strong>{id === peerId ? 'You' : remotePeer}: </strong>
+                                <strong>{id === peerId ? 'You' : remotePeerName}: </strong>
                                 <span>{text}</span>
                             </div>)}
                         </div>

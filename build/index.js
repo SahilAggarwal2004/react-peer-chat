@@ -4,7 +4,7 @@ import { BiSolidMessageDetail, BiSolidMessageX, BsFillMicFill, BsFillMicMuteFill
 export default function Chat({ name, peerId, remotePeerId, peerOptions, text = true, voice = true, dialogOptions, onError = () => alert("Microphone not accessible!"), children, props = {} }) {
     const [peer, setPeer] = useState();
     const [notification, setNotification] = useState(false);
-    const [remotePeer, setRemotePeer] = useStorage('rpc-remote-peer', '', { save: true });
+    const [remotePeerName, setRemotePeer] = useStorage('rpc-remote-peer', '', { save: true });
     const [messages, setMessages] = useStorage('rpc-messages', [], { save: true });
     const connRef = useRef();
     const [dialog, setDialog] = useState(false);
@@ -26,11 +26,11 @@ export default function Chat({ name, peerId, remotePeerId, peerOptions, text = t
     function handleConnection(conn) {
         connRef.current = conn;
         conn.on('open', () => {
-            conn.on('data', ({ type, message, remotePeer, messages }) => {
+            conn.on('data', ({ type, message, remotePeerName, messages }) => {
                 if (type === 'message')
                     addMessage(message);
                 else if (type === 'init') {
-                    setRemotePeer(remotePeer || 'Anonymous User');
+                    setRemotePeer(remotePeerName || 'Anonymous User');
                     setMessages(old => {
                         if (messages.length > old.length)
                             return messages;
@@ -38,7 +38,7 @@ export default function Chat({ name, peerId, remotePeerId, peerOptions, text = t
                     });
                 }
             });
-            conn.send({ type: 'init', remotePeer: name, messages });
+            conn.send({ type: 'init', remotePeerName: name, messages });
         });
     }
     useEffect(() => {
@@ -115,9 +115,9 @@ export default function Chat({ name, peerId, remotePeerId, peerOptions, text = t
         const container = containerRef.current;
         if (container)
             container.scrollTop = container.scrollHeight;
-    }, [dialog, remotePeer, messages]);
+    }, [dialog, remotePeerName, messages]);
     return React.createElement("div", { className: 'rpc-main', ...props },
-        typeof children === 'function' ? children({ remotePeer, messages, addMessage, audio, setAudio }) : React.createElement(React.Fragment, null,
+        typeof children === 'function' ? children({ remotePeerName, messages, addMessage, audio, setAudio }) : React.createElement(React.Fragment, null,
             text && React.createElement("div", null,
                 dialog ? React.createElement(BiSolidMessageX, { onClick: () => setDialog(false) }) : React.createElement("div", { className: 'rpc-notification' },
                     React.createElement(BiSolidMessageDetail, { onClick: () => {
@@ -131,7 +131,7 @@ export default function Chat({ name, peerId, remotePeerId, peerOptions, text = t
                     React.createElement("div", null,
                         React.createElement("div", { ref: containerRef, className: 'rpc-message-container' }, messages.map(({ id, text }, i) => React.createElement("div", { key: i },
                             React.createElement("strong", null,
-                                id === peerId ? 'You' : remotePeer,
+                                id === peerId ? 'You' : remotePeerName,
                                 ": "),
                             React.createElement("span", null, text)))),
                         React.createElement("hr", null),
