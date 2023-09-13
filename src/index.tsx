@@ -133,9 +133,9 @@ export default function Chat({
         if (container) container.scrollTop = container.scrollHeight
     }, [dialog, remotePeerName, messages]);
 
-    return <div className='rpc-main' {...props}>
+    return <div className='rpc-main rpc-font' {...props}>
         {typeof children === 'function' ? children({ remotePeerName, messages, addMessage, audio, setAudio }) : <>
-            {text && <div>
+            {text && <div className='rpc-dialog-container'>
                 {dialog ? <BiSolidMessageX onClick={() => setDialog(false)} /> : <div className='rpc-notification'>
                     <BiSolidMessageDetail onClick={() => {
                         setNotification(false);
@@ -145,7 +145,7 @@ export default function Chat({
                 </div>}
                 <dialog ref={dialogRef} className={`${dialog ? 'rpc-dialog' : ''} rpc-position-${dialogOptions?.position || 'center'}`} style={dialogOptions?.style}>
                     <div className='rpc-heading'>Chat</div>
-                    <hr />
+                    <hr className='rpc-hr' />
                     <div>
                         <div ref={containerRef} className='rpc-message-container'>
                             {messages.map(({ id, text }, i) => <div key={i}>
@@ -153,7 +153,7 @@ export default function Chat({
                                 <span>{text}</span>
                             </div>)}
                         </div>
-                        <hr />
+                        <hr className='rpc-hr' />
                         <form className='rpc-input-container' onSubmit={e => {
                             e.preventDefault()
                             const text = inputRef.current?.value
@@ -162,8 +162,8 @@ export default function Chat({
                                 addMessage({ id: peerId, text }, true)
                             }
                         }}>
-                            <input ref={inputRef} className='rpc-input' placeholder='Enter a message' />
-                            <button type='submit'><GrSend /></button>
+                            <input ref={inputRef} className='rpc-input rpc-font' placeholder='Enter a message' />
+                            <button type='submit' className='rpc-button'><GrSend /></button>
                         </form>
                     </div>
                 </dialog>

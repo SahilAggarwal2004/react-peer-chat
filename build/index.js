@@ -116,9 +116,9 @@ export default function Chat({ name, peerId, remotePeerId, peerOptions, text = t
         if (container)
             container.scrollTop = container.scrollHeight;
     }, [dialog, remotePeerName, messages]);
-    return React.createElement("div", { className: 'rpc-main', ...props },
+    return React.createElement("div", { className: 'rpc-main rpc-font', ...props },
         typeof children === 'function' ? children({ remotePeerName, messages, addMessage, audio, setAudio }) : React.createElement(React.Fragment, null,
-            text && React.createElement("div", null,
+            text && React.createElement("div", { className: 'rpc-dialog-container' },
                 dialog ? React.createElement(BiSolidMessageX, { onClick: () => setDialog(false) }) : React.createElement("div", { className: 'rpc-notification' },
                     React.createElement(BiSolidMessageDetail, { onClick: () => {
                             setNotification(false);
@@ -127,14 +127,14 @@ export default function Chat({ name, peerId, remotePeerId, peerOptions, text = t
                     notification && React.createElement("span", { className: 'rpc-badge' })),
                 React.createElement("dialog", { ref: dialogRef, className: `${dialog ? 'rpc-dialog' : ''} rpc-position-${(dialogOptions === null || dialogOptions === void 0 ? void 0 : dialogOptions.position) || 'center'}`, style: dialogOptions === null || dialogOptions === void 0 ? void 0 : dialogOptions.style },
                     React.createElement("div", { className: 'rpc-heading' }, "Chat"),
-                    React.createElement("hr", null),
+                    React.createElement("hr", { className: 'rpc-hr' }),
                     React.createElement("div", null,
                         React.createElement("div", { ref: containerRef, className: 'rpc-message-container' }, messages.map(({ id, text }, i) => React.createElement("div", { key: i },
                             React.createElement("strong", null,
                                 id === peerId ? 'You' : remotePeerName,
                                 ": "),
                             React.createElement("span", null, text)))),
-                        React.createElement("hr", null),
+                        React.createElement("hr", { className: 'rpc-hr' }),
                         React.createElement("form", { className: 'rpc-input-container', onSubmit: e => {
                                 var _a;
                                 e.preventDefault();
@@ -144,8 +144,8 @@ export default function Chat({ name, peerId, remotePeerId, peerOptions, text = t
                                     addMessage({ id: peerId, text }, true);
                                 }
                             } },
-                            React.createElement("input", { ref: inputRef, className: 'rpc-input', placeholder: 'Enter a message' }),
-                            React.createElement("button", { type: 'submit' },
+                            React.createElement("input", { ref: inputRef, className: 'rpc-input rpc-font', placeholder: 'Enter a message' }),
+                            React.createElement("button", { type: 'submit', className: 'rpc-button' },
                                 React.createElement(GrSend, null)))))),
             voice && React.createElement("div", null, audio ? React.createElement(BsFillMicFill, { title: "Turn mic off", onClick: () => setAudio(false) }) : React.createElement(BsFillMicMuteFill, { title: "Turn mic on", onClick: () => setAudio(true) }))),
         voice && audio && React.createElement("audio", { ref: streamRef, autoPlay: true, style: { display: 'none' } }));

@@ -6,6 +6,7 @@ It is as easy as to import a React component!
 - Peer-to-peer chat without need to have any knowledge about WebRTC
 - Easy to use
 - Supports text chat that persists on page reload
+- Clear text chat on command
 - Supports voice chat
 - Fully Customizable. See [usage with FoC](#Full-Customization)
 ## Installation
@@ -24,23 +25,25 @@ To install react-peer-chat
   bun add react-peer-chat
 ```
 ## Usage
-When you use the `<Chat>` component of `react-peer-chat`, initially the user will see 2 buttons(svg icons), one for text chat and other for voice chat.
+`react-peer-chat` default exports `<Chat>` component. When you use the `<Chat>` component, initially the user will see 2 buttons (svg icons), one for text chat and other for voice chat.
+
+It also exports a `clearChat` function that clears the text chat whenever invoked.
 #### Basic Usage
 ```jsx
-import React, { useEffect } from 'react';
+import React from 'react';
 import Chat, { clearChat } from 'react-peer-chat';
 import 'react-peer-chat/build/styles.css';
 
-function App() {
-    useEffect(() => {
-        return clearChat // clear the chat when app is unmounted
-    }, [])
-
-    return <Chat
-        name='John Doe'
-        peerId='some-unique-id' 
-        remotePeerId='another-unique-id'
-    />
+export default function App() {
+    return <div>
+        <Chat
+            name='John Doe'
+            peerId='some-unique-id' 
+            remotePeerId='another-unique-id'
+        />
+        {/* Text chat will be cleared when following button is clicked. */}
+        <button onClick={clearChat}>Clear Chat</button>
+    </div>
 }
 ```
 #### Partial Customization
@@ -50,7 +53,7 @@ import React from 'react';
 import Chat from 'react-peer-chat';
 import 'react-peer-chat/build/styles.css';
 
-function App() {
+export default function App() {
     return <Chat 
         name='John Doe'
         peerId='some-unique-id'
@@ -73,7 +76,7 @@ import React from 'react'
 import Chat from 'react-peer-chat'
 // import 'react-peer-chat/build/styles.css' (No need to import CSS when using custom component)
 
-function App() {
+export default function App() {
     return <Chat
         name='John Doe'
         peerId='some-unique-id'

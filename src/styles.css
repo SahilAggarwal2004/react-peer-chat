@@ -1,7 +1,15 @@
+.rpc-font {
+    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+}
+
 .rpc-main {
     display: flex;
     align-items: center;
     column-gap: 0.5rem;
+}
+
+.rpc-dialog-container {
+    position: relative;
 }
 
 .rpc-notification {
@@ -19,32 +27,35 @@
 }
 
 .rpc-dialog {
-    display: flex;
-    flex-direction: column;
-    row-gap: 0.25rem;
+    position: absolute;
     background-color: black;
     color: white;
-    padding-top: 0.25rem;
-    outline: 2px solid white;
-    border-radius: 0.25rem;
-    font-size: smaller;
+    padding: 0.4rem 0 0.25rem 0;
+    border-radius: 0.4rem;
+    font-size: small;
 }
 
 .rpc-position-left {
-    left: 0.5rem;
+    left: 0.6rem;
     translate: -100%;
 }
 
 .rpc-position-center {
+    left: 0.5rem;
     translate: -50%;
 }
 
 .rpc-position-right {
-    left: 0.5rem;
+    left: 0.3rem;
+}
+
+.rpc-hr {
+    margin: 0.25rem 0;
+    border-color: rgba(255, 255, 255, 0.7);
 }
 
 .rpc-message-container {
-    height: 6rem;
+    height: 8rem;
     overflow-y: scroll;
     padding-inline: 0.5rem;
     margin-bottom: 0.25rem;
@@ -64,27 +75,45 @@
 
 .rpc-heading {
     text-align: center;
+    font-size: medium;
     font-weight: bold;
     padding-inline: 0.5rem;
 }
 
 .rpc-input-container {
     display: flex;
+    width: 15rem;
+    max-width: 90vw;
     column-gap: 0.25rem;
-    padding-inline: 0.5rem;
-    padding-block: 0.4rem;
+    padding: 0.25rem 0.5rem;
 }
 
 .rpc-input {
+    color: white;
+    width: 100%;
     background-color: black;
     border: none;
     outline: 1px solid rgba(255, 255, 255, 0.8);
     border-radius: 0.25rem;
-    padding-inline: 0.25rem;
+    padding: 0.35rem 0.25rem;
+}
+
+.rpc-input::placeholder {
+    color: rgba(255, 255, 255, 0.7);
 }
 
 .rpc-input:focus {
     outline: 2px solid white;
+}
+
+.rpc-button {
+    all: unset;
+    display: flex;
+}
+
+.rpc-icon-container {
+    display: flex;
+    align-items: center;
 }
 
 .rpc-scale-down {
