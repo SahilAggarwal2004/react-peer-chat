@@ -136,8 +136,8 @@ export default function Chat({
     return <div className='rpc-main rpc-font' {...props}>
         {typeof children === 'function' ? children({ remotePeerName, messages, addMessage, audio, setAudio }) : <>
             {text && <div className='rpc-dialog-container'>
-                {dialog ? <BiSolidMessageX onClick={() => setDialog(false)} /> : <div className='rpc-notification'>
-                    <BiSolidMessageDetail onClick={() => {
+                {dialog ? <BiSolidMessageX title='Close chat' onClick={() => setDialog(false)} /> : <div className='rpc-notification'>
+                    <BiSolidMessageDetail title='Open chat' onClick={() => {
                         setNotification(false);
                         setDialog(true);
                     }} />
@@ -163,7 +163,7 @@ export default function Chat({
                             }
                         }}>
                             <input ref={inputRef} className='rpc-input rpc-font' placeholder='Enter a message' />
-                            <button type='submit' className='rpc-button'><GrSend /></button>
+                            <button type='submit' className='rpc-button'><GrSend title='Send message' /></button>
                         </form>
                     </div>
                 </dialog>

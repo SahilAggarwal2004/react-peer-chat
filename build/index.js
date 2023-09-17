@@ -119,8 +119,8 @@ export default function Chat({ name, peerId, remotePeerId, peerOptions, text = t
     return React.createElement("div", { className: 'rpc-main rpc-font', ...props },
         typeof children === 'function' ? children({ remotePeerName, messages, addMessage, audio, setAudio }) : React.createElement(React.Fragment, null,
             text && React.createElement("div", { className: 'rpc-dialog-container' },
-                dialog ? React.createElement(BiSolidMessageX, { onClick: () => setDialog(false) }) : React.createElement("div", { className: 'rpc-notification' },
-                    React.createElement(BiSolidMessageDetail, { onClick: () => {
+                dialog ? React.createElement(BiSolidMessageX, { title: 'Close chat', onClick: () => setDialog(false) }) : React.createElement("div", { className: 'rpc-notification' },
+                    React.createElement(BiSolidMessageDetail, { title: 'Open chat', onClick: () => {
                             setNotification(false);
                             setDialog(true);
                         } }),
@@ -146,7 +146,7 @@ export default function Chat({ name, peerId, remotePeerId, peerOptions, text = t
                             } },
                             React.createElement("input", { ref: inputRef, className: 'rpc-input rpc-font', placeholder: 'Enter a message' }),
                             React.createElement("button", { type: 'submit', className: 'rpc-button' },
-                                React.createElement(GrSend, null)))))),
+                                React.createElement(GrSend, { title: 'Send message' })))))),
             voice && React.createElement("div", null, audio ? React.createElement(BsFillMicFill, { title: "Turn mic off", onClick: () => setAudio(false) }) : React.createElement(BsFillMicMuteFill, { title: "Turn mic on", onClick: () => setAudio(true) }))),
         voice && audio && React.createElement("audio", { ref: streamRef, autoPlay: true, style: { display: 'none' } }));
 }
