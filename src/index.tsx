@@ -1,28 +1,52 @@
 import React, { CSSProperties, DetailedHTMLProps, HTMLAttributes, ReactNode, useEffect, useRef, useState } from 'react'
-import { Peer, DataConnection, MediaConnection, PeerOptions } from 'peerjs'
+import { Peer, DataConnection, MediaConnection, PeerOptions as ImportedPeerOptions } from 'peerjs'
 import useStorage, { removeStorage } from './storage.js'
 import { BiSolidMessageDetail, BiSolidMessageX, BsFillMicFill, BsFillMicMuteFill, GrSend } from './icons.js'
 
-type Message = { id: string, text: string }
+export type PeerOptions = ImportedPeerOptions
 
-type ChildrenOptions = { remotePeerName?: string, messages?: Message[], addMessage?: (message: Message, sendToRemotePeer?: boolean) => void, audio?: boolean, setAudio?: (audio: boolean) => void }
+export type DialogPosition = 'left' | 'center' | 'right'
 
-type DialogPosition = 'left' | 'center' | 'right'
+export interface DialogOptions {
+    position?: DialogPosition
+    style?: CSSProperties
+}
 
-type DialogOptions = { position: DialogPosition, style: CSSProperties }
+export interface Message {
+    id: string
+    text: string
+}
 
-type Props = {
-    name?: string, peerId: string, remotePeerId?: string, text?: boolean, voice?: boolean, peerOptions?: PeerOptions,
-    dialogOptions?: DialogOptions, onError?: Function,
-    children?: (childrenOptions: ChildrenOptions) => ReactNode,
-    props?: DetailedHTMLProps<HTMLAttributes<HTMLDivElement>, HTMLDivElement>
+export interface ChildrenOptions {
+    remotePeerName?: string
+    messages?: Message[]
+    addMessage?: (message: Message, sendToRemotePeer?: boolean) => void
+    audio?: boolean
+    setAudio?: (audio: boolean) => void
+}
+
+export type Children = (childrenOptions: ChildrenOptions) => ReactNode
+
+export type Props = DetailedHTMLProps<HTMLAttributes<HTMLDivElement>, HTMLDivElement>
+
+export interface ChatProps {
+    name?: string
+    peerId: string
+    remotePeerId?: string
+    text?: boolean
+    voice?: boolean
+    peerOptions?: PeerOptions
+    dialogOptions?: DialogOptions
+    onError?: Function
+    children?: Children
+    props?: Props
 }
 
 export default function Chat({
     name, peerId, remotePeerId, peerOptions, text = true, voice = true,
     dialogOptions, onError = () => alert("Microphone not accessible!"),
     children, props = {}
-}: Props) {
+}: ChatProps) {
     const [peer, setPeer] = useState<Peer>();
     const [notification, setNotification] = useState(false)
     const [remotePeerName, setRemotePeer] = useStorage<string>('rpc-remote-peer', '', { save: true });
