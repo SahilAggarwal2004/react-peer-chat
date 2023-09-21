@@ -1,17 +1,21 @@
 import React, { CSSProperties, DetailedHTMLProps, HTMLAttributes, ReactNode } from 'react';
 import { PeerOptions as ImportedPeerOptions } from 'peerjs';
+export type RemotePeerId = string | string[];
 export type PeerOptions = ImportedPeerOptions;
 export type DialogPosition = 'left' | 'center' | 'right';
 export interface DialogOptions {
     position?: DialogPosition;
     style?: CSSProperties;
 }
+type RemotePeers = {
+    [id: string]: string;
+};
 export interface Message {
     id: string;
     text: string;
 }
 export interface ChildrenOptions {
-    remotePeerName?: string;
+    remotePeers?: RemotePeers;
     messages?: Message[];
     addMessage?: (message: Message, sendToRemotePeer?: boolean) => void;
     audio?: boolean;
@@ -22,7 +26,7 @@ export type Props = DetailedHTMLProps<HTMLAttributes<HTMLDivElement>, HTMLDivEle
 export interface ChatProps {
     name?: string;
     peerId: string;
-    remotePeerId?: string;
+    remotePeerId?: RemotePeerId;
     text?: boolean;
     voice?: boolean;
     peerOptions?: PeerOptions;
@@ -33,3 +37,4 @@ export interface ChatProps {
 }
 export default function Chat({ name, peerId, remotePeerId, peerOptions, text, voice, dialogOptions, onError, children, props }: ChatProps): React.JSX.Element;
 export declare const clearChat: () => void;
+export {};

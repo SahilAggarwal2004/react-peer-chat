@@ -1,13 +1,13 @@
 # react-peer-chat
 An easy to use react component for impleting peer-to-peer chatting using [peerjs](https://peerjs.com/) under the hood.
 
-It is as easy as to import a React component!
 ## Features
 - Peer-to-peer chat without need to have any knowledge about WebRTC
 - Easy to use
 - Supports text chat that persists on page reload
 - Clear text chat on command
 - Supports voice chat
+- Multiple peer connections. See [multi peer usage](#Multi-Peer-Usage)
 - Fully Customizable. See [usage with FoC](#Full-Customization)
 ## Installation
 To install react-peer-chat
@@ -38,8 +38,26 @@ export default function App() {
     return <div>
         <Chat
             name='John Doe'
-            peerId='some-unique-id' 
-            remotePeerId='another-unique-id'
+            peerId='my-unique-id'
+            remotePeerId='remote-unique-id'
+        />
+        {/* Text chat will be cleared when following button is clicked. */}
+        <button onClick={clearChat}>Clear Chat</button>
+    </div>
+}
+```
+#### Multi Peer Usage
+```jsx
+import React from 'react';
+import Chat, { clearChat } from 'react-peer-chat';
+import 'react-peer-chat/build/styles.css';
+
+export default function App() {
+    return <div>
+        <Chat
+            name='John Doe'
+            peerId='my-unique-id'
+            remotePeerId={['remote-unique-id-1', 'remote-unique-id-2', 'remote-unique-id-3']} // Array of remote peer ids
         />
         {/* Text chat will be cleared when following button is clicked. */}
         <button onClick={clearChat}>Clear Chat</button>
@@ -56,9 +74,9 @@ import 'react-peer-chat/build/styles.css';
 export default function App() {
     return <Chat 
         name='John Doe'
-        peerId='some-unique-id'
-        remotePeerId='another-unique-id'
-        dialogOptions={{ 
+        peerId='my-unique-id'
+        remotePeerId='remote-unique-id'
+        dialogOptions={{
             position: 'left',
             style: { padding: '4px' }
         }}
@@ -79,13 +97,13 @@ import Chat from 'react-peer-chat'
 export default function App() {
     return <Chat
         name='John Doe'
-        peerId='some-unique-id'
-        remotePeerId='another-unique-id'
+        peerId='my-unique-id'
+        remotePeerId='remote-unique-id'
         onError={() => {
             console.error('Microphone not accessible!');
         }}
     >
-        {({ remotePeerName, messages, addMessage, audio, setAudio }) => (
+        {({ remotePeers, messages, addMessage, audio, setAudio }) => (
             <YourCustomComponent>
                 {...}
             </YourCustomComponent>
@@ -97,11 +115,11 @@ export default function App() {
 Here is the full API for the `<Chat>` component, these properties can be set on an instance of Chat:
 | Parameter | Type | Required | Default | Description |
 | - | - | - | - | - |
-| `name` | `String` | No | Anonymous User | Name of the peer which will be shown to the remote peer. |
-| `peerId` | `String` | Yes | - | It is the unique id that is alloted to a peer. It uniquely identifies a peer from other peers. |
-| `remotePeerId` | `String` | No | - | It is the unique id of the remote peer. If provided, the peer will try to connect to the remote peer. |
-| `text` | `Boolean` | No | `true` | Text chat will be enabled if this property is set to true. |
-| `voice` | `Boolean` | No | `true` | Voice chat will be enabled if this property is set to true. |
+| `name` | `string` | No | Anonymous User | Name of the peer which will be shown to the remote peer. |
+| `peerId` | `string` | Yes | - | It is the unique id that is alloted to a peer. It uniquely identifies a peer from other peers. |
+| `remotePeerId` | `string \| string[]` | No | - | It is the unique id (or array of unique ids) of the remote peer(s). If provided, the peer will try to connect to the remote peer(s). |
+| `text` | `boolean` | No | `true` | Text chat will be enabled if this property is set to true. |
+| `voice` | `boolean` | No | `true` | Voice chat will be enabled if this property is set to true. |
 | `peerOptions` | [`PeerOptions`](#PeerOptions) | No | - | Options to customize peerjs Peer instance. |
 | `dialogOptions` | [`DialogOptions`](#DialogOptions) | No | { position: 'center' } | Options to customize text dialog box styling. |
 | `onError` | `Function` | No | `() => alert('Microphone not accessible!')` | Function to be executed when microphone is not accessible. |
@@ -124,12 +142,13 @@ type DialogOptions = {
 #### Children
 ```typescript
 import { ReactNode } from 'react';
+type RemotePeers = { [id: string]: string }
 type Message = {
     id: string;
     text: string;
 };
 type ChildrenOptions = {
-    remotePeerName?: string;
+    remotePeers?: RemotePeers;
     messages?: Message[];
     addMessage?: (message: Message, sendToRemotePeer?: boolean) => void;
     audio?: boolean;
