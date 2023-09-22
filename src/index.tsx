@@ -42,9 +42,12 @@ export interface ChatProps {
     peerOptions?: PeerOptions
     dialogOptions?: DialogOptions
     onError?: Function
+    onMicError?: Function
     children?: Children
     props?: Props
 }
+
+export type { IconProps } from './icons.js'
 
 function closeConnection(conn: DataConnection | MediaConnection) {
     conn.removeAllListeners()
@@ -52,8 +55,9 @@ function closeConnection(conn: DataConnection | MediaConnection) {
 }
 
 export default function Chat({
-    name, peerId, remotePeerId = [], peerOptions, text = true, voice = true,
-    dialogOptions, onError = () => alert("Microphone not accessible!"),
+    name, peerId, remotePeerId = [], peerOptions, text = true, voice = true, dialogOptions,
+    onError = () => alert('Browser not supported! Try some other browser.'),
+    onMicError = () => alert('Microphone not accessible!'),
     children, props = {}
 }: ChatProps) {
     const [peer, setPeer] = useState<Peer>();
@@ -102,7 +106,8 @@ export default function Chat({
             return
         }
         (async function () {
-            const { Peer } = await import('peerjs');
+            const { Peer, util: { supports: { audioVideo, data } } } = await import('peerjs');
+            if (!data || !audioVideo) return onError()
             const peer = new Peer(peerId, peerOptions)
             setPeer(peer)
         })();
@@ -140,8 +145,8 @@ export default function Chat({
                             call.on('close', call.removeAllListeners)
                             calls[call.peer] = call
                         })
-                    }, onError);
-                } catch { onError() }
+                    }, onMicError);
+                } catch { onMicError() }
             }
         })
 
@@ -203,7 +208,7 @@ export default function Chat({
                 </dialog>
             </div>}
             {voice && <div>
-                {audio ? <BsFillMicFill title="Turn mic off" onClick={() => setAudio(false)} /> : <BsFillMicMuteFill title="Turn mic on" onClick={() => setAudio(true)} />}
+                {audio ? <BsFillMicFill title='Turn mic off' onClick={() => setAudio(false)} /> : <BsFillMicMuteFill title='Turn mic on' onClick={() => setAudio(true)} />}
             </div>}
         </>}
         {voice && audio && <audio ref={streamRef} autoPlay style={{ display: 'none' }} />}

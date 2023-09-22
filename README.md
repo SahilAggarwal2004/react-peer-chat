@@ -81,9 +81,8 @@ export default function App() {
             style: { padding: '4px' }
         }}
         props={{ title: 'React Peer Chat Component' }}
-        onError={() => {
-            console.error('Microphone not accessible!');
-        }}
+        onError={() => console.error('Browser not supported!')}
+        onMicError={() => console.error('Microphone not accessible!')}
     />
 }
 ```
@@ -99,9 +98,8 @@ export default function App() {
         name='John Doe'
         peerId='my-unique-id'
         remotePeerId='remote-unique-id'
-        onError={() => {
-            console.error('Microphone not accessible!');
-        }}
+        onError={() => console.error('Browser not supported!')}
+        onMicError={() => console.error('Microphone not accessible!')}
     >
         {({ remotePeers, messages, addMessage, audio, setAudio }) => (
             <YourCustomComponent>
@@ -122,7 +120,8 @@ Here is the full API for the `<Chat>` component, these properties can be set on 
 | `voice` | `boolean` | No | `true` | Voice chat will be enabled if this property is set to true. |
 | `peerOptions` | [`PeerOptions`](#PeerOptions) | No | - | Options to customize peerjs Peer instance. |
 | `dialogOptions` | [`DialogOptions`](#DialogOptions) | No | { position: 'center' } | Options to customize text dialog box styling. |
-| `onError` | `Function` | No | `() => alert('Microphone not accessible!')` | Function to be executed when microphone is not accessible. |
+| `onError` | `Function` | No | `() => alert('Browser not supported! Try some other browser.')` | Function to be executed if browser doesn't support [WebRTC](https://webrtc.org/). |
+| `onMicError` | `Function` | No | `() => alert('Microphone not accessible!')` | Function to be executed when microphone is not accessible. |
 | `props` | `React.DetailedHTMLProps` | No | - | Props to customize the `<Chat>` component. |
 | `children` | [`Children`](#Children) | No | - | Props to customize the `<Chat>` component. |
 ### Types
