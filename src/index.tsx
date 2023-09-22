@@ -61,15 +61,15 @@ export default function Chat({
     children, props = {}
 }: ChatProps) {
     const [peer, setPeer] = useState<Peer>();
-    const [notification, setNotification] = useState(false)
-    const [remotePeers, setRemotePeers] = useStorage<RemotePeers>('rpc-remote-peer', {}, { save: true });
-    const [messages, setMessages] = useStorage<Message[]>('rpc-messages', [], { save: true })
+    const [notification, setNotification] = useState(false);
+    const [remotePeers, setRemotePeers] = useStorage<RemotePeers>('rpc-remote-peer', {});
+    const [messages, setMessages] = useStorage<Message[]>('rpc-messages', []);
     const connRef = useRef<{ [id: string]: DataConnection }>({})
     const [dialog, setDialog] = useState(false);
     const dialogRef = useRef<HTMLDialogElement>(null);
     const containerRef = useRef<HTMLDivElement>(null);
     const inputRef = useRef<HTMLInputElement>(null);
-    const [audio, setAudio] = useStorage('rpc-audio', false, { local: true, save: true })
+    const [audio, setAudio] = useStorage('rpc-audio', false, true);
     const streamRef = useRef<HTMLMediaElement>(null);
     const localStream = useRef<MediaStream>();
 
