@@ -100,6 +100,11 @@ export default function Chat({
         conn.on('close', conn.removeAllListeners)
     }
 
+    function handleError() {
+        setAudio(false)
+        onMicError()
+    }
+
     useEffect(() => {
         if (!text && !audio) {
             setPeer(undefined);
@@ -145,8 +150,8 @@ export default function Chat({
                             call.on('close', call.removeAllListeners)
                             calls[call.peer] = call
                         })
-                    }, onMicError);
-                } catch { onMicError() }
+                    }, handleError);
+                } catch { handleError() }
             }
         })
 
