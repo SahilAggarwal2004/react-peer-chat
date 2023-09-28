@@ -38,8 +38,8 @@ export interface ChatProps {
     peerId: string
     remotePeerId?: RemotePeerId
     text?: boolean
-    voice?: boolean
     recoverChat?: boolean
+    voice?: boolean
     peerOptions?: PeerOptions
     dialogOptions?: DialogOptions
     onError?: Function
@@ -56,7 +56,7 @@ function closeConnection(conn: DataConnection | MediaConnection) {
 }
 
 export default function Chat({
-    name, peerId, remotePeerId = [], peerOptions, text = true, voice = true, recoverChat = false, dialogOptions,
+    name, peerId, remotePeerId = [], peerOptions, text = true, recoverChat = false, voice = true, dialogOptions,
     onError = () => alert('Browser not supported! Try some other browser.'),
     onMicError = () => alert('Microphone not accessible!'),
     children, props = {}
