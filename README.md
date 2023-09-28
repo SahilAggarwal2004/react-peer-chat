@@ -118,6 +118,7 @@ Here is the full API for the `<Chat>` component, these properties can be set on 
 | `remotePeerId` | `string \| string[]` | No | - | It is the unique id (or array of unique ids) of the remote peer(s). If provided, the peer will try to connect to the remote peer(s). |
 | `text` | `boolean` | No | `true` | Text chat will be enabled if this property is set to true. |
 | `voice` | `boolean` | No | `true` | Voice chat will be enabled if this property is set to true. |
+| `recoverChat` | `boolean` | No | `false` | Old chats will be recovered upon reconnecting with the same peer(s). |
 | `peerOptions` | [`PeerOptions`](#PeerOptions) | No | - | Options to customize peerjs Peer instance. |
 | `dialogOptions` | [`DialogOptions`](#DialogOptions) | No | { position: 'center' } | Options to customize text dialog box styling. |
 | `onError` | `Function` | No | `() => alert('Browser not supported! Try some other browser.')` | Function to be executed if browser doesn't support [WebRTC](https://webrtc.org/). |

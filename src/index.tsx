@@ -39,6 +39,7 @@ export interface ChatProps {
     remotePeerId?: RemotePeerId
     text?: boolean
     voice?: boolean
+    recoverChat?: boolean
     peerOptions?: PeerOptions
     dialogOptions?: DialogOptions
     onError?: Function
@@ -55,7 +56,7 @@ function closeConnection(conn: DataConnection | MediaConnection) {
 }
 
 export default function Chat({
-    name, peerId, remotePeerId = [], peerOptions, text = true, voice = true, dialogOptions,
+    name, peerId, remotePeerId = [], peerOptions, text = true, voice = true, recoverChat = false, dialogOptions,
     onError = () => alert('Browser not supported! Try some other browser.'),
     onMicError = () => alert('Microphone not accessible!'),
     children, props = {}
@@ -88,14 +89,17 @@ export default function Chat({
     function handleConnection(conn: DataConnection) {
         connRef.current[conn.peer] = conn
         conn.on('open', () => {
-            conn.on('data', ({ type, message, remotePeerName }: any) => {
+            conn.on('data', ({ type, message, remotePeerName, messages }: any) => {
                 if (type === 'message') addMessage(message)
-                else if (type === 'init') setRemotePeers(prev => {
-                    prev[conn.peer] = remotePeerName || 'Anonymous User'
-                    return prev
-                })
+                else if (type === 'init') {
+                    setRemotePeers(prev => {
+                        prev[conn.peer] = remotePeerName || 'Anonymous User'
+                        return prev
+                    })
+                    if (recoverChat) setMessages(old => messages.length > old.length ? messages : old)
+                }
             })
-            conn.send({ type: 'init', remotePeerName: name })
+            conn.send({ type: 'init', remotePeerName: name, messages })
         })
         conn.on('close', conn.removeAllListeners)
     }
