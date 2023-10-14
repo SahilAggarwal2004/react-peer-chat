@@ -122,7 +122,7 @@ Here is the full API for the `<Chat>` component, these properties can be set on 
 | `voice` | `boolean` | No | `true` | Voice chat will be enabled if this property is set to true. |
 | `peerOptions` | [`PeerOptions`](#PeerOptions) | No | - | Options to customize peerjs Peer instance. |
 | `dialogOptions` | [`DialogOptions`](#DialogOptions) | No | { position: 'center' } | Options to customize text dialog box styling. |
-| `onError` | `Function` | No | `() => alert('Browser not supported! Try some other browser.')` | Function to be executed if browser doesn't support [WebRTC](https://webrtc.org/). |
+| `onError` | `Function` | No | `() => alert('Browser not supported! Try some other browser.')` | Function to be executed if browser doesn't support `WebRTC` |
 | `onMicError` | `Function` | No | `() => alert('Microphone not accessible!')` | Function to be executed when microphone is not accessible. |
 | `props` | `React.DetailedHTMLProps` | No | - | Props to customize the `<Chat>` component. |
 | `children` | [`Children`](#Children) | No | - | Props to customize the `<Chat>` component. |
@@ -157,7 +157,5 @@ type ChildrenOptions = {
 };
 type Children = (childrenOptions: ChildrenOptions) => ReactNode;
 ```
-## Used By
-- [StarWars](https://starwarsgame.vercel.app/)
 ## Author
 [Sahil Aggarwal](https://www.github.com/SahilAggarwal2004)

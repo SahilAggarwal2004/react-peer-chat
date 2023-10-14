@@ -14,7 +14,7 @@ export interface DialogOptions {
     style?: CSSProperties
 }
 
-type RemotePeers = { [id: string]: string }
+export type RemotePeers = { [id: string]: string }
 
 export interface Message {
     id: string
