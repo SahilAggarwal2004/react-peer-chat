@@ -30,9 +30,6 @@
     "url": "https://github.com/SahilAggarwal2004/react-peer-chat/issues"
   },
   "homepage": "https://github.com/SahilAggarwal2004/react-peer-chat#readme",
-  "publishConfig": {
-    "@sahilaggarwal2004:registry": "https://npm.pkg.github.com"
-  },
   "peerDependencies": {
     "react": ">=16.0.0",
     "react-dom": ">=16.0.0"
