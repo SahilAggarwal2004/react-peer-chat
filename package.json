@@ -7,7 +7,7 @@
   "types": "dist/index.d.ts",
   "scripts": {
     "copy": "copy .\\src\\*.css dist",
-    "build": "pnpm i && tsc && pnpm copy"
+    "build": "npm i && tsc && npm run copy"
   },
   "repository": {
     "type": "git",
