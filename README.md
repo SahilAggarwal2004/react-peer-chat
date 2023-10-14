@@ -33,7 +33,7 @@ It also exports a `clearChat` function that clears the text chat whenever invoke
 ```jsx
 import React from 'react';
 import Chat, { clearChat } from 'react-peer-chat';
-import 'react-peer-chat/build/styles.css';
+import 'react-peer-chat/dist/styles.css';
 
 export default function App() {
     return <div>
@@ -51,7 +51,7 @@ export default function App() {
 ```jsx
 import React from 'react';
 import Chat, { clearChat } from 'react-peer-chat';
-import 'react-peer-chat/build/styles.css';
+import 'react-peer-chat/dist/styles.css';
 
 export default function App() {
     return <div>
@@ -70,7 +70,7 @@ Use props provided by `<Chat>` component to customize it.
 ```jsx
 import React from 'react';
 import Chat from 'react-peer-chat';
-import 'react-peer-chat/build/styles.css';
+import 'react-peer-chat/dist/styles.css';
 
 export default function App() {
     return <Chat 
@@ -92,7 +92,7 @@ Use Function as Children(FoC) to fully customize the `<Chat>` component.
 ```jsx
 import React from 'react'
 import Chat from 'react-peer-chat'
-// import 'react-peer-chat/build/styles.css' (No need to import CSS when using custom component)
+// import 'react-peer-chat/dist/styles.css' (No need to import CSS when using custom component)
 
 export default function App() {
     return <Chat
@@ -125,7 +125,7 @@ Here is the full API for the `<Chat>` component, these properties can be set on 
 | `onError` | `Function` | No | `() => alert('Browser not supported! Try some other browser.')` | Function to be executed if browser doesn't support `WebRTC` |
 | `onMicError` | `Function` | No | `() => alert('Microphone not accessible!')` | Function to be executed when microphone is not accessible. |
 | `props` | `React.DetailedHTMLProps` | No | - | Props to customize the `<Chat>` component. |
-| `children` | [`Children`](#Children) | No | - | Props to customize the `<Chat>` component. |
+| `children` | [`Children`](#Children) | No | - | See [usage with FoC](#Full-Customization) |
 ### Types
 #### PeerOptions
 ```typescript
