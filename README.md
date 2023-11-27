@@ -9,7 +9,7 @@ An easy to use react component for impleting peer-to-peer chatting using [peerjs
 - Clear text chat on command
 - Supports voice chat
 - Multiple peer connections. See [multi peer usage](#Multi-Peer-Usage)
-- Fully Customizable. See [usage with FoC](#Full-Customization)
+- Fully Customizable. See [usage with FaC](#Full-Customization)
 ## Installation
 To install react-peer-chat
 ```bash
@@ -88,7 +88,7 @@ export default function App() {
 }
 ```
 #### Full Customization 
-Use Function as Children(FoC) to fully customize the `<Chat>` component.
+Use Function as Children(FaC) to fully customize the `<Chat>` component.
 ```jsx
 import React from 'react'
 import Chat from 'react-peer-chat'
@@ -125,7 +125,7 @@ Here is the full API for the `<Chat>` component, these properties can be set on 
 | `onError` | `Function` | No | `() => alert('Browser not supported! Try some other browser.')` | Function to be executed if browser doesn't support `WebRTC` |
 | `onMicError` | `Function` | No | `() => alert('Microphone not accessible!')` | Function to be executed when microphone is not accessible. |
 | `props` | `React.DetailedHTMLProps` | No | - | Props to customize the `<Chat>` component. |
-| `children` | [`Children`](#Children) | No | - | See [usage with FoC](#Full-Customization) |
+| `children` | [`Children`](#Children) | No | - | See [usage with FaC](#Full-Customization) |
 ### Types
 #### PeerOptions
 ```typescript
