@@ -35,9 +35,9 @@
     "react-dom": ">=16.0.0"
   },
   "devDependencies": {
-    "@types/react": "^18.2.38"
+    "@types/react": "^18.2.42"
   },
   "dependencies": {
-    "peerjs": "^1.5.1"
+    "peerjs": "^1.5.2"
   }
 }

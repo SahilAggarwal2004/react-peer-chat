@@ -1,4 +1,6 @@
-# 0.5.3 (27-11-2023)
+# 0.5.4 (06-12-2023)
+- **deps:** update dependency peerjs to v1.5.2
+## 0.5.3 (27-11-2023)
 - **fixed:** typo in docs
 ## 0.5.2 (14-10-2023)
 - **updated:** description of `children` prop of `<Chat>` in README

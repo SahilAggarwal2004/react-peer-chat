@@ -6,8 +6,8 @@ settings:
 
 dependencies:
   peerjs:
-    specifier: ^1.5.1
-    version: 1.5.1
+    specifier: ^1.5.2
+    version: 1.5.2
   react:
     specifier: '>=16.0.0'
     version: 18.2.0
@@ -17,8 +17,8 @@ dependencies:
 
 devDependencies:
   '@types/react':
-    specifier: ^18.2.38
-    version: 18.2.38
+    specifier: ^18.2.42
+    version: 18.2.42
 
 packages:
 
@@ -79,8 +79,8 @@ packages:
     resolution: {integrity: sha512-kMpQpfZKSCBqltAJwskgePRaYRFukDkm1oItcAbC3gNELR20XIBcN9VRgg4+m8DKsTfkWeA4m4Imp4DDuWy7FQ==}
     dev: true
 
-  /@types/react@18.2.38:
-    resolution: {integrity: sha512-cBBXHzuPtQK6wNthuVMV6IjHAFkdl/FOPFIlkd81/Cd1+IqkHu/A+w4g43kaQQoYHik/ruaQBDL72HyCy1vuMw==}
+  /@types/react@18.2.42:
+    resolution: {integrity: sha512-c1zEr96MjakLYus/wPnuWDo1/zErfdU9rNsIGmE+NV71nx88FG9Ttgo5dqorXTu/LImX2f63WBP986gJkMPNbA==}
     dependencies:
       '@types/prop-types': 15.7.8
       '@types/scheduler': 0.16.4
@@ -139,19 +139,19 @@ packages:
     dev: false
     optional: true
 
-  /peerjs-js-binarypack@2.0.0:
-    resolution: {integrity: sha512-wu+L0Qeg4IH2DXm3B6xKP5ODeCIovwEEO/Fu3MVqApPQeVLzSdZpFzQzPobh+sdhUWMQGEO7YxHeiwpPngLjqQ==}
+  /peerjs-js-binarypack@2.1.0:
+    resolution: {integrity: sha512-YIwCC+pTzp3Bi8jPI9UFKO0t0SLo6xALnHkiNt/iUFmUUZG0fEEmEyFKvjsDKweiFitzHRyhuh6NvyJZ4nNxMg==}
     engines: {node: '>= 14.0.0'}
     dev: false
 
-  /peerjs@1.5.1:
-    resolution: {integrity: sha512-jpE2jPZ99vuSVHBAhn7bVCPKlwsPgcAqgcDKEZR4L7SaMaEL6wqD/G6VI0+awmhuEFcUN2ttusly+sKQGD64hQ==}
+  /peerjs@1.5.2:
+    resolution: {integrity: sha512-pPrtNwPyWJHRPxy2y+rHcdlrG8UwUBB1nl+3Yj6r7FLwcbBpcB2NvGNvLvcrxAVGGGX9fsdA5VT5zBKTZcm1DQ==}
     engines: {node: '>= 14'}
     dependencies:
       '@msgpack/msgpack': 2.8.0
       cbor-x: 1.5.4
       eventemitter3: 4.0.7
-      peerjs-js-binarypack: 2.0.0
+      peerjs-js-binarypack: 2.1.0
       webrtc-adapter: 8.2.3
     dev: false
 
