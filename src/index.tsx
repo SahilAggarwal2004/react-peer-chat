@@ -9,19 +9,13 @@ export type PeerOptions = ImportedPeerOptions
 
 export type DialogPosition = 'left' | 'center' | 'right'
 
-export interface DialogOptions {
-    position?: DialogPosition
-    style?: CSSProperties
-}
+export type DialogOptions = { position?: DialogPosition, style?: CSSProperties }
 
 export type RemotePeers = { [id: string]: string }
 
-export interface Message {
-    id: string
-    text: string
-}
+export type Message = { id: string, text: string }
 
-export interface ChildrenOptions {
+export type ChildrenOptions = {
     remotePeers?: RemotePeers
     messages?: Message[]
     addMessage?: (message: Message, sendToRemotePeer?: boolean) => void
@@ -33,20 +27,7 @@ export type Children = (childrenOptions: ChildrenOptions) => ReactNode
 
 export type Props = DetailedHTMLProps<HTMLAttributes<HTMLDivElement>, HTMLDivElement>
 
-export interface ChatProps {
-    name?: string
-    peerId: string
-    remotePeerId?: RemotePeerId
-    text?: boolean
-    recoverChat?: boolean
-    voice?: boolean
-    peerOptions?: PeerOptions
-    dialogOptions?: DialogOptions
-    onError?: Function
-    onMicError?: Function
-    children?: Children
-    props?: Props
-}
+export type ChatProps = { name?: string, peerId: string, remotePeerId?: RemotePeerId, text?: boolean, recoverChat?: boolean, voice?: boolean, peerOptions?: PeerOptions, dialogOptions?: DialogOptions, onError?: Function, onMicError?: Function, children?: Children, props?: Props }
 
 export type { IconProps } from './icons.js'
 

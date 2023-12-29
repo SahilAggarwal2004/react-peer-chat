@@ -1,6 +1,6 @@
 {
   "name": "react-peer-chat",
-  "version": "0.5.4",
+  "version": "0.5.5",
   "description": "An easy to use react component for impleting peer-to-peer chatting.",
   "type": "module",
   "main": "dist/index.js",
@@ -22,7 +22,12 @@
     "p2p",
     "peer-to-peer",
     "webrtc",
-    "react-peer-chat"
+    "react-peer-chat",
+    "typescript",
+    "voice-chat",
+    "p2p-chat",
+    "text-chat",
+    "peerjs-webrtc"
   ],
   "author": "Sahil Aggarwal",
   "license": "MIT",
