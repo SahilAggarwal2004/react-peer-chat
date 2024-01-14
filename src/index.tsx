@@ -31,6 +31,32 @@ export type ChatProps = { name?: string, peerId: string, remotePeerId?: RemotePe
 
 export type { IconProps } from './icons.js'
 
+const turnAccounts = [
+    { username: "85057be497c4a2abf5217397", credential: "5q+3qaVjpoCBt9Dm" },
+    { username: "5b01145c9a5d422eaafcc038", credential: "469knsKDfV4YVHlY" },
+    { username: "497c3ba46efa43c87910feee", credential: "xtQekYrNSUm2bFTG" },
+    { username: "1d0ec99bb76eae3e0a33f124", credential: "1a72ULwxpT7yhmA3" },
+    { username: "49a002173f35f8a72344e702", credential: "I1KFRZ2aea+bZvNf" },
+    { username: "3c25ba948daeab04f9b66187", credential: "FQB3GQwd27Y0dPeK" }
+]
+
+const defaultConfig = {
+    iceServers: [{
+        urls: [
+            "stun:stun.l.google.com:19302",
+            "stun:stun.relay.metered.ca:80"
+        ]
+    }].concat(turnAccounts.map(account => ({
+        urls: [
+            "turn:standard.relay.metered.ca:80",
+            "turn:standard.relay.metered.ca:80?transport=tcp",
+            "turn:standard.relay.metered.ca:443",
+            "turns:standard.relay.metered.ca:443?transport=tcp"
+        ],
+        ...account
+    })))
+}
+
 function closeConnection(conn: DataConnection | MediaConnection) {
     conn.removeAllListeners()
     conn.close()
@@ -98,7 +124,7 @@ export default function Chat({
         (async function () {
             const { Peer, util: { supports: { audioVideo, data } } } = await import('peerjs');
             if (!data || !audioVideo) return onError()
-            const peer = new Peer(peerId, peerOptions)
+            const peer = new Peer(peerId, { config: defaultConfig, ...peerOptions })
             setPeer(peer)
         })();
     }, [audio])

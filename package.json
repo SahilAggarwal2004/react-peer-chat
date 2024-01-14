@@ -1,6 +1,6 @@
 {
   "name": "react-peer-chat",
-  "version": "0.5.5",
+  "version": "0.6.0",
   "description": "An easy to use react component for impleting peer-to-peer chatting.",
   "type": "module",
   "main": "dist/index.js",
@@ -40,7 +40,7 @@
     "react-dom": ">=16.0.0"
   },
   "devDependencies": {
-    "@types/react": "^18.2.42"
+    "@types/react": "^18.2.47"
   },
   "dependencies": {
     "peerjs": "^1.5.2"

@@ -1,4 +1,6 @@
-# 0.5.4 (06-12-2023)
+# 0.6.0 (14-01-2023)
+- **added:** free [turn-server](https://webrtc.org/getting-started/turn-server) service, since the service provided by `peerjs` (the library used under the hood) was [discontinued](https://github.com/orgs/peers/discussions/1172)
+## 0.5.4 (06-12-2023)
 - **deps:** update dependency peerjs to v1.5.2
 ## 0.5.3 (27-11-2023)
 - **fixed:** typo in docs
