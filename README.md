@@ -110,6 +110,34 @@ export default function App() {
     </Chat>
 }
 ```
+#### Custom ICE Servers
+You can also use custom ICE servers to avoid any connectivity issues in case free TURN server limit provided by `react-peer-chat` expires.
+```jsx
+import React from 'react';
+import Chat from 'react-peer-chat';
+import 'react-peer-chat/dist/styles.css';
+
+export default function App() {
+    return <Chat
+        name='John Doe'
+        peerId='my-unique-id'
+        remotePeerId='remote-unique-id'
+        peerOptions={{
+            config: {
+                iceServers: [
+                    { urls: "stun:stun-server.example.com:19302" },
+                    {
+                        urls: 'turn:turn-server.example.com:19403',
+                        username: 'optional-username',
+                        credential: 'auth-token'
+                    }
+                ]
+            }
+            // other peerjs options (optional)
+        }}
+    />
+}
+```
 ## Chat Component API Reference
 Here is the full API for the `<Chat>` component, these properties can be set on an instance of Chat:
 | Parameter | Type | Required | Default | Description |

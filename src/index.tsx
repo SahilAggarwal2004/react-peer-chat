@@ -32,11 +32,11 @@ export type ChatProps = { name?: string, peerId: string, remotePeerId?: RemotePe
 export type { IconProps } from './icons.js'
 
 const turnAccounts = [
-    { username: "85057be497c4a2abf5217397", credential: "5q+3qaVjpoCBt9Dm" },
-    { username: "5b01145c9a5d422eaafcc038", credential: "469knsKDfV4YVHlY" },
-    { username: "497c3ba46efa43c87910feee", credential: "xtQekYrNSUm2bFTG" },
-    { username: "1d0ec99bb76eae3e0a33f124", credential: "1a72ULwxpT7yhmA3" },
-    { username: "49a002173f35f8a72344e702", credential: "I1KFRZ2aea+bZvNf" },
+    { username: "70061a377b51f3a3d01c11e3", credential: "lHV4NYJ5Rfl5JNa9" },
+    { username: "13b19eb65bbf6e9f96d64b72", credential: "7R9P/+7y7Q516Etv" },
+    { username: "3469603f5cdc7ca4a1e891ae", credential: "/jMyLSDbbcgqpVQv" },
+    { username: "a7926f4dcc4a688d41f89752", credential: "ZYM8jFYeb8bQkL+N" },
+    { username: "0be25ab7f61d9d733ba94809", credential: "hiiSwWVch+ftt3SX" },
     { username: "3c25ba948daeab04f9b66187", credential: "FQB3GQwd27Y0dPeK" }
 ]
 
