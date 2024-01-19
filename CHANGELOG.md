@@ -1,4 +1,6 @@
-# 0.6.1 (15-01-2024)
+# 0.6.2 (19-01-2024)
+- **improved:** default icons
+## 0.6.1 (15-01-2024)
 - **docs:** added guide to configure custom ICE/TURN servers. See [Custom ICE Servers](https://www.npmjs.com/package/react-peer-chat#custom-ice-servers)
 ## 0.6.0 (14-01-2024)
 - **added:** free [TURN server](https://webrtc.org/getting-started/turn-server) service, since the service provided by `peerjs` (the library used under the hood) was [discontinued](https://github.com/orgs/peers/discussions/1172)

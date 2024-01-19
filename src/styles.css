@@ -116,10 +116,6 @@
     align-items: center;
 }
 
-.rpc-scale-down {
-    scale: calc(2/3);
-}
-
 .rpc-invert {
     filter: invert(100%);
 }
