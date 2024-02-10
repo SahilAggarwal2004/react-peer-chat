@@ -1,11 +1,11 @@
 import React, { CSSProperties, DetailedHTMLProps, HTMLAttributes, ReactNode, useEffect, useRef, useState } from 'react'
-import { Peer, DataConnection, MediaConnection, PeerOptions as ImportedPeerOptions } from 'peerjs'
+import { Peer, DataConnection, MediaConnection, PeerOptions } from 'peerjs'
 import useStorage, { removeStorage } from './storage.js'
 import { BiSolidMessageDetail, BiSolidMessageX, BsFillMicFill, BsFillMicMuteFill, GrSend } from './icons.js'
 
 export type RemotePeerId = string | string[]
 
-export type PeerOptions = ImportedPeerOptions
+export type { PeerOptions }
 
 export type DialogPosition = 'left' | 'center' | 'right'
 
