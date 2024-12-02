@@ -1,184 +1,27 @@
-import React, { CSSProperties, DetailedHTMLProps, HTMLAttributes, ReactNode, useEffect, useRef, useState } from "react";
-import { Peer, DataConnection, MediaConnection, PeerOptions } from "peerjs";
-import useStorage, { removeStorage } from "./storage.js";
+import React, { useEffect, useRef, useState } from "react";
+import { useChat } from "./hooks.js";
 import { BiSolidMessageDetail, BiSolidMessageX, BsFillMicFill, BsFillMicMuteFill, GrSend } from "./icons.js";
+import { clearChat } from "./storage.js";
+import { ChatProps, Message } from "./types.js";
 
-export type RemotePeerId = string | string[];
-
-export type { PeerOptions };
-
-export type DialogPosition = "left" | "center" | "right";
-
-export type DialogOptions = { position?: DialogPosition; style?: CSSProperties };
-
-export type RemotePeers = { [id: string]: string };
-
-export type Message = { id: string; text: string };
-
-export type ChildrenOptions = {
-  remotePeers?: RemotePeers;
-  messages?: Message[];
-  addMessage?: (message: Message, sendToRemotePeer?: boolean) => void;
-  audio?: boolean;
-  setAudio?: (audio: boolean) => void;
-};
-
-export type Children = (childrenOptions: ChildrenOptions) => ReactNode;
-
-export type Props = DetailedHTMLProps<HTMLAttributes<HTMLDivElement>, HTMLDivElement>;
-
-export type ChatProps = { name?: string; peerId: string; remotePeerId?: RemotePeerId; text?: boolean; recoverChat?: boolean; voice?: boolean; peerOptions?: PeerOptions; dialogOptions?: DialogOptions; onError?: Function; onMicError?: Function; children?: Children; props?: Props };
-
-export type { IconProps } from "./icons.js";
-
-const turnAccounts = [
-  { username: "70061a377b51f3a3d01c11e3", credential: "lHV4NYJ5Rfl5JNa9" },
-  { username: "13b19eb65bbf6e9f96d64b72", credential: "7R9P/+7y7Q516Etv" },
-  { username: "3469603f5cdc7ca4a1e891ae", credential: "/jMyLSDbbcgqpVQv" },
-  { username: "a7926f4dcc4a688d41f89752", credential: "ZYM8jFYeb8bQkL+N" },
-  { username: "0be25ab7f61d9d733ba94809", credential: "hiiSwWVch+ftt3SX" },
-  { username: "3c25ba948daeab04f9b66187", credential: "FQB3GQwd27Y0dPeK" },
-];
-
-const defaultConfig = {
-  iceServers: [
-    {
-      urls: ["stun:stun.l.google.com:19302", "stun:stun.relay.metered.ca:80"],
-    },
-  ].concat(
-    turnAccounts.map((account) => ({
-      urls: ["turn:standard.relay.metered.ca:80", "turn:standard.relay.metered.ca:80?transport=tcp", "turn:standard.relay.metered.ca:443", "turns:standard.relay.metered.ca:443?transport=tcp"],
-      ...account,
-    }))
-  ),
-};
-
-function closeConnection(conn: DataConnection | MediaConnection) {
-  conn.removeAllListeners();
-  conn.close();
-}
-
-export default function Chat({ name, peerId, remotePeerId = [], peerOptions, text = true, recoverChat = false, voice = true, dialogOptions, onError = () => alert("Browser not supported! Try some other browser."), onMicError = () => alert("Microphone not accessible!"), children, props = {} }: ChatProps) {
-  const [peer, setPeer] = useState<Peer>();
-  const [notification, setNotification] = useState(false);
-  const [remotePeers, setRemotePeers] = useStorage<RemotePeers>("rpc-remote-peer", {});
-  const [messages, setMessages] = useStorage<Message[]>("rpc-messages", []);
-  const connRef = useRef<{ [id: string]: DataConnection }>({});
+export default function Chat({ text = true, audio = true, onMessageReceived, dialogOptions, props = {}, children, ...hookProps }: ChatProps) {
+  const { peerId, audioStreamRef, ...childrenOptions } = useChat({
+    text,
+    audio,
+    onMessageReceived: modifiedOnMessageReceived,
+    ...hookProps,
+  });
+  const { remotePeers, messages, sendMessage, audio: audioEnabled, setAudio } = childrenOptions;
+  const containerRef = useRef<HTMLDivElement>(null);
   const [dialog, setDialog] = useState(false);
   const dialogRef = useRef<HTMLDialogElement>(null);
-  const containerRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
-  const [audio, setAudio] = useStorage("rpc-audio", false, true);
-  const streamRef = useRef<HTMLMediaElement>(null);
-  const localStream = useRef<MediaStream>();
+  const [notification, setNotification] = useState(false);
 
-  peerId = `rpc-${peerId}`;
-  if (typeof remotePeerId === "string") remotePeerId = [remotePeerId];
-  const remotePeerIds = remotePeerId.map((id) => `rpc-${id}`);
-
-  const handleRemoteStream = (remoteStream: MediaStream) => (streamRef.current!.srcObject = remoteStream);
-
-  function addMessage(message: Message, sendToRemotePeer: boolean = false) {
-    setMessages((prev) => prev.concat(message));
-    if (sendToRemotePeer) Object.values(connRef.current).forEach((conn) => conn.send({ type: "message", message }));
-    else if (!dialogRef.current?.open) setNotification(true);
+  function modifiedOnMessageReceived(message: Message) {
+    if (!dialogRef.current?.open) setNotification(true);
+    onMessageReceived?.(message);
   }
-
-  function handleConnection(conn: DataConnection) {
-    connRef.current[conn.peer] = conn;
-    conn.on("open", () => {
-      conn.on("data", ({ type, message, remotePeerName, messages }: any) => {
-        if (type === "message") addMessage(message);
-        else if (type === "init") {
-          setRemotePeers((prev) => {
-            prev[conn.peer] = remotePeerName || "Anonymous User";
-            return prev;
-          });
-          if (recoverChat) setMessages((old) => (messages.length > old.length ? messages : old));
-        }
-      });
-      conn.send({ type: "init", remotePeerName: name, messages });
-    });
-    conn.on("close", conn.removeAllListeners);
-  }
-
-  function handleError() {
-    setAudio(false);
-    onMicError();
-  }
-
-  useEffect(() => {
-    if (!text && !audio) {
-      setPeer(undefined);
-      return;
-    }
-    (async function () {
-      const {
-        Peer,
-        util: {
-          supports: { audioVideo, data },
-        },
-      } = await import("peerjs");
-      if (!data || !audioVideo) return onError();
-      const peer = new Peer(peerId, { config: defaultConfig, ...peerOptions });
-      setPeer(peer);
-    })();
-  }, [audio]);
-
-  useEffect(() => {
-    if (!peer) return;
-    let calls: { [id: string]: MediaConnection } = {};
-    peer.on("open", () => {
-      remotePeerIds.forEach((id) => {
-        if (text) handleConnection(peer.connect(id));
-      });
-      if (audio) {
-        // @ts-ignore
-        const getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia;
-        try {
-          getUserMedia(
-            {
-              video: false,
-              audio: {
-                autoGainControl: false, // Disable automatic gain control
-                noiseSuppression: true, // Enable noise suppression
-                echoCancellation: true, // Enable echo cancellation
-              },
-            },
-            (stream: MediaStream) => {
-              localStream.current = stream;
-              remotePeerIds.forEach((id) => {
-                const call = peer.call(id, stream);
-                call.on("stream", handleRemoteStream);
-                call.on("close", call.removeAllListeners);
-                calls[id] = call;
-              });
-              peer.on("call", (call) => {
-                call.answer(stream); // Answer the call with an A/V stream.
-                call.on("stream", handleRemoteStream);
-                call.on("close", call.removeAllListeners);
-                calls[call.peer] = call;
-              });
-            },
-            handleError
-          );
-        } catch {
-          handleError();
-        }
-      }
-    });
-
-    peer.on("connection", handleConnection);
-
-    return () => {
-      localStream.current?.getTracks().forEach((track) => track.stop());
-      Object.values(connRef.current).forEach(closeConnection);
-      connRef.current = {};
-      Object.values(calls).forEach(closeConnection);
-      peer.removeAllListeners();
-      peer.destroy();
-    };
-  }, [peer]);
 
   useEffect(() => {
     if (dialog) dialogRef.current?.show();
@@ -193,7 +36,7 @@ export default function Chat({ name, peerId, remotePeerId = [], peerOptions, tex
   return (
     <div className="rpc-main rpc-font" {...props}>
       {typeof children === "function" ? (
-        children({ remotePeers, messages, addMessage, audio, setAudio })
+        children(childrenOptions)
       ) : (
         <>
           {text && (
@@ -232,7 +75,7 @@ export default function Chat({ name, peerId, remotePeerId = [], peerOptions, tex
                       const text = inputRef.current?.value;
                       if (text) {
                         inputRef.current.value = "";
-                        addMessage({ id: peerId, text }, true);
+                        sendMessage({ id: peerId, text });
                       }
                     }}
                   >
@@ -245,15 +88,12 @@ export default function Chat({ name, peerId, remotePeerId = [], peerOptions, tex
               </dialog>
             </div>
           )}
-          {voice && <div>{audio ? <BsFillMicFill title="Turn mic off" onClick={() => setAudio(false)} /> : <BsFillMicMuteFill title="Turn mic on" onClick={() => setAudio(true)} />}</div>}
+          {audio && <button>{audioEnabled ? <BsFillMicFill title="Turn mic off" onClick={() => setAudio(false)} /> : <BsFillMicMuteFill title="Turn mic on" onClick={() => setAudio(true)} />}</button>}
         </>
       )}
-      {voice && audio && <audio ref={streamRef} autoPlay style={{ display: "none" }} />}
+      {audio && audioEnabled && <audio ref={audioStreamRef} autoPlay style={{ display: "none" }} />}
     </div>
   );
 }
 
-export const clearChat = () => {
-  removeStorage("rpc-remote-peer");
-  removeStorage("rpc-messages");
-};
+export { clearChat, useChat };

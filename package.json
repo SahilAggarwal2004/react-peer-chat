@@ -1,17 +1,40 @@
 {
   "name": "react-peer-chat",
-  "version": "0.6.8",
+  "version": "0.7.0",
   "description": "An easy to use react component for impleting peer-to-peer chatting.",
+  "license": "MIT",
+  "author": "Sahil Aggarwal <aggarwalsahil2004@gmail.com>",
+  "contributors": [],
+  "homepage": "https://github.com/SahilAggarwal2004/react-peer-chat#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/SahilAggarwal2004/react-peer-chat.git"
+  },
+  "bugs": {
+    "url": "https://github.com/SahilAggarwal2004/react-peer-chat/issues"
+  },
   "type": "module",
+  "exports": {
+    ".": "./dist/index.js",
+    "./icons": "./dist/icons.js",
+    "./styles.css": "./dist/styles.css",
+    "./types": "./dist/types.js"
+  },
   "main": "dist/index.js",
-  "types": "dist/index.d.ts",
   "scripts": {
     "copy": "copy .\\src\\*.css dist",
     "build": "pnpm i && tsc && pnpm copy"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/SahilAggarwal2004/react-peer-chat.git"
+  "types": "dist/index.d.ts",
+  "dependencies": {
+    "peerjs": "^1.5.4"
+  },
+  "devDependencies": {
+    "@types/react": "^18.3.12"
+  },
+  "peerDependencies": {
+    "react": ">=17.0.0",
+    "react-dom": ">=17.0.0"
   },
   "keywords": [
     "react",
@@ -24,25 +47,9 @@
     "webrtc",
     "react-peer-chat",
     "typescript",
-    "voice-chat",
     "p2p-chat",
     "text-chat",
-    "peerjs-webrtc"
-  ],
-  "author": "Sahil Aggarwal",
-  "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/SahilAggarwal2004/react-peer-chat/issues"
-  },
-  "homepage": "https://github.com/SahilAggarwal2004/react-peer-chat#readme",
-  "peerDependencies": {
-    "react": ">=17.0.0",
-    "react-dom": ">=17.0.0"
-  },
-  "devDependencies": {
-    "@types/react": "^18.3.12"
-  },
-  "dependencies": {
-    "peerjs": "^1.5.4"
-  }
+    "voice-chat",
+    "audio-chat"
+  ]
 }

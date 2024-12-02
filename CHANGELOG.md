@@ -1,28 +1,32 @@
-# 0.6.2 (19-01-2024)
+# 0.7.0 (02-12-2024)
 
-- **improved:** default icons
+- **added:** `useChat` hook.
+- **added:** `onMessageSent` and `onMessageReceived` props in `<Chat>` component.
+- **changed:** Renamed `voice` prop to `audio` in `<Chat>` component.
+- **changed:** Renamed `addMessage` function to `sendMessage` in the FaC of the `<Chat>` component.
+- **docs:** Restructured and refined documentation for better clarity and navigation.
+
+## 0.6.2 (19-01-2024)
+
+- **improved:** Default icons for enhanced user experience.
 
 ## 0.6.1 (15-01-2024)
 
-- **docs:** added guide to configure custom ICE/TURN servers. See [Custom ICE Servers](https://www.npmjs.com/package/react-peer-chat#custom-ice-servers)
+- **docs:** Added guide to configure custom ICE/TURN servers. See [Custom ICE Servers](https://www.npmjs.com/package/react-peer-chat#custom-ice-servers)
 
 ## 0.6.0 (14-01-2024)
 
-- **added:** free [TURN server](https://webrtc.org/getting-started/turn-server) service, since the service provided by `peerjs` (the library used under the hood) was [discontinued](https://github.com/orgs/peers/discussions/1172)
+- **added:** Free [TURN server](https://webrtc.org/getting-started/turn-server) service, replacing the `peerjs` service (discontinued as per [this discussion](https://github.com/orgs/peers/discussions/1172))
 
 ## 0.5.4 (06-12-2023)
 
-- **deps:** updates dependency peerjs to v1.5.2
-
-## 0.5.3 (27-11-2023)
-
-- **docs:** fixed typo
+- **deps:** Updated the `peerjs` dependency to version `1.5.2`.
 
 ## 0.5.2 (14-10-2023)
 
-- **docs:** updated description of `children` prop of `<Chat>`
+- **docs:** Updated description of `children` prop of `<Chat>` component
 
 ## 0.5.0 (28-09-2023)
 
-- **added:** `recoverChat` prop in `<Chat>` component. See [Chat Component API Reference](https://www.npmjs.com/package/react-peer-chat#chat-component-api-reference)
-- **deps:** updated dependency peerjs to v1.5.1
+- **added:** `recoverChat` prop in `<Chat>` component.
+- **deps:** Updated the `peerjs` dependency to version `1.5.1`.
