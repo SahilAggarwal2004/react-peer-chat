@@ -1,14 +1,18 @@
-# 0.7.0 (02-12-2024)
+# 0.8.0 (06-12-2024)
 
-- **added:** `useChat` hook.
-- **added:** `onMessageSent` and `onMessageReceived` props in `<Chat>` component.
-- **changed:** Renamed `voice` prop to `audio` in `<Chat>` component.
-- **changed:** Renamed `addMessage` function to `sendMessage` in the FaC of the `<Chat>` component.
+- **feat:** Support for React.js v19 to ensure compatibility with the latest features.
+
+## 0.7.0 (02-12-2024)
+
+- **feat:** `useChat` hook added.
+- **feat:** `onMessageSent` and `onMessageReceived` props in `<Chat>` component.
+- **chore:** Renamed `voice` prop to `audio` in `<Chat>` component.
+- **chore:** Renamed `addMessage` function to `sendMessage` in the FaC of the `<Chat>` component.
 - **docs:** Restructured and refined documentation for better clarity and navigation.
 
 ## 0.6.2 (19-01-2024)
 
-- **improved:** Default icons for enhanced user experience.
+- **improve:** Default icons for enhanced user experience.
 
 ## 0.6.1 (15-01-2024)
 
@@ -16,7 +20,7 @@
 
 ## 0.6.0 (14-01-2024)
 
-- **added:** Free [TURN server](https://webrtc.org/getting-started/turn-server) service, replacing the `peerjs` service (discontinued as per [this discussion](https://github.com/orgs/peers/discussions/1172))
+- **feat:** Free [TURN server](https://webrtc.org/getting-started/turn-server) service, replacing the `peerjs` service (discontinued as per [this discussion](https://github.com/orgs/peers/discussions/1172))
 
 ## 0.5.4 (06-12-2023)
 
@@ -24,9 +28,9 @@
 
 ## 0.5.2 (14-10-2023)
 
-- **docs:** Updated description of `children` prop of `<Chat>` component
+- **docs:** Updated description of `children` prop of `<Chat>` component.
 
 ## 0.5.0 (28-09-2023)
 
-- **added:** `recoverChat` prop in `<Chat>` component.
+- **feat:** `recoverChat` prop in `<Chat>` component.
 - **deps:** Updated the `peerjs` dependency to version `1.5.1`.

@@ -1,6 +1,6 @@
 {
   "name": "react-peer-chat",
-  "version": "0.7.0",
+  "version": "0.8.0",
   "description": "An easy to use react component for impleting peer-to-peer chatting.",
   "license": "MIT",
   "author": "Sahil Aggarwal <aggarwalsahil2004@gmail.com>",
@@ -30,11 +30,11 @@
     "peerjs": "^1.5.4"
   },
   "devDependencies": {
-    "@types/react": "^18.3.12"
+    "@types/react": "^19.0.0"
   },
   "peerDependencies": {
-    "react": ">=17.0.0",
-    "react-dom": ">=17.0.0"
+    "react": "^17.0.0 || ^18.0.0 || ^19.0.0",
+    "react-dom": "^17.0.0 || ^18.0.0 || ^19.0.0"
   },
   "keywords": [
     "react",
