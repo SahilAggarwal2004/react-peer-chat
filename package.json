@@ -1,6 +1,6 @@
 {
   "name": "react-peer-chat",
-  "version": "0.8.0",
+  "version": "0.8.1",
   "description": "An easy to use react component for impleting peer-to-peer chatting.",
   "license": "MIT",
   "author": "Sahil Aggarwal <aggarwalsahil2004@gmail.com>",
@@ -17,20 +17,22 @@
   "exports": {
     ".": "./dist/index.js",
     "./icons": "./dist/icons.js",
-    "./styles.css": "./dist/styles.css",
     "./types": "./dist/types.js"
   },
   "main": "dist/index.js",
   "scripts": {
-    "copy": "copy .\\src\\*.css dist",
-    "build": "pnpm i && tsc && pnpm copy"
+    "build": "pnpm i && pnpm run compile",
+    "compile": "tsup",
+    "dev": "tsup --watch"
   },
   "types": "dist/index.d.ts",
   "dependencies": {
     "peerjs": "^1.5.4"
   },
   "devDependencies": {
-    "@types/react": "^19.0.0"
+    "@types/react": "^19.0.10",
+    "tsup": "^8.4.0",
+    "typescript": "^5.8.2"
   },
   "peerDependencies": {
     "react": "^17.0.0 || ^18.0.0 || ^19.0.0",
@@ -51,5 +53,13 @@
     "text-chat",
     "voice-chat",
     "audio-chat"
-  ]
+  ],
+  "pnpm": {
+    "ignoredBuiltDependencies": [
+      "esbuild"
+    ],
+    "onlyBuiltDependencies": [
+      "esbuild"
+    ]
+  }
 }

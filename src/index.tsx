@@ -1,7 +1,9 @@
 import React, { useEffect, useRef, useState } from "react";
+
 import { useChat } from "./hooks.js";
 import { BiSolidMessageDetail, BiSolidMessageX, BsFillMicFill, BsFillMicMuteFill, GrSend } from "./icons.js";
 import { clearChat } from "./storage.js";
+import "./styles.css";
 import { ChatProps, Message } from "./types.js";
 
 export default function Chat({ text = true, audio = true, onMessageReceived, dialogOptions, props = {}, children, ...hookProps }: ChatProps) {
@@ -74,7 +76,7 @@ export default function Chat({ text = true, audio = true, onMessageReceived, dia
                       e.preventDefault();
                       const text = inputRef.current?.value;
                       if (text) {
-                        inputRef.current.value = "";
+                        inputRef.current!.value = "";
                         sendMessage({ id: peerId, text });
                       }
                     }}
@@ -88,7 +90,11 @@ export default function Chat({ text = true, audio = true, onMessageReceived, dia
               </dialog>
             </div>
           )}
-          {audio && <button>{audioEnabled ? <BsFillMicFill title="Turn mic off" onClick={() => setAudio(false)} /> : <BsFillMicMuteFill title="Turn mic on" onClick={() => setAudio(true)} />}</button>}
+          {audio && (
+            <button className="rpc-button">
+              {audioEnabled ? <BsFillMicFill title="Turn mic off" onClick={() => setAudio(false)} /> : <BsFillMicMuteFill title="Turn mic on" onClick={() => setAudio(true)} />}
+            </button>
+          )}
         </>
       )}
       {audio && audioEnabled && <audio ref={audioStreamRef} autoPlay style={{ display: "none" }} />}

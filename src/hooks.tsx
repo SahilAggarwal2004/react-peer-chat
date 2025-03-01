@@ -10,7 +10,7 @@ export function useChat({ name, peerId, remotePeerId = [], peerOptions, text = t
   const [audio, setAudio] = useAudio(allowed);
   const audioStreamRef = useRef<HTMLMediaElement>(null);
   const connRef = useRef<{ [id: string]: DataConnection }>({});
-  const localStream = useRef<MediaStream>();
+  const localStream = useRef<MediaStream>(null);
   const [messages, setMessages, addMessage] = useMessages();
   const [peer, setPeer] = useState<Peer>();
   const [remotePeers, setRemotePeers] = useStorage<RemotePeers>("rpc-remote-peer", {});

@@ -46,7 +46,6 @@ The default export of `react-peer-chat` is the `<Chat>` component, which offers 
 ```jsx
 import React from "react";
 import Chat, { clearChat } from "react-peer-chat";
-import "react-peer-chat/styles.css";
 
 export default function App() {
   return (
@@ -64,7 +63,6 @@ export default function App() {
 ```jsx
 import React from "react";
 import Chat, { clearChat } from "react-peer-chat";
-import "react-peer-chat/styles.css";
 
 export default function App() {
   return (
@@ -88,7 +86,6 @@ Use the props provided by the `<Chat>` component for customization.
 ```jsx
 import React from "react";
 import Chat from "react-peer-chat";
-import "react-peer-chat/styles.css";
 
 export default function App() {
   return (
@@ -115,7 +112,6 @@ Use Function as Children (FaC) to fully customize the `<Chat>` component.
 ```jsx
 import React from 'react'
 import Chat from 'react-peer-chat'
-// import 'react-peer-chat/styles.css' (No need to import CSS when using custom component)
 
 export default function App() {
     return <Chat
@@ -141,7 +137,6 @@ You can also provide custom ICE servers to avoid connectivity issues if the free
 ```jsx
 import React from "react";
 import Chat from "react-peer-chat";
-import "react-peer-chat/styles.css";
 
 export default function App() {
   return (
@@ -175,7 +170,6 @@ The `useChat` hook is ideal when you want to completely redesign the Chat UI or 
 import React, { useEffect, useRef, useState } from "react";
 import { clearChat, useChat } from "react-peer-chat";
 import { BiSolidMessageDetail, BiSolidMessageX, BsFillMicFill, BsFillMicMuteFill, GrSend } from "react-peer-chat/icons";
-import "react-peer-chat/styles.css"; // (No need to import CSS when using custom styles)
 
 function Chat({ text = true, audio = true, onMessageReceived, dialogOptions, props = {}, children, ...hookProps }) {
   const { peerId, audioStreamRef, ...childrenOptions } = useChat({

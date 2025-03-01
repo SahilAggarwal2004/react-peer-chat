@@ -1,4 +1,9 @@
-# 0.8.0 (06-12-2024)
+# 0.8.1 (01-03-2025)
+
+- **chore:** Replaced `tsc` with `tsup` for faster and optimized bundling.
+- **chore:** No longer required to import `react-peer-chat/styles.css` manually.
+
+## 0.8.0 (06-12-2024)
 
 - **feat:** Support for React.js v19 to ensure compatibility with the latest features.
 
