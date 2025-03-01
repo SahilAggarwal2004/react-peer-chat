@@ -1,4 +1,8 @@
-# 0.8.1 (01-03-2025)
+# 0.8.2 (01-03-2025)  
+
+- **fix:** Ensure audio is enabled only when both the audio setting and the allowed flag are true.
+
+## 0.8.1 (01-03-2025)
 
 - **chore:** Replaced `tsc` with `tsup` for faster and optimized bundling.
 - **chore:** No longer required to import `react-peer-chat/styles.css` manually.

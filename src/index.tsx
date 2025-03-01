@@ -91,8 +91,8 @@ export default function Chat({ text = true, audio = true, onMessageReceived, dia
             </div>
           )}
           {audio && (
-            <button className="rpc-button">
-              {audioEnabled ? <BsFillMicFill title="Turn mic off" onClick={() => setAudio(false)} /> : <BsFillMicMuteFill title="Turn mic on" onClick={() => setAudio(true)} />}
+            <button className="rpc-button" onClick={() => setAudio(!audioEnabled)}>
+              {audioEnabled ? <BsFillMicFill title="Turn mic off" /> : <BsFillMicMuteFill title="Turn mic on" />}
             </button>
           )}
         </>

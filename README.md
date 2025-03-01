@@ -255,10 +255,18 @@ function Chat({ text = true, audio = true, onMessageReceived, dialogOptions, pro
               </dialog>
             </div>
           )}
-          {audio && <button>{audioEnabled ? <BsFillMicFill title="Turn mic off" onClick={() => setAudio(false)} /> : <BsFillMicMuteFill title="Turn mic on" onClick={() => setAudio(true)} />}</button>}
+          {audio && (
+            <button>
+              {audioEnabled ? <BsFillMicFill title="Turn mic off" onClick={() => setAudio(false)} /> : <BsFillMicMuteFill title="Turn mic on" onClick={() => setAudio(true)} />}
+            </button>
+          )}
         </>
       )}
-      {audio && audioEnabled && <audio ref={audioStreamRef} autoPlay style={{ display: "none" }} />}
+      {audio && (
+        <button className="rpc-button" onClick={() => setAudio(!audioEnabled)}>
+          {audioEnabled ? <BsFillMicFill title="Turn mic off" /> : <BsFillMicMuteFill title="Turn mic on" />}
+        </button>
+      )}
     </div>
   );
 }

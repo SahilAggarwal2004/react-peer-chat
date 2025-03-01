@@ -6,7 +6,19 @@ import { getStorage, setStorage } from "./storage.js";
 import { Message, RemotePeers, useChatProps } from "./types.js";
 import { addPrefix } from "./utils.js";
 
-export function useChat({ name, peerId, remotePeerId = [], peerOptions, text = true, recoverChat = false, audio: allowed = true, onError = () => alert("Browser not supported! Try some other browser."), onMicError = () => alert("Microphone not accessible!"), onMessageSent, onMessageReceived }: useChatProps) {
+export function useChat({
+  name,
+  peerId,
+  remotePeerId = [],
+  peerOptions,
+  text = true,
+  recoverChat = false,
+  audio: allowed = true,
+  onError = () => alert("Browser not supported! Try some other browser."),
+  onMicError = () => alert("Microphone not accessible!"),
+  onMessageSent,
+  onMessageReceived,
+}: useChatProps) {
   const [audio, setAudio] = useAudio(allowed);
   const audioStreamRef = useRef<HTMLMediaElement>(null);
   const connRef = useRef<{ [id: string]: DataConnection }>({});
@@ -158,7 +170,7 @@ export function useStorage<Value>(key: string, initialValue: Value, local = fals
 
 export function useAudio(allowed: boolean) {
   const [audio, setAudio] = useStorage("rpc-audio", false, true);
-  const enabled = audio || allowed;
+  const enabled = audio && allowed;
 
   return [enabled, setAudio] as const;
 }

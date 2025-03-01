@@ -14,7 +14,12 @@ export const defaultConfig = {
     },
   ].concat(
     turnAccounts.map((account) => ({
-      urls: ["turn:standard.relay.metered.ca:80", "turn:standard.relay.metered.ca:80?transport=tcp", "turn:standard.relay.metered.ca:443", "turns:standard.relay.metered.ca:443?transport=tcp"],
+      urls: [
+        "turn:standard.relay.metered.ca:80",
+        "turn:standard.relay.metered.ca:80?transport=tcp",
+        "turn:standard.relay.metered.ca:443",
+        "turns:standard.relay.metered.ca:443?transport=tcp",
+      ],
       ...account,
     }))
   ),
