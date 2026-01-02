@@ -33,7 +33,7 @@ To install `react-peer-chat`:
 
 ## Usage
 
-`react-peer-chat` provides two primary methods to integrate chat functionality into your React apps: through the `<Chat>` component and the `useSpeech` hook.
+`react-peer-chat` provides two primary methods to integrate chat functionality into your React apps: through the `<Chat>` component and the `useChat` hook.
 
 It also exports a `clearChat` function that clears the text chat from the browser's session storage when called.
 
@@ -353,4 +353,4 @@ type Children = (childrenOptions: ChildrenOptions) => ReactNode;
 
 ## Author
 
-[Sahil Aggarwal](https://www.github.com/SahilAggarwal2004)
+[Sahil Aggarwal](https://github.com/SahilAggarwal2004)
