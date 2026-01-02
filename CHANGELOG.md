@@ -1,3 +1,16 @@
+# Changelog
+
+## [0.8.3](https://github.com/SahilAggarwal2004/react-peer-chat/compare/v0.8.2...v0.8.3) (2026-01-02)
+
+### Chores
+
+* Add release-it for automated versioning and changelog.  ([1eba520](https://github.com/SahilAggarwal2004/react-peer-chat/commit/1eba52004adeefa703cd30d7bbcbde9b9749cbb0))
+* **deps:** Update `peerjs`, `@types/react`, `tsup` and `typescript`.  ([b938534](https://github.com/SahilAggarwal2004/react-peer-chat/commit/b938534d953828c6a796f4e833cc870096d06604))
+
+### Documentation
+
+* Correct hook name from `useSpeech` to `useChat`.  ([c9a6342](https://github.com/SahilAggarwal2004/react-peer-chat/commit/c9a63427c66edb2d8c73c351b8be91dad51e4923))
+
 ## 0.8.2 (2025-03-01)
 
 * **fix:** Ensure audio is enabled only when both the audio setting and the allowed flag are true.
