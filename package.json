@@ -23,14 +23,18 @@
   "scripts": {
     "build": "pnpm i && pnpm run compile",
     "compile": "tsup",
-    "dev": "tsup --watch"
+    "dev": "tsup --watch",
+    "dry-release": "release-it --ci --dry-run",
+    "release": "release-it --ci"
   },
   "types": "dist/index.d.ts",
   "dependencies": {
     "peerjs": "^1.5.5"
   },
   "devDependencies": {
+    "@release-it/conventional-changelog": "^10.0.4",
     "@types/react": "^19.2.7",
+    "release-it": "^19.2.2",
     "tsup": "^8.5.1",
     "typescript": "^5.9.3"
   },
