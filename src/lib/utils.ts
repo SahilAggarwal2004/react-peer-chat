@@ -1,1 +1,1 @@
-export const addPrefix = (str: string) => `rpc-${str}`;
+export const addPrefix = (str: string): string => `rpc-${str}`;

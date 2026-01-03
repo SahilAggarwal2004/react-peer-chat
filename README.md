@@ -10,8 +10,8 @@ A simple-to-use React component for implementing peer-to-peer chatting, powered 
 - Recovers old chats upon reconnection
 - Option to clear chat on command
 - Supports audio/voice chat
-- Multiple peer connections. See [multi-peer usage](#Multi-Peer-Usage)
-- Fully customizable. See [usage with FaC](#Full-Customization)
+- Multiple peer connections. See [multi-peer usage](#multi-peer-usage)
+- Fully customizable. See [usage with FaC](#full-customization)
 
 ## Installation
 
@@ -78,6 +78,8 @@ export default function App() {
   );
 }
 ```
+
+> **Note:** The `remotePeerId` prop is read at mount and whenever `peerId` changes. Changes to `remotePeerId` alone (without `peerId` changing) won't establish new connections. In peer-to-peer chat scenarios, new peers should connect to existing peers by providing their IDs at mount time, rather than existing peers updating this prop dynamically.
 
 #### Partial Customization
 
@@ -289,48 +291,33 @@ export default function App() {
 ### useChat Hook
 
 Here is the full API for the `useChat` hook, these options can be passed as paramerters to the hook:
-| Parameter | Type | Required | Default | Description |
-| - | - | - | - | - |
-| `name` | `string` | No | Anonymous User | Name of the peer which will be shown to the remote peer. |
-| `peerId` | `string` | Yes | - | It is the unique id that is alloted to a peer. It uniquely identifies a peer from other peers. |
-| `remotePeerId` | `string \| string[]` | No | - | It is the unique id (or array of unique ids) of the remote peer(s). If provided, the peer will try to connect to the remote peer(s). |
-| `text` | `boolean` | No | `true` | Text chat will be enabled if this property is set to true. |
-| `recoverChat` | `boolean` | No | `false` | Old chats will be recovered upon reconnecting with the same peer(s). |
-| `audio` | `boolean` | No | `true` | Voice chat will be enabled if this property is set to true. |
-| `peerOptions` | [`PeerOptions`](#PeerOptions) | No | - | Options to customize peerjs Peer instance. |
-| `onError` | `Function` | No | `() => alert('Browser not supported! Try some other browser.')` | Function to be executed if browser doesn't support `WebRTC` |
-| `onMicError` | `Function` | No | `() => alert('Microphone not accessible!')` | Function to be executed when microphone is not accessible. |
-| `onMessageSent` | `Function` | No | - | Function to be executed when a text message is sent to other peers. |
-| `onMessageReceived` | `Function` | No | - | Function to be executed when a text message is received from other peers. |
+
+| Parameter           | Type                                          | Required | Default                                                         | Description                                                                                                                                     |
+| ------------------- | --------------------------------------------- | -------- | --------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------- |
+| `name`              | `string`                                      | No       | Anonymous User                                                  | Name of the peer which will be shown to the remote peer.                                                                                        |
+| `peerId`            | `string`                                      | Yes      | -                                                               | It is the unique id that is alloted to a peer. It uniquely identifies a peer from other peers.                                                  |
+| `remotePeerId`      | `string \| string[]`                          | No       | -                                                               | Unique id(s) of remote peer(s) to connect to. Read at mount and when `peerId` changes; changes to this prop alone won't create new connections. |
+| `text`              | `boolean`                                     | No       | `true`                                                          | Text chat will be enabled if this property is set to true.                                                                                      |
+| `recoverChat`       | `boolean`                                     | No       | `false`                                                         | Old chats will be recovered upon reconnecting with the same peer(s).                                                                            |
+| `audio`             | `boolean`                                     | No       | `true`                                                          | Voice chat will be enabled if this property is set to true.                                                                                     |
+| `peerOptions`       | [`PeerOptions`](#peeroptions)                 | No       | -                                                               | Options to customize peerjs Peer instance.                                                                                                      |
+| `onError`           | [`ErrorHandler`](#errorhandler)               | No       | `() => alert('Browser not supported! Try some other browser.')` | Function to be executed if browser doesn't support `WebRTC`                                                                                     |
+| `onMicError`        | [`ErrorHandler`](#errorhandler)               | No       | `() => alert('Microphone not accessible!')`                     | Function to be executed when microphone is not accessible.                                                                                      |
+| `onMessageSent`     | [`MessageEventHandler`](#messageeventhandler) | No       | -                                                               | Function to be executed when a text message is sent to other peers.                                                                             |
+| `onMessageReceived` | [`MessageEventHandler`](#messageeventhandler) | No       | -                                                               | Function to be executed when a text message is received from other peers.                                                                       |
 
 ### Chat Component
 
 Here is the full API for the `<Chat>` component, these properties can be set on an instance of `<Chat>`. It contains all the parameters
 that are listed in [useChat Hook API Reference](#usechat-hook-1) along with the following parameters:
-| Parameter | Type | Required | Default | Description |
-| - | - | - | - | - |
-| `dialogOptions` | [`DialogOptions`](#DialogOptions) | No | { position: 'center' } | Options to customize text dialog box styling. |
-| `props` | `React.DetailedHTMLProps` | No | - | Props to customize the `<Chat>` component. |
-| `children` | [`Children`](#Children) | No | - | See [usage with FaC](#Full-Customization) |
+
+| Parameter       | Type                              | Required | Default                | Description                                   |
+| --------------- | --------------------------------- | -------- | ---------------------- | --------------------------------------------- |
+| `dialogOptions` | [`DialogOptions`](#dialogoptions) | No       | { position: 'center' } | Options to customize text dialog box styling. |
+| `props`         | [`DivProps`](#divprops)           | No       | -                      | Props to customize the `<Chat>` component.    |
+| `children`      | [`Children`](#children)           | No       | -                      | See [usage with FaC](#full-customization)     |
 
 ### Types
-
-#### PeerOptions
-
-```typescript
-import { PeerOptions } from "peerjs";
-```
-
-#### DialogOptions
-
-```typescript
-import { CSSProperties } from "react";
-type DialogPosition = "left" | "center" | "right";
-type DialogOptions = {
-  position: DialogPosition;
-  style: CSSProperties;
-};
-```
 
 #### Children
 
@@ -351,6 +338,46 @@ type ChildrenOptions = {
 type Children = (childrenOptions: ChildrenOptions) => ReactNode;
 ```
 
-## Author
+#### DialogOptions
 
-[Sahil Aggarwal](https://github.com/SahilAggarwal2004)
+```typescript
+import { CSSProperties } from "react";
+type DialogPosition = "left" | "center" | "right";
+type DialogOptions = {
+  position: DialogPosition;
+  style: CSSProperties;
+};
+```
+
+#### DivProps
+
+```typescript
+import { DetailedHTMLProps, HTMLAttributes } from "react";
+type DivProps = DetailedHTMLProps<HTMLAttributes<HTMLDivElement>, HTMLDivElement>;
+```
+
+#### ErrorHandler
+
+```typescript
+type ErrorHandler = () => void;
+```
+
+#### MessageEventHandler
+
+```typescript
+type Message = {
+  id: string;
+  text: string;
+};
+type MessageEventHandler = (message: Message) => void;
+```
+
+#### PeerOptions
+
+```typescript
+import { PeerOptions } from "peerjs";
+```
+
+## License
+
+This project is licensed under the [MIT License](LICENSE).

@@ -7,20 +7,24 @@ const turnAccounts = [
   { username: "3c25ba948daeab04f9b66187", credential: "FQB3GQwd27Y0dPeK" },
 ];
 
-export const defaultConfig = {
-  iceServers: [
-    {
-      urls: ["stun:stun.l.google.com:19302", "stun:stun.relay.metered.ca:80"],
-    },
-  ].concat(
-    turnAccounts.map((account) => ({
-      urls: [
-        "turn:standard.relay.metered.ca:80",
-        "turn:standard.relay.metered.ca:80?transport=tcp",
-        "turn:standard.relay.metered.ca:443",
-        "turns:standard.relay.metered.ca:443?transport=tcp",
-      ],
-      ...account,
-    }))
-  ),
+export const defaults = {
+  config: {
+    iceServers: [
+      {
+        urls: ["stun:stun.l.google.com:19302", "stun:stun.relay.metered.ca:80"],
+      },
+    ].concat(
+      turnAccounts.map((account) => ({
+        urls: [
+          "turn:standard.relay.metered.ca:80",
+          "turn:standard.relay.metered.ca:80?transport=tcp",
+          "turn:standard.relay.metered.ca:443",
+          "turns:standard.relay.metered.ca:443?transport=tcp",
+        ],
+        ...account,
+      }))
+    ),
+  },
+  peerOptions: {},
+  remotePeerId: [],
 };

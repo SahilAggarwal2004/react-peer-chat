@@ -1,34 +1,53 @@
-import { PeerOptions } from "peerjs";
-import { CSSProperties, DetailedHTMLProps, HTMLAttributes, ReactNode } from "react";
+import { DataConnection, MediaConnection, PeerOptions } from "peerjs";
+import { CSSProperties, DetailedHTMLProps, HTMLAttributes, ReactNode, RefObject, SetStateAction } from "react";
 
-// hooks.tsx
+// lib/connection.ts
+export type Connection = DataConnection | MediaConnection;
+
+// hooks.ts
+export type ErrorHandler = () => void;
+
 export type Message = { id: string; text: string };
 
-export type MessageEvent = (message: Message) => void;
+export type MessageEventHandler = (message: Message) => void;
 
 export type { PeerOptions };
 
 export type RemotePeerId = string | string[];
 
-export type useChatProps = {
-  name?: string;
+export type UseChatProps = {
   peerId: string;
+  name?: string;
   remotePeerId?: RemotePeerId;
   text?: boolean;
   recoverChat?: boolean;
   audio?: boolean;
   peerOptions?: PeerOptions;
-  onError?: Function;
-  onMicError?: Function;
-  onMessageSent?: MessageEvent;
-  onMessageReceived?: MessageEvent;
+  onError?: ErrorHandler;
+  onMicError?: ErrorHandler;
+  onMessageSent?: MessageEventHandler;
+  onMessageReceived?: MessageEventHandler;
+};
+
+export type UseChatReturn = {
+  peerId: string;
+  audioStreamRef: RefObject<HTMLMediaElement | null>;
+  remotePeers: RemotePeers;
+  messages: Message[];
+  sendMessage: (message: Message) => void;
+  audio: boolean;
+  setAudio: (value: SetStateAction<boolean>) => void;
 };
 
 // icons.tsx
-export type IconProps = React.DetailedHTMLProps<React.HTMLAttributes<HTMLSpanElement>, HTMLSpanElement>;
+export type IconProps = DetailedHTMLProps<HTMLAttributes<HTMLSpanElement>, HTMLSpanElement>;
 
 // index.tsx
-export type RemotePeers = { [id: string]: string };
+export type ChatProps = UseChatProps & {
+  dialogOptions?: DialogOptions;
+  props?: DivProps;
+  children?: Children;
+};
 
 export type Children = (childrenOptions: ChildrenOptions) => ReactNode;
 
@@ -40,16 +59,10 @@ export type ChildrenOptions = {
   setAudio?: (audio: boolean) => void;
 };
 
-export type ChatProps = useChatProps & {
-  dialogOptions?: DialogOptions;
-  props?: DivProps;
-  children?: Children;
-};
-
 export type DialogOptions = { position?: DialogPosition; style?: CSSProperties };
 
 export type DialogPosition = "left" | "center" | "right";
 
 export type DivProps = DetailedHTMLProps<HTMLAttributes<HTMLDivElement>, HTMLDivElement>;
 
-// storage.ts
+export type RemotePeers = { [id: string]: string };

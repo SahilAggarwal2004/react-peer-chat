@@ -1,6 +1,6 @@
-import { DataConnection, MediaConnection } from "peerjs";
+import { Connection } from "../types.js";
 
-export function closeConnection(conn: DataConnection | MediaConnection) {
+export function closeConnection(conn: Connection) {
   conn.removeAllListeners();
   conn.close();
 }
