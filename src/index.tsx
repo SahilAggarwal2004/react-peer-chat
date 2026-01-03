@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 
 import { useChat } from "./hooks.js";
 import { BiSolidMessageDetail, BiSolidMessageX, BsFillMicFill, BsFillMicMuteFill, GrSend } from "./icons.js";
-import { clearChat } from "./storage.js";
+import { clearChat } from "./lib/storage.js";
 import "./styles.css";
 import { ChatProps, Message } from "./types.js";
 

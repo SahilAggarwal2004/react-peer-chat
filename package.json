@@ -14,12 +14,16 @@
     "url": "https://github.com/SahilAggarwal2004/react-peer-chat/issues"
   },
   "type": "module",
+  "files": [
+    "dist"
+  ],
   "exports": {
     ".": "./dist/index.js",
     "./icons": "./dist/icons.js",
     "./types": "./dist/types.js"
   },
   "main": "dist/index.js",
+  "types": "dist/index.d.ts",
   "scripts": {
     "build": "pnpm i && pnpm run compile",
     "compile": "tsup",
@@ -27,7 +31,6 @@
     "dry-release": "release-it --ci --dry-run",
     "release": "release-it --ci"
   },
-  "types": "dist/index.d.ts",
   "dependencies": {
     "peerjs": "^1.5.5"
   },

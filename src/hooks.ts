@@ -1,10 +1,10 @@
 import { DataConnection, MediaConnection, Peer } from "peerjs";
 import { useEffect, useRef, useState } from "react";
-import { closeConnection } from "./connection.js";
 import { defaultConfig } from "./constants.js";
-import { getStorage, setStorage } from "./storage.js";
+import { closeConnection } from "./lib/connection.js";
+import { getStorage, setStorage } from "./lib/storage.js";
+import { addPrefix } from "./lib/utils.js";
 import { Message, RemotePeers, useChatProps } from "./types.js";
-import { addPrefix } from "./utils.js";
 
 export function useChat({
   name,
