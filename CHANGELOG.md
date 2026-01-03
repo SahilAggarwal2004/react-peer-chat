@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.8.5](https://github.com/SahilAggarwal2004/react-peer-chat/compare/v0.8.4...v0.8.5) (2026-01-03)
+
+### Code Refactoring
+
+* Improve useChat lifecycle, media handling, and TypeScript safety.  ([eedcb44](https://github.com/SahilAggarwal2004/react-peer-chat/commit/eedcb449b9502047c50ac18919dec44021c815c2))
+
 ## [0.8.4](https://github.com/SahilAggarwal2004/react-peer-chat/compare/v0.8.3...v0.8.4) (2026-01-03)
 
 ### Chores
