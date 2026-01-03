@@ -1,5 +1,19 @@
 # Changelog
 
+## [0.8.4](https://github.com/SahilAggarwal2004/react-peer-chat/compare/v0.8.3...v0.8.4) (2026-01-03)
+
+### Chores
+
+* Add publish script to package.json.  ([8057790](https://github.com/SahilAggarwal2004/react-peer-chat/commit/80577906f6eae86abffab79c754d4e61ffaa0d46))
+
+### Code Refactoring
+
+* Move utility files from src/modules to src/lib.  ([0a20280](https://github.com/SahilAggarwal2004/react-peer-chat/commit/0a20280178ac5aca41c8701b126af02c8703f6e2))
+
+### Build System
+
+* Mark package as side effect free for JavaScript while preserving CSS imports.  ([4aa1e9a](https://github.com/SahilAggarwal2004/react-peer-chat/commit/4aa1e9aa1480325a1a0bcc8288c16ac8a60e149b))
+
 ## [0.8.3](https://github.com/SahilAggarwal2004/react-peer-chat/compare/v0.8.2...v0.8.3) (2026-01-02)
 
 ### Chores
