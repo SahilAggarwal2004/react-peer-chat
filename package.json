@@ -24,6 +24,9 @@
   },
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
+  "sideEffects": [
+    "**/*.css"
+  ],
   "scripts": {
     "build": "pnpm i && pnpm run compile",
     "compile": "tsup",
