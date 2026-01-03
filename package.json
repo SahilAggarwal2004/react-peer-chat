@@ -32,6 +32,7 @@
     "compile": "tsup",
     "dev": "tsup --watch",
     "dry-release": "release-it --ci --dry-run",
+    "publish": "pnpm login && pnpm publish",
     "release": "release-it --ci"
   },
   "dependencies": {
