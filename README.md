@@ -317,9 +317,9 @@ that are listed in [useChat Hook API Reference](#usechat-hook-1) along with the 
 | `props`         | [`DivProps`](#divprops)           | No       | -                      | Props to customize the `<Chat>` component.    |
 | `children`      | [`Children`](#children)           | No       | -                      | See [usage with FaC](#full-customization)     |
 
-### Types
+## Types
 
-#### Children
+### Children
 
 ```typescript
 import { ReactNode } from "react";
@@ -338,7 +338,7 @@ type ChildrenOptions = {
 type Children = (childrenOptions: ChildrenOptions) => ReactNode;
 ```
 
-#### DialogOptions
+### DialogOptions
 
 ```typescript
 import { CSSProperties } from "react";
@@ -349,20 +349,20 @@ type DialogOptions = {
 };
 ```
 
-#### DivProps
+### DivProps
 
 ```typescript
 import { DetailedHTMLProps, HTMLAttributes } from "react";
 type DivProps = DetailedHTMLProps<HTMLAttributes<HTMLDivElement>, HTMLDivElement>;
 ```
 
-#### ErrorHandler
+### ErrorHandler
 
 ```typescript
 type ErrorHandler = () => void;
 ```
 
-#### MessageEventHandler
+### MessageEventHandler
 
 ```typescript
 type Message = {
@@ -372,7 +372,7 @@ type Message = {
 type MessageEventHandler = (message: Message) => void;
 ```
 
-#### PeerOptions
+### PeerOptions
 
 ```typescript
 import { PeerOptions } from "peerjs";
