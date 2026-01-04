@@ -1,5 +1,15 @@
 # Changelog
 
+## [0.8.6](https://github.com/SahilAggarwal2004/react-peer-chat/compare/v0.8.5...v0.8.6) (2026-01-04)
+
+### Chores
+
+* Rename publish script to pub.  ([eb64122](https://github.com/SahilAggarwal2004/react-peer-chat/commit/eb64122aed808884eb3229a480ebf8be93830392))
+
+### Code Refactoring
+
+* Modularize `index.tsx`.  ([e4bd91c](https://github.com/SahilAggarwal2004/react-peer-chat/commit/e4bd91c6bce06690dafc5803db268d06edc0c65e))
+
 ## [0.8.5](https://github.com/SahilAggarwal2004/react-peer-chat/compare/v0.8.4...v0.8.5) (2026-01-03)
 
 ### Code Refactoring
