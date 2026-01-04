@@ -1,10 +1,11 @@
 import type { DataConnection, MediaConnection, Peer } from "peerjs";
 import { SetStateAction, useEffect, useMemo, useRef, useState } from "react";
+
 import { defaults } from "./constants.js";
 import { closeConnection } from "./lib/connection.js";
 import { getStorage, setStorage } from "./lib/storage.js";
 import { addPrefix } from "./lib/utils.js";
-import { Message, RemotePeers, UseChatProps, UseChatReturn } from "./types.js";
+import type { Message, RemotePeers, UseChatProps, UseChatReturn } from "./types.js";
 import { isSetStateFunction } from "./lib/react.js";
 
 const { config: defaultConfig, peerOptions: defaultPeerOptions, remotePeerId: defaultRemotePeerId } = defaults;

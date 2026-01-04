@@ -1,5 +1,5 @@
-import { DataConnection, MediaConnection, PeerOptions } from "peerjs";
-import { CSSProperties, DetailedHTMLProps, HTMLAttributes, ReactNode, RefObject, SetStateAction } from "react";
+import type { DataConnection, MediaConnection, PeerOptions } from "peerjs";
+import type { CSSProperties, DetailedHTMLProps, HTMLAttributes, ReactNode, RefObject, SetStateAction } from "react";
 
 // lib/connection.ts
 export type Connection = DataConnection | MediaConnection;

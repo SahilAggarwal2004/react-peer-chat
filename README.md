@@ -322,7 +322,8 @@ that are listed in [useChat Hook API Reference](#usechat-hook-1) along with the 
 ### Children
 
 ```typescript
-import { ReactNode } from "react";
+import type { ReactNode } from "react";
+
 type RemotePeers = { [id: string]: string };
 type Message = {
   id: string;
@@ -341,7 +342,8 @@ type Children = (childrenOptions: ChildrenOptions) => ReactNode;
 ### DialogOptions
 
 ```typescript
-import { CSSProperties } from "react";
+import type { CSSProperties } from "react";
+
 type DialogPosition = "left" | "center" | "right";
 type DialogOptions = {
   position: DialogPosition;
@@ -352,7 +354,8 @@ type DialogOptions = {
 ### DivProps
 
 ```typescript
-import { DetailedHTMLProps, HTMLAttributes } from "react";
+import type { DetailedHTMLProps, HTMLAttributes } from "react";
+
 type DivProps = DetailedHTMLProps<HTMLAttributes<HTMLDivElement>, HTMLDivElement>;
 ```
 
@@ -375,7 +378,7 @@ type MessageEventHandler = (message: Message) => void;
 ### PeerOptions
 
 ```typescript
-import { PeerOptions } from "peerjs";
+import type { PeerOptions } from "peerjs";
 ```
 
 ## License

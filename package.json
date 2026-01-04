@@ -14,55 +14,57 @@
     "url": "https://github.com/SahilAggarwal2004/react-peer-chat/issues"
   },
   "type": "module",
-  "files": [
-    "dist"
-  ],
   "exports": {
     ".": "./dist/index.js",
     "./icons": "./dist/icons.js",
     "./types": "./dist/types.js"
   },
   "main": "dist/index.js",
-  "types": "dist/index.d.ts",
-  "sideEffects": [
-    "**/*.css"
+  "files": [
+    "dist"
   ],
   "scripts": {
     "build": "pnpm i && pnpm run compile",
     "compile": "tsup",
     "dev": "tsup --watch",
     "dry-release": "release-it --ci --dry-run",
+    "prettier": "prettier-package-json --write package.json",
     "pub": "pnpm login && pnpm publish",
     "release": "release-it --ci"
   },
+  "sideEffects": [
+    "**/*.css"
+  ],
+  "types": "dist/index.d.ts",
   "dependencies": {
     "peerjs": "^1.5.5"
-  },
-  "devDependencies": {
-    "@release-it/conventional-changelog": "^10.0.4",
-    "@types/react": "^19.2.7",
-    "release-it": "^19.2.2",
-    "tsup": "^8.5.1",
-    "typescript": "^5.9.3"
   },
   "peerDependencies": {
     "react": "^17.0.0 || ^18.0.0 || ^19.0.0",
     "react-dom": "^17.0.0 || ^18.0.0 || ^19.0.0"
   },
+  "devDependencies": {
+    "@release-it/conventional-changelog": "^10.0.4",
+    "@types/react": "^19.2.7",
+    "prettier-package-json": "^2.8.0",
+    "release-it": "^19.2.2",
+    "tsup": "^8.5.1",
+    "typescript": "^5.9.3"
+  },
   "keywords": [
-    "react",
+    "audio-chat",
     "chat",
     "component",
-    "peer",
-    "peerjs",
     "p2p",
-    "peer-to-peer",
-    "webrtc",
-    "react-peer-chat",
-    "typescript",
     "p2p-chat",
+    "peer",
+    "peer-to-peer",
+    "peerjs",
+    "react",
+    "react-peer-chat",
     "text-chat",
+    "typescript",
     "voice-chat",
-    "audio-chat"
+    "webrtc"
   ]
 }
