@@ -1,5 +1,15 @@
 # Changelog
 
+## [0.9.0](///compare/v0.8.6...v0.9.0) (2026-01-04)
+
+### ⚠ BREAKING CHANGES
+
+* Add multi-peer audio support, fix duplicate connections, remove audioStreamRef
+
+### Features
+
+* Add multi-peer audio support, fix duplicate connections, remove audioStreamRef.  b0569eb
+
 ## [0.8.6](https://github.com/SahilAggarwal2004/react-peer-chat/compare/v0.8.5...v0.8.6) (2026-01-04)
 
 ### Chores
