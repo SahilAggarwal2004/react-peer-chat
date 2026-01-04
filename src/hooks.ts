@@ -25,10 +25,11 @@ export function useChat({
 }: UseChatProps): UseChatReturn {
   const [peer, setPeer] = useState<Peer>();
   const [audio, setAudio] = useAudio(allowed);
-  const connRef = useRef<{ [id: string]: DataConnection }>({});
-  const localStreamRef = useRef<MediaStream>(null);
-  const audioStreamRef = useRef<HTMLMediaElement>(null);
-  const callsRef = useRef<{ [id: string]: MediaConnection }>({});
+  const connRef = useRef<Record<string, DataConnection>>({});
+  const callsRef = useRef<Record<string, MediaConnection>>({});
+  const audioContextRef = useRef<AudioContext>(null);
+  const mixerRef = useRef<GainNode>(null);
+  const sourceNodesRef = useRef<Record<string, MediaStreamAudioSourceNode | undefined>>({});
   const [messages, setMessages, addMessage] = useMessages();
   const [remotePeers, setRemotePeers] = useStorage<RemotePeers>("rpc-remote-peer", {});
 
@@ -36,6 +37,17 @@ export function useChat({
     const remotePeerIds = Array.isArray(remotePeerId) ? remotePeerId : [remotePeerId];
     return { completePeerId: addPrefix(peerId), completeRemotePeerIds: remotePeerIds.map(addPrefix) };
   }, [peerId]);
+
+  function handleCall(call: MediaConnection) {
+    const id = call.peer;
+    call.on("stream", (stream) => handleRemoteStream(id, stream));
+    call.on("close", () => {
+      call.removeAllListeners();
+      removePeerAudio(id);
+      delete callsRef.current[id];
+    });
+    callsRef.current[id] = call;
+  }
 
   function handleConnection(conn: DataConnection) {
     connRef.current[conn.peer] = conn;
@@ -57,13 +69,29 @@ export function useChat({
     onMicError();
   }
 
-  function handleRemoteStream(remoteStream: MediaStream) {
-    if (audioStreamRef.current) audioStreamRef.current.srcObject = remoteStream;
+  function handleRemoteStream(peerId: string, remoteStream: MediaStream) {
+    if (!audioContextRef.current) audioContextRef.current = new AudioContext();
+    if (!mixerRef.current) {
+      mixerRef.current = audioContextRef.current.createGain();
+      mixerRef.current.connect(audioContextRef.current.destination);
+    }
+
+    removePeerAudio(peerId);
+
+    const source = audioContextRef.current.createMediaStreamSource(remoteStream);
+    source.connect(mixerRef.current);
+    sourceNodesRef.current[peerId] = source;
   }
 
   function receiveMessage(message: Message) {
     addMessage(message);
     onMessageReceived?.(message);
+  }
+
+  function removePeerAudio(peerId: string) {
+    if (!sourceNodesRef.current[peerId]) return;
+    sourceNodesRef.current[peerId].disconnect();
+    delete sourceNodesRef.current[peerId];
   }
 
   function sendMessage(message: Message) {
@@ -116,6 +144,8 @@ export function useChat({
   useEffect(() => {
     if (!audio || !peer) return;
 
+    let localStream: MediaStream;
+
     const setupAudio = () =>
       navigator.mediaDevices
         .getUserMedia({
@@ -127,18 +157,16 @@ export function useChat({
           },
         })
         .then((stream: MediaStream) => {
-          localStreamRef.current = stream;
+          localStream = stream;
           completeRemotePeerIds.forEach((id) => {
+            if (callsRef.current[id]) return;
             const call = peer.call(id, stream);
-            call.on("stream", handleRemoteStream);
-            call.on("close", call.removeAllListeners);
-            callsRef.current[id] = call;
+            handleCall(call);
           });
           peer.on("call", (call) => {
+            if (callsRef.current[call.peer]) return call.close();
             call.answer(stream);
-            call.on("stream", handleRemoteStream);
-            call.on("close", call.removeAllListeners);
-            callsRef.current[call.peer] = call;
+            handleCall(call);
           });
         })
         .catch(handleError);
@@ -147,14 +175,17 @@ export function useChat({
     else peer.once("open", setupAudio);
 
     return () => {
-      localStreamRef.current?.getTracks().forEach((track) => track.stop());
-      localStreamRef.current = null;
+      localStream?.getTracks().forEach((track) => track.stop());
       Object.values(callsRef.current).forEach(closeConnection);
       callsRef.current = {};
+      Object.keys(sourceNodesRef.current).forEach(removePeerAudio);
+      audioContextRef.current?.close();
+      audioContextRef.current = null;
+      mixerRef.current = null;
     };
   }, [audio, peer]);
 
-  return { peerId: completePeerId, audioStreamRef, remotePeers, messages, sendMessage, audio, setAudio };
+  return { peerId: completePeerId, remotePeers, messages, sendMessage, audio, setAudio };
 }
 
 export function useMessages(): readonly [Message[], (value: SetStateAction<Message[]>) => void, (message: Message) => void] {

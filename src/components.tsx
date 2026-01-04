@@ -6,7 +6,7 @@ import "./styles.css";
 import type { ChatProps, Message } from "./types.js";
 
 export default function Chat({ text = true, audio = true, onMessageReceived, dialogOptions, props = {}, children, ...hookProps }: ChatProps) {
-  const { peerId, audioStreamRef, ...childrenOptions } = useChat({
+  const { peerId, ...childrenOptions } = useChat({
     text,
     audio,
     onMessageReceived: modifiedOnMessageReceived,
@@ -96,7 +96,6 @@ export default function Chat({ text = true, audio = true, onMessageReceived, dia
           )}
         </>
       )}
-      {audio && audioEnabled && <audio ref={audioStreamRef} autoPlay style={{ display: "none" }} />}
     </div>
   );
 }

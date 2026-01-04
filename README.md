@@ -9,7 +9,7 @@ A simple-to-use React component for implementing peer-to-peer chatting, powered 
 - Supports persistent text chat across page reloads
 - Recovers old chats upon reconnection
 - Option to clear chat on command
-- Supports audio/voice chat
+- Supports audio/voice chat with automatic mixing for multiple peers
 - Multiple peer connections. See [multi-peer usage](#multi-peer-usage)
 - Fully customizable. See [usage with FaC](#full-customization)
 
@@ -166,7 +166,9 @@ export default function App() {
 
 ### useChat Hook
 
-The `useChat` hook is ideal when you want to completely redesign the Chat UI or handle the audio stream differently, instead of using traditional playback methods.
+The `useChat` hook is ideal when you want to completely redesign the Chat UI.
+
+#### Basic Usage
 
 ```jsx
 import React, { useEffect, useRef, useState } from "react";
@@ -174,13 +176,19 @@ import { clearChat, useChat } from "react-peer-chat";
 import { BiSolidMessageDetail, BiSolidMessageX, BsFillMicFill, BsFillMicMuteFill, GrSend } from "react-peer-chat/icons";
 
 function Chat({ text = true, audio = true, onMessageReceived, dialogOptions, props = {}, children, ...hookProps }) {
-  const { peerId, audioStreamRef, ...childrenOptions } = useChat({
+  const {
+    peerId, // Complete peer ID
+    remotePeers, // Object mapping remote peer IDs to their names
+    messages, // Array of all chat messages
+    sendMessage, // Function to send a message to all connected peers
+    audio: audioEnabled, // Current audio state (enabled/disabled)
+    setAudio, // Function to toggle audio on/off (only works if audio option is set to true)
+  } = useChat({
     text,
     audio,
     onMessageReceived: modifiedOnMessageReceived,
     ...hookProps,
   });
-  const { remotePeers, messages, sendMessage, audio: audioEnabled, setAudio } = childrenOptions;
   const containerRef = useRef(null);
   const [dialog, setDialog] = useState(false);
   const dialogRef = useRef(null);
@@ -205,7 +213,7 @@ function Chat({ text = true, audio = true, onMessageReceived, dialogOptions, pro
   return (
     <div className="rpc-main rpc-font" {...props}>
       {typeof children === "function" ? (
-        children(childrenOptions)
+        children({ remotePeers, messages, sendMessage, audio: audioEnabled, setAudio })
       ) : (
         <>
           {text && (
@@ -258,16 +266,11 @@ function Chat({ text = true, audio = true, onMessageReceived, dialogOptions, pro
             </div>
           )}
           {audio && (
-            <button>
-              {audioEnabled ? <BsFillMicFill title="Turn mic off" onClick={() => setAudio(false)} /> : <BsFillMicMuteFill title="Turn mic on" onClick={() => setAudio(true)} />}
+            <button className="rpc-button" onClick={() => setAudio(!audioEnabled)}>
+              {audioEnabled ? <BsFillMicFill title="Turn mic off" /> : <BsFillMicMuteFill title="Turn mic on" />}
             </button>
           )}
         </>
-      )}
-      {audio && (
-        <button className="rpc-button" onClick={() => setAudio(!audioEnabled)}>
-          {audioEnabled ? <BsFillMicFill title="Turn mic off" /> : <BsFillMicMuteFill title="Turn mic on" />}
-        </button>
       )}
     </div>
   );
@@ -284,13 +287,11 @@ export default function App() {
 }
 ```
 
-#### Basic Usage
-
 ## API Reference
 
 ### useChat Hook
 
-Here is the full API for the `useChat` hook, these options can be passed as paramerters to the hook:
+Here is the full API for the `useChat` hook, these options can be passed as parameters to the hook:
 
 | Parameter           | Type                                          | Required | Default                                                         | Description                                                                                                                                     |
 | ------------------- | --------------------------------------------- | -------- | --------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -299,7 +300,7 @@ Here is the full API for the `useChat` hook, these options can be passed as para
 | `remotePeerId`      | `string \| string[]`                          | No       | -                                                               | Unique id(s) of remote peer(s) to connect to. Read at mount and when `peerId` changes; changes to this prop alone won't create new connections. |
 | `text`              | `boolean`                                     | No       | `true`                                                          | Text chat will be enabled if this property is set to true.                                                                                      |
 | `recoverChat`       | `boolean`                                     | No       | `false`                                                         | Old chats will be recovered upon reconnecting with the same peer(s).                                                                            |
-| `audio`             | `boolean`                                     | No       | `true`                                                          | Voice chat will be enabled if this property is set to true.                                                                                     |
+| `audio`             | `boolean`                                     | No       | `true`                                                          | Voice chat will be enabled if this property is set to true. Audio from multiple peers is automatically mixed.                                   |
 | `peerOptions`       | [`PeerOptions`](#peeroptions)                 | No       | -                                                               | Options to customize peerjs Peer instance.                                                                                                      |
 | `onError`           | [`ErrorHandler`](#errorhandler)               | No       | `() => alert('Browser not supported! Try some other browser.')` | Function to be executed if browser doesn't support `WebRTC`                                                                                     |
 | `onMicError`        | [`ErrorHandler`](#errorhandler)               | No       | `() => alert('Microphone not accessible!')`                     | Function to be executed when microphone is not accessible.                                                                                      |
@@ -322,19 +323,19 @@ that are listed in [useChat Hook API Reference](#usechat-hook-1) along with the 
 ### Children
 
 ```typescript
-import type { ReactNode } from "react";
+import type { ReactNode, SetStateAction } from "react";
 
-type RemotePeers = { [id: string]: string };
+type RemotePeers = Record<string, string>;
 type Message = {
   id: string;
   text: string;
 };
 type ChildrenOptions = {
-  remotePeers?: RemotePeers;
-  messages?: Message[];
-  sendMessage?: (message: Message) => void;
-  audio?: boolean;
-  setAudio?: (audio: boolean) => void;
+  remotePeers: RemotePeers;
+  messages: Message[];
+  sendMessage: (message: Message) => void;
+  audio: boolean;
+  setAudio: (value: SetStateAction<boolean>) => void;
 };
 type Children = (childrenOptions: ChildrenOptions) => ReactNode;
 ```
@@ -346,8 +347,8 @@ import type { CSSProperties } from "react";
 
 type DialogPosition = "left" | "center" | "right";
 type DialogOptions = {
-  position: DialogPosition;
-  style: CSSProperties;
+  position?: DialogPosition;
+  style?: CSSProperties;
 };
 ```
 

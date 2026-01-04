@@ -1,5 +1,5 @@
 import type { DataConnection, MediaConnection, PeerOptions } from "peerjs";
-import type { CSSProperties, DetailedHTMLProps, HTMLAttributes, ReactNode, RefObject, SetStateAction } from "react";
+import type { CSSProperties, DetailedHTMLProps, HTMLAttributes, ReactNode, SetStateAction } from "react";
 
 // lib/connection.ts
 export type Connection = DataConnection | MediaConnection;
@@ -29,15 +29,15 @@ export type UseChatProps = {
   onMessageReceived?: MessageEventHandler;
 };
 
-export type UseChatReturn = {
-  peerId: string;
-  audioStreamRef: RefObject<HTMLMediaElement | null>;
+export type ChildrenOptions = {
   remotePeers: RemotePeers;
   messages: Message[];
   sendMessage: (message: Message) => void;
   audio: boolean;
   setAudio: (value: SetStateAction<boolean>) => void;
 };
+
+export type UseChatReturn = ChildrenOptions & { peerId: string };
 
 // icons.tsx
 export type IconProps = DetailedHTMLProps<HTMLAttributes<HTMLSpanElement>, HTMLSpanElement>;
@@ -51,18 +51,10 @@ export type ChatProps = UseChatProps & {
 
 export type Children = (childrenOptions: ChildrenOptions) => ReactNode;
 
-export type ChildrenOptions = {
-  remotePeers?: RemotePeers;
-  messages?: Message[];
-  sendMessage?: (message: Message) => void;
-  audio?: boolean;
-  setAudio?: (audio: boolean) => void;
-};
-
 export type DialogOptions = { position?: DialogPosition; style?: CSSProperties };
 
 export type DialogPosition = "left" | "center" | "right";
 
 export type DivProps = DetailedHTMLProps<HTMLAttributes<HTMLDivElement>, HTMLDivElement>;
 
-export type RemotePeers = { [id: string]: string };
+export type RemotePeers = Record<string, string>;
