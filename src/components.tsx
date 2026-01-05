@@ -9,7 +9,7 @@ export default function Chat({ text = true, audio = true, onMessageReceived, dia
   const { peerId, ...childrenOptions } = useChat({
     text,
     audio,
-    onMessageReceived: modifiedOnMessageReceived,
+    onMessageReceived: receiveMessageHandler,
     ...hookProps,
   });
   const { remotePeers, messages, sendMessage, audio: audioEnabled, setAudio } = childrenOptions;
@@ -19,7 +19,7 @@ export default function Chat({ text = true, audio = true, onMessageReceived, dia
   const inputRef = useRef<HTMLInputElement>(null);
   const [notification, setNotification] = useState(false);
 
-  function modifiedOnMessageReceived(message: Message) {
+  function receiveMessageHandler(message: Message) {
     if (!dialogRef.current?.open) setNotification(true);
     onMessageReceived?.(message);
   }
@@ -61,9 +61,9 @@ export default function Chat({ text = true, audio = true, onMessageReceived, dia
                 <hr className="rpc-hr" />
                 <div>
                   <div ref={containerRef} className="rpc-message-container">
-                    {messages.map(({ id, text }, i) => (
+                    {messages.map(({ id, name, text }, i) => (
                       <div key={i}>
-                        <strong>{id === peerId ? "You" : remotePeers[id]}: </strong>
+                        <strong>{id === peerId ? "You" : name}: </strong>
                         <span>{text}</span>
                       </div>
                     ))}

@@ -5,7 +5,7 @@ import { defaults } from "./constants.js";
 import { closeConnection } from "./lib/connection.js";
 import { getStorage, setStorage } from "./lib/storage.js";
 import { addPrefix } from "./lib/utils.js";
-import type { Message, RemotePeers, UseChatProps, UseChatReturn } from "./types.js";
+import type { InputMessage, Message, RemotePeers, UseChatProps, UseChatReturn } from "./types.js";
 import { isSetStateFunction } from "./lib/react.js";
 
 const { config: defaultConfig, peerOptions: defaultPeerOptions, remotePeerId: defaultRemotePeerId } = defaults;
@@ -94,10 +94,11 @@ export function useChat({
     delete sourceNodesRef.current[peerId];
   }
 
-  function sendMessage(message: Message) {
-    addMessage(message);
-    Object.values(connRef.current).forEach((conn) => conn.send({ type: "message", message }));
-    onMessageSent?.(message);
+  function sendMessage(message: InputMessage) {
+    const event = { type: "message", message: { ...message, name } };
+    addMessage(event.message);
+    Object.values(connRef.current).forEach((conn) => conn.send(event));
+    onMessageSent?.(event.message);
   }
 
   useEffect(() => {

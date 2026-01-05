@@ -7,7 +7,9 @@ export type Connection = DataConnection | MediaConnection;
 // hooks.ts
 export type ErrorHandler = () => void;
 
-export type Message = { id: string; text: string };
+export type InputMessage = { id: string; text: string };
+
+export type Message = InputMessage & { name: string };
 
 export type MessageEventHandler = (message: Message) => void;
 
@@ -32,7 +34,7 @@ export type UseChatProps = {
 export type ChildrenOptions = {
   remotePeers: RemotePeers;
   messages: Message[];
-  sendMessage: (message: Message) => void;
+  sendMessage: (message: InputMessage) => void;
   audio: boolean;
   setAudio: (value: SetStateAction<boolean>) => void;
 };
