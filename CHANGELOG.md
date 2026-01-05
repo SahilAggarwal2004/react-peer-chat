@@ -1,5 +1,15 @@
 # Changelog
 
+## [0.10.0](https://github.com/SahilAggarwal2004/react-peer-chat/compare/v0.9.0...v0.10.0) (2026-01-05)
+
+### Features
+
+* Add sender name to chat messages.  ([46e8b62](https://github.com/SahilAggarwal2004/react-peer-chat/commit/46e8b62e72aa106265fe1925c5ec2c01d4ddda24))
+
+### Bug Fixes
+
+* Resolve WebRTC audio playback and race condition issues.  ([56ab779](https://github.com/SahilAggarwal2004/react-peer-chat/commit/56ab77960112ac0f6c02d191f486ff45c7e5aac0))
+
 ## [0.9.0](///compare/v0.8.6...v0.9.0) (2026-01-04)
 
 ### ⚠ BREAKING CHANGES
