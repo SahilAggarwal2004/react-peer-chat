@@ -29,7 +29,7 @@ export function useChat({
   const callsRef = useRef<Record<string, MediaConnection>>({});
   const audioContextRef = useRef<AudioContext>(null);
   const mixerRef = useRef<GainNode>(null);
-  const sourceNodesRef = useRef<Record<string, MediaStreamAudioSourceNode | undefined>>({});
+  const sourceNodesRef = useRef<Record<string, MediaElementAudioSourceNode | undefined>>({});
   const [messages, setMessages, addMessage] = useMessages();
   const [remotePeers, setRemotePeers] = useStorage<RemotePeers>("rpc-remote-peer", {});
 
@@ -39,18 +39,36 @@ export function useChat({
   }, [peerId]);
 
   function handleCall(call: MediaConnection) {
-    const id = call.peer;
-    call.on("stream", (stream) => handleRemoteStream(id, stream));
+    const peerId = call.peer;
+
+    call.on("stream", () => {
+      callsRef.current[peerId] = call;
+      if (!audioContextRef.current) audioContextRef.current = new AudioContext();
+      if (audioContextRef.current.state === "suspended") audioContextRef.current.resume();
+      if (!mixerRef.current) {
+        mixerRef.current = audioContextRef.current.createGain();
+        mixerRef.current.connect(audioContextRef.current.destination);
+      }
+      removePeerAudio(peerId);
+      const audio = new Audio();
+      audio.srcObject = call.remoteStream;
+      audio.autoplay = true;
+      audio.muted = false;
+      const source = audioContextRef.current.createMediaElementSource(audio);
+      source.connect(mixerRef.current);
+      sourceNodesRef.current[peerId] = source;
+    });
+
     call.on("close", () => {
       call.removeAllListeners();
-      removePeerAudio(id);
-      delete callsRef.current[id];
+      removePeerAudio(peerId);
+      delete callsRef.current[peerId];
     });
-    callsRef.current[id] = call;
   }
 
   function handleConnection(conn: DataConnection) {
     connRef.current[conn.peer] = conn;
+
     conn.on("open", () => {
       conn.on("data", ({ message, messages, remotePeerName, type }: any) => {
         if (type === "message") receiveMessage(message);
@@ -59,28 +77,16 @@ export function useChat({
           if (recoverChat) setMessages((old) => (messages.length > old.length ? messages : old));
         }
       });
+
       conn.send({ type: "init", remotePeerName: name, messages });
     });
+
     conn.on("close", conn.removeAllListeners);
   }
 
   function handleError() {
     setAudio(false);
     onMicError();
-  }
-
-  function handleRemoteStream(peerId: string, remoteStream: MediaStream) {
-    if (!audioContextRef.current) audioContextRef.current = new AudioContext();
-    if (!mixerRef.current) {
-      mixerRef.current = audioContextRef.current.createGain();
-      mixerRef.current.connect(audioContextRef.current.destination);
-    }
-
-    removePeerAudio(peerId);
-
-    const source = audioContextRef.current.createMediaStreamSource(remoteStream);
-    source.connect(mixerRef.current);
-    sourceNodesRef.current[peerId] = source;
   }
 
   function receiveMessage(message: Message) {
@@ -152,9 +158,9 @@ export function useChat({
         .getUserMedia({
           video: false,
           audio: {
-            autoGainControl: false, // Disable automatic gain control
-            noiseSuppression: true, // Enable noise suppression
-            echoCancellation: true, // Enable echo cancellation
+            autoGainControl: true,
+            noiseSuppression: true,
+            echoCancellation: true,
           },
         })
         .then((stream: MediaStream) => {
