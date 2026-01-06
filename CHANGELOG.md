@@ -1,5 +1,15 @@
 # Changelog
 
+## [0.11.0](https://github.com/SahilAggarwal2004/react-peer-chat/compare/v0.10.0...v0.11.0) (2026-01-06)
+
+### ⚠ BREAKING CHANGES
+
+* Improve error handling and add automatic reconnection
+
+### Features
+
+* Improve error handling and add automatic reconnection.  ([8849276](https://github.com/SahilAggarwal2004/react-peer-chat/commit/8849276259bc32ab3715ad732017c2bd141e14d4))
+
 ## [0.10.0](https://github.com/SahilAggarwal2004/react-peer-chat/compare/v0.9.0...v0.10.0) (2026-01-05)
 
 ### Features
