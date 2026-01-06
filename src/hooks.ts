@@ -18,8 +18,9 @@ export function useChat({
   text = true,
   recoverChat = false,
   audio: allowed = true,
-  onError = () => alert("Browser not supported! Try some other browser."),
-  onMicError = () => alert("Microphone not accessible!"),
+  onError = console.error,
+  onPeerError = console.error,
+  onNetworkError,
   onMessageSent,
   onMessageReceived,
 }: UseChatProps): UseChatReturn {
@@ -84,9 +85,9 @@ export function useChat({
     conn.on("close", conn.removeAllListeners);
   }
 
-  function handleError() {
+  function handleMediaError() {
     setAudio(false);
-    onMicError();
+    onError(new Error("Microphone not accessible!"));
   }
 
   function receiveMessage(message: Message) {
@@ -117,10 +118,18 @@ export function useChat({
           supports: { audioVideo, data },
         },
       }) => {
-        if (!data || !audioVideo) return onError();
+        if (!data || !audioVideo) return onError(new Error("Browser not supported! Try some other browser."));
 
         const peer = new Peer(completePeerId, { config: defaultConfig, ...peerOptions });
         peer.on("connection", handleConnection);
+        peer.on("disconnected", () => peer.reconnect());
+        peer.on("error", (error) => {
+          if (error.type === "network" || error.type === "server-error") {
+            setTimeout(() => peer.reconnect(), 1000);
+            onNetworkError?.(error);
+          }
+          onPeerError(error);
+        });
         setPeer(peer);
       }
     );
@@ -140,9 +149,10 @@ export function useChat({
     const handleOpen = () => completeRemotePeerIds.forEach((id) => handleConnection(peer.connect(id)));
 
     if (peer.open) handleOpen();
-    else peer.once("open", handleOpen);
+    peer.on("open", handleOpen);
 
     return () => {
+      peer.off("open", handleOpen);
       Object.values(connRef.current).forEach(closeConnection);
       connRef.current = {};
     };
@@ -153,7 +163,9 @@ export function useChat({
 
     let localStream: MediaStream;
 
-    const setupAudio = () =>
+    const setupAudio = () => {
+      if (!navigator.mediaDevices) return handleMediaError();
+
       navigator.mediaDevices
         .getUserMedia({
           video: false,
@@ -176,12 +188,15 @@ export function useChat({
             handleCall(call);
           });
         })
-        .catch(handleError);
+        .catch(handleMediaError);
+    };
 
     if (peer.open) setupAudio();
-    else peer.once("open", setupAudio);
+    peer.on("open", setupAudio);
 
     return () => {
+      peer.off("open", setupAudio);
+      peer.off("call");
       localStream?.getTracks().forEach((track) => track.stop());
       Object.values(callsRef.current).forEach(closeConnection);
       callsRef.current = {};

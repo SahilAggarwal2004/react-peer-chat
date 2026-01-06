@@ -1,17 +1,19 @@
-import type { DataConnection, MediaConnection, PeerOptions } from "peerjs";
+import type { DataConnection, MediaConnection, PeerError, PeerErrorType, PeerOptions } from "peerjs";
 import type { CSSProperties, DetailedHTMLProps, HTMLAttributes, ReactNode, SetStateAction } from "react";
 
 // lib/connection.ts
 export type Connection = DataConnection | MediaConnection;
 
 // hooks.ts
-export type ErrorHandler = () => void;
+export type ErrorHandler<E = Error> = (error: E) => void;
 
 export type InputMessage = { id: string; text: string };
 
 export type Message = InputMessage & { name: string };
 
 export type MessageEventHandler = (message: Message) => void;
+
+export type PeerErrorHandler = ErrorHandler<PeerError<`${PeerErrorType}`>>;
 
 export type { PeerOptions };
 
@@ -26,7 +28,8 @@ export type UseChatProps = {
   audio?: boolean;
   peerOptions?: PeerOptions;
   onError?: ErrorHandler;
-  onMicError?: ErrorHandler;
+  onPeerError?: PeerErrorHandler;
+  onNetworkError?: PeerErrorHandler;
   onMessageSent?: MessageEventHandler;
   onMessageReceived?: MessageEventHandler;
 };

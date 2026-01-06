@@ -11,6 +11,7 @@ A simple-to-use React component for implementing peer-to-peer chatting, powered 
 - Option to clear chat on command
 - Supports audio/voice chat with automatic mixing for multiple peers
 - Multiple peer connections. See [multi-peer usage](#multi-peer-usage)
+- Automatic reconnection handling for network interruptions
 - Fully customizable. See [usage with FaC](#full-customization)
 
 ## Installation
@@ -100,8 +101,9 @@ export default function App() {
         style: { padding: "4px" },
       }}
       props={{ title: "React Peer Chat Component" }}
-      onError={() => console.error("Browser not supported!")}
-      onMicError={() => console.error("Microphone not accessible!")}
+      onError={(error) => console.error("Fatal error:", error)}
+      onPeerError={(error) => console.error("Peer error:", error.type, error)}
+      onNetworkError={(error) => console.log("Reconnecting...")}
     />
   );
 }
@@ -120,8 +122,8 @@ export default function App() {
         name='John Doe'
         peerId='my-unique-id'
         remotePeerId='remote-unique-id'
-        onError={() => console.error('Browser not supported!')}
-        onMicError={() => console.error('Microphone not accessible!')}
+        onError={(error) => console.error('Fatal error:', error)}
+        onPeerError={(error) => console.error('Peer error:', error.type, error)}
     >
         {({ remotePeers, messages, sendMessage, audio, setAudio }) => (
             <YourCustomComponent>
@@ -293,19 +295,20 @@ export default function App() {
 
 Here is the full API for the `useChat` hook, these options can be passed as parameters to the hook:
 
-| Parameter           | Type                                          | Required | Default                                                         | Description                                                                                                                                     |
-| ------------------- | --------------------------------------------- | -------- | --------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------- |
-| `name`              | `string`                                      | No       | Anonymous User                                                  | Name of the peer which will be shown to the remote peer.                                                                                        |
-| `peerId`            | `string`                                      | Yes      | -                                                               | It is the unique id that is alloted to a peer. It uniquely identifies a peer from other peers.                                                  |
-| `remotePeerId`      | `string \| string[]`                          | No       | -                                                               | Unique id(s) of remote peer(s) to connect to. Read at mount and when `peerId` changes; changes to this prop alone won't create new connections. |
-| `text`              | `boolean`                                     | No       | `true`                                                          | Text chat will be enabled if this property is set to true.                                                                                      |
-| `recoverChat`       | `boolean`                                     | No       | `false`                                                         | Old chats will be recovered upon reconnecting with the same peer(s).                                                                            |
-| `audio`             | `boolean`                                     | No       | `true`                                                          | Voice chat will be enabled if this property is set to true. Audio from multiple peers is automatically mixed.                                   |
-| `peerOptions`       | [`PeerOptions`](#peeroptions)                 | No       | -                                                               | Options to customize peerjs Peer instance.                                                                                                      |
-| `onError`           | [`ErrorHandler`](#errorhandler)               | No       | `() => alert('Browser not supported! Try some other browser.')` | Function to be executed if browser doesn't support `WebRTC`                                                                                     |
-| `onMicError`        | [`ErrorHandler`](#errorhandler)               | No       | `() => alert('Microphone not accessible!')`                     | Function to be executed when microphone is not accessible.                                                                                      |
-| `onMessageSent`     | [`MessageEventHandler`](#messageeventhandler) | No       | -                                                               | Function to be executed when a text message is sent to other peers.                                                                             |
-| `onMessageReceived` | [`MessageEventHandler`](#messageeventhandler) | No       | -                                                               | Function to be executed when a text message is received from other peers.                                                                       |
+| Parameter           | Type                                          | Required | Default         | Description                                                                                                                                     |
+| ------------------- | --------------------------------------------- | -------- | --------------- | ----------------------------------------------------------------------------------------------------------------------------------------------- |
+| `name`              | `string`                                      | No       | Anonymous User  | Name of the peer which will be shown to the remote peer.                                                                                        |
+| `peerId`            | `string`                                      | Yes      | -               | It is the unique id that is alloted to a peer. It uniquely identifies a peer from other peers.                                                  |
+| `remotePeerId`      | `string \| string[]`                          | No       | -               | Unique id(s) of remote peer(s) to connect to. Read at mount and when `peerId` changes; changes to this prop alone won't create new connections. |
+| `text`              | `boolean`                                     | No       | `true`          | Text chat will be enabled if this property is set to true.                                                                                      |
+| `recoverChat`       | `boolean`                                     | No       | `false`         | Old chats will be recovered upon reconnecting with the same peer(s).                                                                            |
+| `audio`             | `boolean`                                     | No       | `true`          | Voice chat will be enabled if this property is set to true. Audio from multiple peers is automatically mixed.                                   |
+| `peerOptions`       | [`PeerOptions`](#peeroptions)                 | No       | -               | Options to customize peerjs Peer instance.                                                                                                      |
+| `onError`           | [`ErrorHandler`](#errorhandler)               | No       | `console.error` | Function to be executed for fatal errors (browser not supported, microphone not accessible).                                                    |
+| `onPeerError`       | [`PeerErrorHandler`](#peererrorhandler)       | No       | `console.error` | Function to be executed for all peer runtime errors. The library automatically handles reconnection for network errors.                         |
+| `onNetworkError`    | [`PeerErrorHandler`](#peererrorhandler)       | No       | -               | Function to be executed for network/server errors (which trigger automatic reconnection). Useful for showing "reconnecting..." UI.              |
+| `onMessageSent`     | [`MessageEventHandler`](#messageeventhandler) | No       | -               | Function to be executed when a text message is sent to other peers.                                                                             |
+| `onMessageReceived` | [`MessageEventHandler`](#messageeventhandler) | No       | -               | Function to be executed when a text message is received from other peers.                                                                       |
 
 ### Chat Component
 
@@ -363,7 +366,15 @@ type DivProps = DetailedHTMLProps<HTMLAttributes<HTMLDivElement>, HTMLDivElement
 ### ErrorHandler
 
 ```typescript
-type ErrorHandler = () => void;
+type ErrorHandler = (error: Error) => void;
+```
+
+### PeerErrorHandler
+
+```typescript
+import type { PeerError, PeerErrorType } from "peerjs";
+
+export type PeerErrorHandler = ErrorHandler<PeerError<`${PeerErrorType}`>>;
 ```
 
 ### MessageEventHandler
@@ -384,4 +395,4 @@ import type { PeerOptions } from "peerjs";
 
 ## License
 
-This project is licensed under the [MIT License](LICENSE).
+This project is licensed under the [MIT License](LICENSE)
