@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.11.5](https://github.com/SahilAggarwal2004/react-peer-chat/compare/v0.11.4...v0.11.5) (2026-01-17)
+
+### Bug Fixes
+
+* Ensure clean peer teardown and reliable reconnection with listener cleanup and scheduled retry.  ([c1a40fd](https://github.com/SahilAggarwal2004/react-peer-chat/commit/c1a40fdc490cc4079a3a88b6f7cd1777272d4f7a))
+
 ## [0.11.4](https://github.com/SahilAggarwal2004/react-peer-chat/compare/v0.11.3...v0.11.4) (2026-01-17)
 
 ### Bug Fixes
