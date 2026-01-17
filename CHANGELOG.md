@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.11.8](https://github.com/SahilAggarwal2004/react-peer-chat/compare/v0.11.7...v0.11.8) (2026-01-17)
+
+### Bug Fixes
+
+* Make clearChat reactive via storage subscriptions.  ([7709e4a](https://github.com/SahilAggarwal2004/react-peer-chat/commit/7709e4a85ee6d0a215c91445c67e1e33dcbb0b0b))
+
 ## [0.11.7](https://github.com/SahilAggarwal2004/react-peer-chat/compare/v0.11.6...v0.11.7) (2026-01-17)
 
 ### Bug Fixes
