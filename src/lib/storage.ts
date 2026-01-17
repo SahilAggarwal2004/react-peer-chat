@@ -3,25 +3,15 @@ import { VoidFunction } from "../types";
 const listeners = new Map<string, Set<(value: any) => void>>();
 
 export function clearChat() {
-  removeStorage("rpc-remote-peer");
-  removeStorage("rpc-messages");
+  removeStorage("rpc-remote-peer", false);
+  removeStorage("rpc-messages", false);
 }
 
-const getStorageInstance = (local = true) => (local ? localStorage : sessionStorage);
+const getStorageInstance = (local: boolean) => (local ? localStorage : sessionStorage);
 
-export function clearStorage(prefix = "", local = true) {
-  const storage = getStorageInstance(local);
-  const keysToRemove = [];
-  for (let i = 0; i < storage.length; i++) {
-    const key = storage.key(i);
-    if (key && key.startsWith(prefix)) keysToRemove.push(key);
-  }
-  keysToRemove.forEach((key) => removeStorage(key, local));
-}
+const getNamespacedKey = (key: string, local: boolean) => `${local ? "local" : "session"}:${key}`;
 
-const getNamespacedKey = (key: string, local = true) => `${local ? "local" : "session"}:${key}`;
-
-export function getStorage<T>(key: string, fallbackValue?: T, local = true): T | undefined {
+export function getStorage<T>(key: string, local: boolean, fallbackValue?: T): T | undefined {
   if (typeof window === "undefined") return fallbackValue;
   const value = getStorageInstance(local).getItem(key);
   if (value) {
@@ -40,13 +30,13 @@ function publish<T>(key: string, local: boolean, value?: T) {
   if (callbacks) callbacks.forEach((callback) => callback(value));
 }
 
-export function removeStorage(key: string, local = true) {
+export function removeStorage(key: string, local: boolean) {
   getStorageInstance(local).removeItem(key);
   publish(key, local);
 }
 
-export function setStorage(key: string, value: unknown, local = true) {
-  if (typeof value === "function") value = value(getStorage(key, undefined, local));
+export function setStorage(key: string, value: unknown, local: boolean) {
+  if (typeof value === "function") value = value(getStorage(key, local));
   getStorageInstance(local).setItem(key, JSON.stringify(value));
   publish(key, local, value);
 }

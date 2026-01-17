@@ -276,7 +276,7 @@ export function useMessages(): readonly [Message[], (value: SetStateAction<Messa
 export function useStorage<T>(key: string, initialValue: T, local?: boolean): readonly [T, (value: SetStateAction<T>) => void];
 export function useStorage<T>(key: string, initialValue?: T, local?: boolean): readonly [T | undefined, (value: SetStateAction<T | undefined>) => void];
 export function useStorage<T>(key: string, initialValue?: T, local = false) {
-  const [storedValue, setStoredValue] = useState<T | undefined>(() => (typeof window === "undefined" ? initialValue : getStorage(key, initialValue, local)));
+  const [storedValue, setStoredValue] = useState<T | undefined>(() => (typeof window === "undefined" ? initialValue : getStorage(key, local, initialValue)));
 
   const setValue = (value: SetStateAction<T | undefined>) => {
     setStoredValue((prev) => {
