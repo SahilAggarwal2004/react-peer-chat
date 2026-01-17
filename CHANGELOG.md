@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.11.3](https://github.com/SahilAggarwal2004/react-peer-chat/compare/v0.11.2...v0.11.3) (2026-01-17)
+
+### Bug Fixes
+
+* Prefer new peer connections and clean up stale ones.  ([52fc73c](https://github.com/SahilAggarwal2004/react-peer-chat/commit/52fc73c1bf7fedd4c1966b79d16a9d5a76dc4989))
+
 ## [0.11.2](https://github.com/SahilAggarwal2004/react-peer-chat/compare/v0.11.1...v0.11.2) (2026-01-17)
 
 ### Bug Fixes
