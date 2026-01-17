@@ -1,5 +1,16 @@
 # Changelog
 
+## [0.11.1](https://github.com/SahilAggarwal2004/react-peer-chat/compare/v0.11.0...v0.11.1) (2026-01-17)
+
+### Chores
+
+* **deps:** Update @types/react and release-it.  ([3c3ca7c](https://github.com/SahilAggarwal2004/react-peer-chat/commit/3c3ca7c6d417e07dbf7a93e616e95922262beebe))
+* Rename `index.tsx` to `index.ts`.  ([7510b50](https://github.com/SahilAggarwal2004/react-peer-chat/commit/7510b50737caa53821dc4cdf8779459d22c707d4))
+
+### Bug Fixes
+
+* Stabilize PeerJS reconnection by resetting stale connections.  ([dae908f](https://github.com/SahilAggarwal2004/react-peer-chat/commit/dae908f120bb0514a14f4f4c8d429c20c6cd0884))
+
 ## [0.11.0](https://github.com/SahilAggarwal2004/react-peer-chat/compare/v0.10.0...v0.11.0) (2026-01-06)
 
 ### ⚠ BREAKING CHANGES
