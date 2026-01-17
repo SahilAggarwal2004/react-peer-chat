@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.11.9](https://github.com/SahilAggarwal2004/react-peer-chat/compare/v0.11.8...v0.11.9) (2026-01-17)
+
+### Bug Fixes
+
+* Correct storage scoping and clearChat behavior.  ([b8a3837](https://github.com/SahilAggarwal2004/react-peer-chat/commit/b8a3837ec4285bd07e391a870051b8f5a7c495c0))
+
 ## [0.11.8](https://github.com/SahilAggarwal2004/react-peer-chat/compare/v0.11.7...v0.11.8) (2026-01-17)
 
 ### Bug Fixes
