@@ -49,7 +49,7 @@ export type UseChatReturn = ChildrenOptions & { peerId: string };
 // icons.tsx
 export type IconProps = DetailedHTMLProps<HTMLAttributes<HTMLSpanElement>, HTMLSpanElement>;
 
-// index.tsx
+// index.ts
 export type ChatProps = UseChatProps & {
   dialogOptions?: DialogOptions;
   props?: DivProps;

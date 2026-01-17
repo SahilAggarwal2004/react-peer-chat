@@ -23,7 +23,7 @@ function injectStyle(css) {
 `;
 
 export default defineConfig({
-  entry: ["src/components.tsx", "src/hooks.ts", "src/icons.tsx", "src/index.tsx", "src/lib/storage.ts", "src/types.ts"],
+  entry: ["src/components.tsx", "src/hooks.ts", "src/icons.tsx", "src/index.ts", "src/lib/storage.ts", "src/types.ts"],
   format: ["esm"],
   clean: true,
   dts: true,
