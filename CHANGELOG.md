@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.11.4](https://github.com/SahilAggarwal2004/react-peer-chat/compare/v0.11.3...v0.11.4) (2026-01-17)
+
+### Bug Fixes
+
+* Handle mobile reconnects and respect new connections using peerRef epochs.  ([c0cb96e](https://github.com/SahilAggarwal2004/react-peer-chat/commit/c0cb96ead59b529465d2fde0f7d04881f06fff72))
+
 ## [0.11.3](https://github.com/SahilAggarwal2004/react-peer-chat/compare/v0.11.2...v0.11.3) (2026-01-17)
 
 ### Bug Fixes
