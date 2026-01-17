@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.11.6](https://github.com/SahilAggarwal2004/react-peer-chat/compare/v0.11.5...v0.11.6) (2026-01-17)
+
+### Bug Fixes
+
+* Improve peer reconnection with retries and hard reset for mobile stability.  ([77974c8](https://github.com/SahilAggarwal2004/react-peer-chat/commit/77974c88b194f53017f8059d916c731dbe22aa31))
+
 ## [0.11.5](https://github.com/SahilAggarwal2004/react-peer-chat/compare/v0.11.4...v0.11.5) (2026-01-17)
 
 ### Bug Fixes
