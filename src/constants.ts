@@ -29,4 +29,6 @@ export const defaults = {
   remotePeerId: [],
 };
 
-export const maxReconnectionAttempts = 2;
+export const iosRegex = /iPhone|iPad|iPod/i;
+
+export const mobileRegex = /Android|webOS|BlackBerry|IEMobile|Opera Mini/i;
