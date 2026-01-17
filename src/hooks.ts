@@ -3,7 +3,7 @@ import { SetStateAction, useEffect, useMemo, useRef, useState } from "react";
 
 import { defaults } from "./constants.js";
 import { closeConnection } from "./lib/connection.js";
-import { getStorage, setStorage } from "./lib/storage.js";
+import { getStorage, setStorage, subscribeToStorage } from "./lib/storage.js";
 import { addPrefix, isMobile } from "./lib/utils.js";
 import type { InputMessage, Message, RemotePeers, ResetConnectionType, UseChatProps, UseChatReturn, VoidFunction } from "./types.js";
 import { isSetStateFunction } from "./lib/react.js";
@@ -285,6 +285,10 @@ export function useStorage<T>(key: string, initialValue?: T, local = false) {
       return next;
     });
   };
+
+  useEffect(() => {
+    return subscribeToStorage<T>(key, local, (value) => setStoredValue(value));
+  }, [key, local]);
 
   return [storedValue, setValue] as const;
 }
