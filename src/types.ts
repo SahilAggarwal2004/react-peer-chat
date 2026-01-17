@@ -19,6 +19,8 @@ export type { PeerOptions };
 
 export type RemotePeerId = string | string[];
 
+export type ResetConnectionType = "all" | "data" | "call";
+
 export type UseChatProps = {
   peerId: string;
   name?: string;

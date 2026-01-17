@@ -5,7 +5,7 @@ import { defaults } from "./constants.js";
 import { closeConnection } from "./lib/connection.js";
 import { getStorage, setStorage } from "./lib/storage.js";
 import { addPrefix } from "./lib/utils.js";
-import type { InputMessage, Message, RemotePeers, UseChatProps, UseChatReturn } from "./types.js";
+import type { InputMessage, Message, RemotePeers, ResetConnectionType, UseChatProps, UseChatReturn } from "./types.js";
 import { isSetStateFunction } from "./lib/react.js";
 
 const { config: defaultConfig, peerOptions: defaultPeerOptions, remotePeerId: defaultRemotePeerId } = defaults;
@@ -39,8 +39,55 @@ export function useChat({
     return { completePeerId: addPrefix(peerId), completeRemotePeerIds: remotePeerIds.map(addPrefix) };
   }, [peerId]);
 
+  function resetConnections(type: ResetConnectionType = "all") {
+    switch (type) {
+      case "all":
+        resetConnections("data");
+        resetConnections("call");
+        break;
+      case "data":
+        Object.values(connRef.current).forEach(closeConnection);
+        connRef.current = {};
+        break;
+      case "call":
+        Object.values(callsRef.current).forEach(closeConnection);
+        Object.keys(sourceNodesRef.current).forEach(removePeerAudio);
+        callsRef.current = {};
+        break;
+    }
+  }
+
+  function handleConnection(conn: DataConnection) {
+    const peerId = conn.peer;
+    if (connRef.current[peerId]) return conn.close();
+
+    connRef.current[peerId] = conn;
+
+    conn.on("open", () => {
+      conn.on("data", ({ type, message, messages, remotePeerName }: any) => {
+        switch (type) {
+          case "init":
+            setRemotePeers((prev) => ({ ...prev, [peerId]: remotePeerName }));
+            if (recoverChat) setMessages((old) => (messages.length > old.length ? messages : old));
+            break;
+          case "message":
+            receiveMessage(message);
+            break;
+        }
+      });
+
+      conn.send({ type: "init", remotePeerName: name, messages });
+    });
+
+    conn.on("close", () => {
+      conn.removeAllListeners();
+      delete connRef.current[peerId];
+    });
+  }
+
   function handleCall(call: MediaConnection) {
     const peerId = call.peer;
+    if (callsRef.current[peerId]) return call.close();
 
     call.on("stream", () => {
       callsRef.current[peerId] = call;
@@ -67,37 +114,15 @@ export function useChat({
     });
   }
 
-  function handleConnection(conn: DataConnection) {
-    connRef.current[conn.peer] = conn;
-
-    conn.on("open", () => {
-      conn.on("data", ({ message, messages, remotePeerName, type }: any) => {
-        if (type === "message") receiveMessage(message);
-        else if (type === "init") {
-          setRemotePeers((prev) => ({ ...prev, [conn.peer]: remotePeerName }));
-          if (recoverChat) setMessages((old) => (messages.length > old.length ? messages : old));
-        }
-      });
-
-      conn.send({ type: "init", remotePeerName: name, messages });
-    });
-
-    conn.on("close", conn.removeAllListeners);
-  }
-
-  function handleMediaError() {
-    setAudio(false);
-    onError(new Error("Microphone not accessible!"));
-  }
-
   function receiveMessage(message: Message) {
     addMessage(message);
     onMessageReceived?.(message);
   }
 
   function removePeerAudio(peerId: string) {
-    if (!sourceNodesRef.current[peerId]) return;
-    sourceNodesRef.current[peerId].disconnect();
+    const source = sourceNodesRef.current[peerId];
+    if (!source) return;
+    source.disconnect();
     delete sourceNodesRef.current[peerId];
   }
 
@@ -111,6 +136,8 @@ export function useChat({
   useEffect(() => {
     if (!text && !audio) return;
 
+    let destroyed = false;
+
     import("peerjs").then(
       ({
         Peer,
@@ -122,21 +149,27 @@ export function useChat({
 
         const peer = new Peer(completePeerId, { config: defaultConfig, ...peerOptions });
         peer.on("connection", handleConnection);
-        peer.on("disconnected", () => peer.reconnect());
+        peer.on("call", handleCall);
+        peer.on("disconnected", () => {
+          resetConnections();
+          peer.reconnect();
+        });
         peer.on("error", (error) => {
           if (error.type === "network" || error.type === "server-error") {
+            resetConnections();
             setTimeout(() => peer.reconnect(), 1000);
             onNetworkError?.(error);
           }
           onPeerError(error);
         });
-        setPeer(peer);
-      }
+        if (destroyed) peer.destroy();
+        else setPeer(peer);
+      },
     );
 
     return () => {
+      destroyed = true;
       setPeer((prev) => {
-        prev?.removeAllListeners();
         prev?.destroy();
         return undefined;
       });
@@ -146,15 +179,14 @@ export function useChat({
   useEffect(() => {
     if (!text || !peer) return;
 
-    const handleOpen = () => completeRemotePeerIds.forEach((id) => handleConnection(peer.connect(id)));
+    const connectData = () => completeRemotePeerIds.forEach((id) => handleConnection(peer.connect(id)));
 
-    if (peer.open) handleOpen();
-    peer.on("open", handleOpen);
+    if (peer.open) connectData();
+    peer.on("open", connectData);
 
     return () => {
-      peer.off("open", handleOpen);
-      Object.values(connRef.current).forEach(closeConnection);
-      connRef.current = {};
+      peer.off("open", connectData);
+      resetConnections("data");
     };
   }, [text, peer]);
 
@@ -163,32 +195,16 @@ export function useChat({
 
     let localStream: MediaStream;
 
-    const setupAudio = () => {
-      if (!navigator.mediaDevices) return handleMediaError();
-
-      navigator.mediaDevices
-        .getUserMedia({
-          video: false,
-          audio: {
-            autoGainControl: true,
-            noiseSuppression: true,
-            echoCancellation: true,
-          },
-        })
-        .then((stream: MediaStream) => {
-          localStream = stream;
-          completeRemotePeerIds.forEach((id) => {
-            if (callsRef.current[id]) return;
-            const call = peer.call(id, stream);
-            handleCall(call);
-          });
-          peer.on("call", (call) => {
-            if (callsRef.current[call.peer]) return call.close();
-            call.answer(stream);
-            handleCall(call);
-          });
-        })
-        .catch(handleMediaError);
+    const setupAudio = async () => {
+      try {
+        localStream = await navigator.mediaDevices.getUserMedia({ video: false, audio: { autoGainControl: true, noiseSuppression: true, echoCancellation: true } });
+        completeRemotePeerIds.forEach((id) => {
+          if (!callsRef.current[id]) handleCall(peer.call(id, localStream));
+        });
+      } catch {
+        setAudio(false);
+        onError(new Error("Microphone not accessible"));
+      }
     };
 
     if (peer.open) setupAudio();
@@ -196,11 +212,8 @@ export function useChat({
 
     return () => {
       peer.off("open", setupAudio);
-      peer.off("call");
       localStream?.getTracks().forEach((track) => track.stop());
-      Object.values(callsRef.current).forEach(closeConnection);
-      callsRef.current = {};
-      Object.keys(sourceNodesRef.current).forEach(removePeerAudio);
+      resetConnections("call");
       audioContextRef.current?.close();
       audioContextRef.current = null;
       mixerRef.current = null;
@@ -221,10 +234,7 @@ export function useMessages(): readonly [Message[], (value: SetStateAction<Messa
 export function useStorage<T>(key: string, initialValue: T, local?: boolean): readonly [T, (value: SetStateAction<T>) => void];
 export function useStorage<T>(key: string, initialValue?: T, local?: boolean): readonly [T | undefined, (value: SetStateAction<T | undefined>) => void];
 export function useStorage<T>(key: string, initialValue?: T, local = false) {
-  const [storedValue, setStoredValue] = useState<T | undefined>(() => {
-    if (typeof window === "undefined") return initialValue;
-    return getStorage(key, initialValue, local);
-  });
+  const [storedValue, setStoredValue] = useState<T | undefined>(() => (typeof window === "undefined" ? initialValue : getStorage(key, initialValue, local)));
 
   const setValue = (value: SetStateAction<T | undefined>) => {
     setStoredValue((prev) => {
