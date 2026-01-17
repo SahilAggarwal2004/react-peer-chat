@@ -22,9 +22,13 @@ export const defaults = {
           "turns:standard.relay.metered.ca:443?transport=tcp",
         ],
         ...account,
-      }))
+      })),
     ),
   },
   peerOptions: {},
   remotePeerId: [],
 };
+
+export const iosRegex = /iPhone|iPad|iPod/i;
+
+export const mobileRegex = /Android|webOS|BlackBerry|IEMobile|Opera Mini/i;

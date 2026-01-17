@@ -4,7 +4,7 @@ import { SetStateAction, useEffect, useMemo, useRef, useState } from "react";
 import { defaults } from "./constants.js";
 import { closeConnection } from "./lib/connection.js";
 import { getStorage, setStorage } from "./lib/storage.js";
-import { addPrefix } from "./lib/utils.js";
+import { addPrefix, isMobile } from "./lib/utils.js";
 import type { InputMessage, Message, RemotePeers, ResetConnectionType, UseChatProps, UseChatReturn } from "./types.js";
 import { isSetStateFunction } from "./lib/react.js";
 
@@ -24,8 +24,10 @@ export function useChat({
   onMessageSent,
   onMessageReceived,
 }: UseChatProps): UseChatReturn {
-  const [peer, setPeer] = useState<Peer>();
+  const [peerEpoch, setPeerEpoch] = useState(0);
+  const [peerGeneration, setPeerGeneration] = useState(0);
   const [audio, setAudio] = useAudio(allowed);
+  const peerRef = useRef<Peer>(null);
   const connRef = useRef<Record<string, DataConnection>>({});
   const callsRef = useRef<Record<string, MediaConnection>>({});
   const localStreamRef = useRef<MediaStream>(null);
@@ -153,39 +155,46 @@ export function useChat({
           supports: { audioVideo, data },
         },
       }) => {
+        if (destroyed) return;
+
         if (!data || !audioVideo) return onError(new Error("Browser not supported! Try some other browser."));
 
-        const peer = new Peer(completePeerId, { config: defaultConfig, ...peerOptions });
+        peerRef.current = new Peer(completePeerId, { config: defaultConfig, ...peerOptions });
+        setPeerEpoch((prev) => prev + 1);
+        const peer = peerRef.current;
         peer.on("connection", handleConnection);
         peer.on("call", handleCall);
         peer.on("disconnected", () => {
           resetConnections();
-          peer.reconnect();
+          if (isMobile()) setPeerGeneration((prev) => prev + 1);
+          else peer.reconnect();
         });
         peer.on("error", (error) => {
           if (error.type === "network" || error.type === "server-error") {
             resetConnections();
-            setTimeout(() => peer.reconnect(), 1000);
+            setTimeout(() => {
+              if (isMobile()) setPeerGeneration((prev) => prev + 1);
+              else peer.reconnect();
+            }, 1000);
             onNetworkError?.(error);
           }
           onPeerError(error);
         });
-        if (destroyed) peer.destroy();
-        else setPeer(peer);
       },
     );
 
     return () => {
       destroyed = true;
-      setPeer((prev) => {
-        prev?.destroy();
-        return undefined;
-      });
+      peerRef.current?.destroy();
+      peerRef.current = null;
     };
-  }, [completePeerId]);
+  }, [completePeerId, peerGeneration]);
 
   useEffect(() => {
-    if (!text || !peer) return;
+    if (!text) return;
+
+    const peer = peerRef.current;
+    if (!peer) return;
 
     const connectData = () => completeRemotePeerIds.forEach((id) => handleConnection(peer.connect(id)));
 
@@ -196,10 +205,13 @@ export function useChat({
       peer.off("open", connectData);
       resetConnections("data");
     };
-  }, [text, peer]);
+  }, [text, peerEpoch]);
 
   useEffect(() => {
-    if (!audio || !peer) return;
+    if (!audio) return;
+
+    const peer = peerRef.current;
+    if (!peer) return;
 
     const setupAudio = async () => {
       try {
@@ -223,7 +235,7 @@ export function useChat({
       audioContextRef.current = null;
       mixerRef.current = null;
     };
-  }, [audio, peer]);
+  }, [audio, peerEpoch]);
 
   return { peerId: completePeerId, remotePeers, messages, sendMessage, audio, setAudio };
 }
