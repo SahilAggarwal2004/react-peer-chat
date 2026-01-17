@@ -28,6 +28,7 @@ export function useChat({
   const [audio, setAudio] = useAudio(allowed);
   const connRef = useRef<Record<string, DataConnection>>({});
   const callsRef = useRef<Record<string, MediaConnection>>({});
+  const localStreamRef = useRef<MediaStream>(null);
   const audioContextRef = useRef<AudioContext>(null);
   const mixerRef = useRef<GainNode>(null);
   const sourceNodesRef = useRef<Record<string, MediaElementAudioSourceNode | undefined>>({});
@@ -61,9 +62,8 @@ export function useChat({
     const peerId = conn.peer;
     if (connRef.current[peerId]) return conn.close();
 
-    connRef.current[peerId] = conn;
-
     conn.on("open", () => {
+      connRef.current[peerId] = conn;
       conn.on("data", ({ type, message, messages, remotePeerName }: any) => {
         switch (type) {
           case "init":
@@ -88,6 +88,12 @@ export function useChat({
   function handleCall(call: MediaConnection) {
     const peerId = call.peer;
     if (callsRef.current[peerId]) return call.close();
+
+    // Incoming call
+    if (!call.localStream) {
+      if (!localStreamRef.current) return call.close();
+      call.answer(localStreamRef.current);
+    }
 
     call.on("stream", () => {
       callsRef.current[peerId] = call;
@@ -193,14 +199,10 @@ export function useChat({
   useEffect(() => {
     if (!audio || !peer) return;
 
-    let localStream: MediaStream;
-
     const setupAudio = async () => {
       try {
-        localStream = await navigator.mediaDevices.getUserMedia({ video: false, audio: { autoGainControl: true, noiseSuppression: true, echoCancellation: true } });
-        completeRemotePeerIds.forEach((id) => {
-          if (!callsRef.current[id]) handleCall(peer.call(id, localStream));
-        });
+        localStreamRef.current = await navigator.mediaDevices.getUserMedia({ video: false, audio: { autoGainControl: true, noiseSuppression: true, echoCancellation: true } });
+        completeRemotePeerIds.forEach((id) => localStreamRef.current && handleCall(peer.call(id, localStreamRef.current)));
       } catch {
         setAudio(false);
         onError(new Error("Microphone not accessible"));
@@ -212,9 +214,10 @@ export function useChat({
 
     return () => {
       peer.off("open", setupAudio);
-      localStream?.getTracks().forEach((track) => track.stop());
+      localStreamRef.current?.getTracks().forEach((track) => track.stop());
       resetConnections("call");
       audioContextRef.current?.close();
+      localStreamRef.current = null;
       audioContextRef.current = null;
       mixerRef.current = null;
     };
