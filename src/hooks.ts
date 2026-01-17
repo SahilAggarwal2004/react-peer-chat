@@ -31,7 +31,7 @@ export function useChat({
   const localStreamRef = useRef<MediaStream>(null);
   const audioContextRef = useRef<AudioContext>(null);
   const mixerRef = useRef<GainNode>(null);
-  const sourceNodesRef = useRef<Record<string, MediaElementAudioSourceNode | undefined>>({});
+  const sourceNodesRef = useRef<Record<string, MediaElementAudioSourceNode>>({});
   const [messages, setMessages, addMessage] = useMessages();
   const [remotePeers, setRemotePeers] = useStorage<RemotePeers>("rpc-remote-peer", {});
 
@@ -60,9 +60,9 @@ export function useChat({
 
   function handleConnection(conn: DataConnection) {
     const peerId = conn.peer;
-    if (connRef.current[peerId]) return conn.close();
 
     conn.on("open", () => {
+      connRef.current[peerId]?.close();
       connRef.current[peerId] = conn;
       conn.on("data", ({ type, message, messages, remotePeerName }: any) => {
         switch (type) {
@@ -81,13 +81,12 @@ export function useChat({
 
     conn.on("close", () => {
       conn.removeAllListeners();
-      delete connRef.current[peerId];
+      if (connRef.current[peerId] === conn) delete connRef.current[peerId];
     });
   }
 
   function handleCall(call: MediaConnection) {
     const peerId = call.peer;
-    if (callsRef.current[peerId]) return call.close();
 
     // Incoming call
     if (!call.localStream) {
@@ -96,6 +95,7 @@ export function useChat({
     }
 
     call.on("stream", () => {
+      callsRef.current[peerId]?.close();
       callsRef.current[peerId] = call;
       if (!audioContextRef.current) audioContextRef.current = new AudioContext();
       if (audioContextRef.current.state === "suspended") audioContextRef.current.resume();
@@ -115,8 +115,10 @@ export function useChat({
 
     call.on("close", () => {
       call.removeAllListeners();
-      removePeerAudio(peerId);
-      delete callsRef.current[peerId];
+      if (callsRef.current[peerId] === call) {
+        removePeerAudio(peerId);
+        delete callsRef.current[peerId];
+      }
     });
   }
 
