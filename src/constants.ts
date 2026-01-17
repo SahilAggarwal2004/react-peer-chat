@@ -28,7 +28,3 @@ export const defaults = {
   peerOptions: {},
   remotePeerId: [],
 };
-
-export const iosRegex = /iPhone|iPad|iPod/i;
-
-export const mobileRegex = /Android|webOS|BlackBerry|IEMobile|Opera Mini/i;

@@ -4,8 +4,8 @@ import { SetStateAction, useEffect, useMemo, useRef, useState } from "react";
 import { defaults } from "./constants.js";
 import { closeConnection } from "./lib/connection.js";
 import { getStorage, setStorage } from "./lib/storage.js";
-import { addPrefix, isMobile } from "./lib/utils.js";
-import type { InputMessage, Message, RemotePeers, ResetConnectionType, UseChatProps, UseChatReturn } from "./types.js";
+import { addPrefix } from "./lib/utils.js";
+import type { InputMessage, Message, RemotePeers, ResetConnectionType, UseChatProps, UseChatReturn, VoidFunction } from "./types.js";
 import { isSetStateFunction } from "./lib/react.js";
 
 const { config: defaultConfig, peerOptions: defaultPeerOptions, remotePeerId: defaultRemotePeerId } = defaults;
@@ -25,9 +25,9 @@ export function useChat({
   onMessageReceived,
 }: UseChatProps): UseChatReturn {
   const [peerEpoch, setPeerEpoch] = useState(0);
-  const [peerGeneration, setPeerGeneration] = useState(0);
   const [audio, setAudio] = useAudio(allowed);
   const peerRef = useRef<Peer>(null);
+  const scheduleReconnectRef = useRef<VoidFunction>(null);
   const connRef = useRef<Record<string, DataConnection>>({});
   const callsRef = useRef<Record<string, MediaConnection>>({});
   const localStreamRef = useRef<MediaStream>(null);
@@ -144,9 +144,29 @@ export function useChat({
   }
 
   useEffect(() => {
+    const onOnline = () => peerRef.current?.disconnected && scheduleReconnectRef.current?.();
+    window.addEventListener("online", onOnline);
+
+    return () => window.removeEventListener("online", onOnline);
+  }, []);
+
+  useEffect(() => {
     if (!text && !audio) return;
 
     let destroyed = false;
+    let reconnecting = false;
+    let reconnectTimer: ReturnType<typeof setTimeout>;
+
+    scheduleReconnectRef.current = () => {
+      if (destroyed || reconnecting) return;
+
+      reconnecting = true;
+      reconnectTimer = setTimeout(() => {
+        if (!destroyed && peerRef.current?.disconnected) peerRef.current.reconnect();
+        reconnecting = false;
+      }, 1000);
+    };
+    const scheduleReconnect = scheduleReconnectRef.current;
 
     import("peerjs").then(
       ({
@@ -166,16 +186,12 @@ export function useChat({
         peer.on("call", handleCall);
         peer.on("disconnected", () => {
           resetConnections();
-          if (isMobile()) setPeerGeneration((prev) => prev + 1);
-          else peer.reconnect();
+          scheduleReconnect();
         });
         peer.on("error", (error) => {
           if (error.type === "network" || error.type === "server-error") {
             resetConnections();
-            setTimeout(() => {
-              if (isMobile()) setPeerGeneration((prev) => prev + 1);
-              else peer.reconnect();
-            }, 1000);
+            scheduleReconnect();
             onNetworkError?.(error);
           }
           onPeerError(error);
@@ -185,10 +201,12 @@ export function useChat({
 
     return () => {
       destroyed = true;
+      clearTimeout(reconnectTimer);
+      peerRef.current?.removeAllListeners();
       peerRef.current?.destroy();
       peerRef.current = null;
     };
-  }, [completePeerId, peerGeneration]);
+  }, [completePeerId]);
 
   useEffect(() => {
     if (!text) return;
@@ -215,7 +233,8 @@ export function useChat({
 
     const setupAudio = async () => {
       try {
-        localStreamRef.current = await navigator.mediaDevices.getUserMedia({ video: false, audio: { autoGainControl: true, noiseSuppression: true, echoCancellation: true } });
+        if (!localStreamRef.current)
+          localStreamRef.current = await navigator.mediaDevices.getUserMedia({ video: false, audio: { autoGainControl: true, noiseSuppression: true, echoCancellation: true } });
         completeRemotePeerIds.forEach((id) => localStreamRef.current && handleCall(peer.call(id, localStreamRef.current)));
       } catch {
         setAudio(false);

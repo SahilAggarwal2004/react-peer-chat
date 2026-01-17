@@ -5,6 +5,14 @@ import type { CSSProperties, DetailedHTMLProps, HTMLAttributes, ReactNode, SetSt
 export type Connection = DataConnection | MediaConnection;
 
 // hooks.ts
+export type ChildrenOptions = {
+  remotePeers: RemotePeers;
+  messages: Message[];
+  sendMessage: (message: InputMessage) => void;
+  audio: boolean;
+  setAudio: (value: SetStateAction<boolean>) => void;
+};
+
 export type ErrorHandler<E = Error> = (error: E) => void;
 
 export type InputMessage = { id: string; text: string };
@@ -36,15 +44,9 @@ export type UseChatProps = {
   onMessageReceived?: MessageEventHandler;
 };
 
-export type ChildrenOptions = {
-  remotePeers: RemotePeers;
-  messages: Message[];
-  sendMessage: (message: InputMessage) => void;
-  audio: boolean;
-  setAudio: (value: SetStateAction<boolean>) => void;
-};
-
 export type UseChatReturn = ChildrenOptions & { peerId: string };
+
+export type VoidFunction = () => void;
 
 // icons.tsx
 export type IconProps = DetailedHTMLProps<HTMLAttributes<HTMLSpanElement>, HTMLSpanElement>;
