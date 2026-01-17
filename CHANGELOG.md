@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.11.7](https://github.com/SahilAggarwal2004/react-peer-chat/compare/v0.11.6...v0.11.7) (2026-01-17)
+
+### Bug Fixes
+
+* Force hard PeerJS reconnect on mobile to improve recovery reliability.  ([14d3c62](https://github.com/SahilAggarwal2004/react-peer-chat/commit/14d3c62f6b185643ac8a2f74f796115d213484b8))
+
 ## [0.11.6](https://github.com/SahilAggarwal2004/react-peer-chat/compare/v0.11.5...v0.11.6) (2026-01-17)
 
 ### Bug Fixes
