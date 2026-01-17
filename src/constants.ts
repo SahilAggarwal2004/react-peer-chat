@@ -28,3 +28,5 @@ export const defaults = {
   peerOptions: {},
   remotePeerId: [],
 };
+
+export const maxReconnectionAttempts = 2;

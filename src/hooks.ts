@@ -1,7 +1,7 @@
 import type { DataConnection, MediaConnection, Peer } from "peerjs";
 import { SetStateAction, useEffect, useMemo, useRef, useState } from "react";
 
-import { defaults } from "./constants.js";
+import { defaults, maxReconnectionAttempts } from "./constants.js";
 import { closeConnection } from "./lib/connection.js";
 import { getStorage, setStorage } from "./lib/storage.js";
 import { addPrefix } from "./lib/utils.js";
@@ -25,6 +25,7 @@ export function useChat({
   onMessageReceived,
 }: UseChatProps): UseChatReturn {
   const [peerEpoch, setPeerEpoch] = useState(0);
+  const [peerGeneration, setPeerGeneration] = useState(0);
   const [audio, setAudio] = useAudio(allowed);
   const peerRef = useRef<Peer>(null);
   const scheduleReconnectRef = useRef<VoidFunction>(null);
@@ -155,6 +156,7 @@ export function useChat({
 
     let destroyed = false;
     let reconnecting = false;
+    let reconnectAttempts = 0;
     let reconnectTimer: ReturnType<typeof setTimeout>;
 
     scheduleReconnectRef.current = () => {
@@ -162,7 +164,14 @@ export function useChat({
 
       reconnecting = true;
       reconnectTimer = setTimeout(() => {
-        if (!destroyed && peerRef.current?.disconnected) peerRef.current.reconnect();
+        const peer = peerRef.current;
+        if (peer) {
+          reconnectAttempts++;
+          if (reconnectAttempts >= maxReconnectionAttempts) {
+            setPeerGeneration((prev) => prev + 1);
+            reconnectAttempts = 0;
+          } else peer.reconnect();
+        }
         reconnecting = false;
       }, 1000);
     };
@@ -182,6 +191,7 @@ export function useChat({
         peerRef.current = new Peer(completePeerId, { config: defaultConfig, ...peerOptions });
         setPeerEpoch((prev) => prev + 1);
         const peer = peerRef.current;
+        peer.on("open", () => (reconnectAttempts = 0));
         peer.on("connection", handleConnection);
         peer.on("call", handleCall);
         peer.on("disconnected", () => {
@@ -201,12 +211,14 @@ export function useChat({
 
     return () => {
       destroyed = true;
+      reconnecting = false;
+      reconnectAttempts = 0;
       clearTimeout(reconnectTimer);
       peerRef.current?.removeAllListeners();
       peerRef.current?.destroy();
       peerRef.current = null;
     };
-  }, [completePeerId]);
+  }, [completePeerId, peerGeneration]);
 
   useEffect(() => {
     if (!text) return;
