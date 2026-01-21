@@ -1,5 +1,15 @@
 # Changelog
 
+## [0.11.10](https://github.com/SahilAggarwal2004/react-peer-chat/compare/v0.11.9...v0.11.10) (2026-01-21)
+
+### Chores
+
+* **deps:** Update @types/react and release-it.  ([459d8c5](https://github.com/SahilAggarwal2004/react-peer-chat/commit/459d8c527afd4108b22b3ae24bacbf67c1a08810))
+
+### Bug Fixes
+
+* Prevent undefined state on storage removal.  ([fb940c3](https://github.com/SahilAggarwal2004/react-peer-chat/commit/fb940c36bab0e8f5696fed50ac0bb919ca25e108))
+
 ## [0.11.9](https://github.com/SahilAggarwal2004/react-peer-chat/compare/v0.11.8...v0.11.9) (2026-01-17)
 
 ### Bug Fixes
