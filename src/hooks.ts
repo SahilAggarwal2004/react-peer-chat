@@ -287,7 +287,7 @@ export function useStorage<T>(key: string, initialValue?: T, local = false) {
   };
 
   useEffect(() => {
-    return subscribeToStorage<T>(key, local, (value) => setStoredValue(value));
+    return subscribeToStorage<T>(key, local, (value) => setStoredValue(value ?? initialValue));
   }, [key, local]);
 
   return [storedValue, setValue] as const;
