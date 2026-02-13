@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.11.11](https://github.com/SahilAggarwal2004/react-peer-chat/compare/v0.11.10...v0.11.11) (2026-02-13)
+
+### Chores
+
+* **deps:** Update @release-it/conventional-changelog and @types/react.  ([df2cbe4](https://github.com/SahilAggarwal2004/react-peer-chat/commit/df2cbe414adc5f9415ac3550cfac618f3ca8fa9c))
+
 ## [0.11.10](https://github.com/SahilAggarwal2004/react-peer-chat/compare/v0.11.9...v0.11.10) (2026-01-21)
 
 ### Chores
