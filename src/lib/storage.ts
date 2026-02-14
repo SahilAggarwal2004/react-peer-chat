@@ -1,6 +1,8 @@
-import { VoidFunction } from "../types";
+import { SetStateAction } from "react";
+import { Listener, VoidFunction } from "../types";
+import { isSetStateFunction } from "./react";
 
-const listeners = new Map<string, Set<(value: any) => void>>();
+const listeners = new Map<string, Set<Listener>>();
 
 export function clearChat() {
   removeStorage("rpc-remote-peer", false);
@@ -21,7 +23,7 @@ export function getStorage<T>(key: string, local: boolean, fallbackValue?: T): T
       removeStorage(key, local); // Remove corrupted data
     }
   }
-  if (fallbackValue !== undefined) setStorage(key, fallbackValue, local);
+  if (fallbackValue !== undefined) setStorage<T>(key, fallbackValue, local);
   return fallbackValue;
 }
 
@@ -35,20 +37,20 @@ export function removeStorage(key: string, local: boolean) {
   publish(key, local);
 }
 
-export function setStorage(key: string, value: unknown, local: boolean) {
-  if (typeof value === "function") value = value(getStorage(key, local));
-  getStorageInstance(local).setItem(key, JSON.stringify(value));
-  publish(key, local, value);
+export function setStorage<T = unknown>(key: string, value: SetStateAction<T | undefined>, local: boolean) {
+  const next = isSetStateFunction(value) ? value(getStorage<T>(key, local)) : value;
+  getStorageInstance(local).setItem(key, JSON.stringify(next));
+  publish(key, local, next);
 }
 
 export function subscribeToStorage<T>(key: string, local: boolean, callback: (value: T) => void): VoidFunction {
   key = getNamespacedKey(key, local);
   if (!listeners.has(key)) listeners.set(key, new Set());
   const set = listeners.get(key)!;
-  set.add(callback);
+  set.add(callback as Listener);
 
   return () => {
-    set.delete(callback);
+    set.delete(callback as Listener);
     if (set.size === 0) listeners.delete(key);
   };
 }

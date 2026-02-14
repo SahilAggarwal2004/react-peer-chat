@@ -4,6 +4,9 @@ import type { CSSProperties, DetailedHTMLProps, HTMLAttributes, ReactNode, SetSt
 // lib/connection.ts
 export type Connection = DataConnection | MediaConnection;
 
+// lib/storage.ts
+export type Listener = (value: unknown) => void;
+
 // hooks.ts
 export type ChildrenOptions = {
   remotePeers: RemotePeers;

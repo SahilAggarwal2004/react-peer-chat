@@ -281,7 +281,7 @@ export function useStorage<T>(key: string, initialValue?: T, local = false) {
   const setValue = (value: SetStateAction<T | undefined>) => {
     setStoredValue((prev) => {
       const next = isSetStateFunction(value) ? value(prev) : value;
-      setStorage(key, next, local);
+      setStorage<T>(key, next, local);
       return next;
     });
   };
