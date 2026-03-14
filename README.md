@@ -47,6 +47,7 @@ The default export of `react-peer-chat` is the `<Chat>` component, which offers 
 ```jsx
 import React from "react";
 import Chat, { clearChat } from "react-peer-chat";
+import "react-peer-chat/style.css";
 
 export default function App() {
   return (
@@ -64,6 +65,7 @@ export default function App() {
 ```jsx
 import React from "react";
 import Chat, { clearChat } from "react-peer-chat";
+import "react-peer-chat/style.css";
 
 export default function App() {
   return (
@@ -89,6 +91,7 @@ Use the props provided by the `<Chat>` component for customization.
 ```jsx
 import React from "react";
 import Chat from "react-peer-chat";
+import "react-peer-chat/style.css";
 
 export default function App() {
   return (
@@ -141,6 +144,7 @@ You can also provide custom ICE servers to avoid connectivity issues if the free
 ```jsx
 import React from "react";
 import Chat from "react-peer-chat";
+import "react-peer-chat/style.css";
 
 export default function App() {
   return (
@@ -176,6 +180,7 @@ The `useChat` hook is ideal when you want to completely redesign the Chat UI.
 import React, { useEffect, useRef, useState } from "react";
 import { clearChat, useChat } from "react-peer-chat";
 import { BiSolidMessageDetail, BiSolidMessageX, BsFillMicFill, BsFillMicMuteFill, GrSend } from "react-peer-chat/icons";
+import "react-peer-chat/style.css";
 
 function Chat({ text = true, audio = true, onMessageReceived, dialogOptions, props = {}, children, ...hookProps }) {
   const {

@@ -1,3 +1,3 @@
-export { default } from "./components.js";
-export { useChat } from "./hooks.js";
-export { clearChat } from "./lib/storage.js";
+export { default } from "./components";
+export { useChat } from "./hooks";
+export { clearChat } from "./lib/storage";
