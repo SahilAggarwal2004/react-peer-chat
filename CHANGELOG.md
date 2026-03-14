@@ -1,5 +1,20 @@
 # Changelog
 
+## [0.12.0](https://github.com/SahilAggarwal2004/react-peer-chat/compare/v0.11.11...v0.12.0) (2026-03-14)
+
+### ⚠ BREAKING CHANGES
+
+* Remove automatic CSS injection and migrate build from tsup to tsdown
+
+### Chores
+
+* **deps:** Update @release-it/conventional-changelog.  ([cd8e6d7](https://github.com/SahilAggarwal2004/react-peer-chat/commit/cd8e6d7137a17fdc0aaf7c91eacb0d819fd59db0))
+
+### Code Refactoring
+
+* Improve storage typing and remove any from listeners.  ([a9b9fcc](https://github.com/SahilAggarwal2004/react-peer-chat/commit/a9b9fcc4b3e2b016046df68010c7587afdbbbcc4))
+* Remove automatic CSS injection and migrate build from tsup to tsdown.  ([83657bf](https://github.com/SahilAggarwal2004/react-peer-chat/commit/83657bf9d38a40443aeee395c696c28e81e2a30f))
+
 ## [0.11.11](https://github.com/SahilAggarwal2004/react-peer-chat/compare/v0.11.10...v0.11.11) (2026-02-13)
 
 ### Chores
