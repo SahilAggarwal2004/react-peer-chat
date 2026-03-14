@@ -44,7 +44,7 @@
     "react-dom": "^17.0.0 || ^18.0.0 || ^19.0.0"
   },
   "devDependencies": {
-    "@release-it/conventional-changelog": "^10.0.5",
+    "@release-it/conventional-changelog": "^10.0.6",
     "@types/react": "^19.2.14",
     "prettier-package-json": "^2.8.0",
     "release-it": "^19.2.4",
