@@ -1,4 +1,4 @@
-import type { Connection } from "../types";
+import type { Connection } from "@/types";
 
 export function closeConnection(conn: Connection) {
   conn.removeAllListeners();

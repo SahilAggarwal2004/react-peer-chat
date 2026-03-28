@@ -1,4 +1,4 @@
-import { iosRegex, mobileRegex } from "../constants";
+import { iosRegex, mobileRegex } from "@/constants";
 
 export const addPrefix = (str: string): string => `rpc-${str}`;
 

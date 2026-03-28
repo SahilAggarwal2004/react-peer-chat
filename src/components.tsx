@@ -1,9 +1,8 @@
+import { useChat } from "@/hooks";
+import { BiSolidMessageDetail, BiSolidMessageX, BsFillMicFill, BsFillMicMuteFill, GrSend } from "@/icons";
 import React, { useEffect, useRef, useState } from "react";
-
-import { useChat } from "./hooks";
-import { BiSolidMessageDetail, BiSolidMessageX, BsFillMicFill, BsFillMicMuteFill, GrSend } from "./icons";
-import "./style.css";
-import type { ChatProps, Message } from "./types";
+import "@/style.css";
+import type { ChatProps, Message } from "@/types";
 
 export default function Chat({ text = true, audio = true, onMessageReceived, dialogOptions, props = {}, children, ...hookProps }: ChatProps) {
   const { peerId, ...childrenOptions } = useChat({

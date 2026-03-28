@@ -1,6 +1,6 @@
-import { SetStateAction } from "react";
-import { Listener, VoidFunction } from "../types";
-import { isSetStateFunction } from "./react";
+import { isSetStateFunction } from "@/lib/react";
+import type { Listener, VoidFunction } from "@/types";
+import type { SetStateAction } from "react";
 
 const listeners = new Map<string, Set<Listener>>();
 
