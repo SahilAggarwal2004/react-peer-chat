@@ -35,7 +35,7 @@ export function useChat({
   const mixerRef = useRef<GainNode>(null);
   const sourceNodesRef = useRef<Record<string, MediaElementAudioSourceNode>>({});
   const [messages, setMessages, addMessage] = useMessages();
-  const [remotePeers, setRemotePeers] = useStorage<RemotePeers>("rpc-remote-peer", {});
+  const [remotePeers, setRemotePeers] = useStorage<RemotePeers>(addPrefix("remote-peer"), {});
 
   const { completePeerId, completeRemotePeerIds } = useMemo(() => {
     const remotePeerIds = Array.isArray(remotePeerId) ? remotePeerId : [remotePeerId];
@@ -265,7 +265,7 @@ export function useChat({
 }
 
 export function useMessages(): readonly [Message[], (value: SetStateAction<Message[]>) => void, (message: Message) => void] {
-  const [messages, setMessages] = useStorage<Message[]>("rpc-messages", []);
+  const [messages, setMessages] = useStorage<Message[]>(addPrefix("messages"), []);
 
   const addMessage = (message: Message) => setMessages((prev) => prev.concat(message));
 
@@ -293,7 +293,7 @@ export function useStorage<T>(key: string, initialValue?: T, local = false) {
 }
 
 export function useAudio(allowed: boolean): readonly [boolean, (value: SetStateAction<boolean>) => void] {
-  const [audio, setAudio] = useStorage("rpc-audio", false, true);
+  const [audio, setAudio] = useStorage(addPrefix("audio"), false, true);
   const enabled = audio && allowed;
 
   return [enabled, setAudio] as const;

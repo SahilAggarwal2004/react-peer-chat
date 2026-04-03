@@ -1,8 +1,8 @@
 import { useChat } from "@/hooks";
 import { BiSolidMessageDetail, BiSolidMessageX, BsFillMicFill, BsFillMicMuteFill, GrSend } from "@/icons";
-import React, { useEffect, useRef, useState } from "react";
-import "@/style.css";
+import styles from "@/style.module.css";
 import type { ChatProps, Message } from "@/types";
+import React, { useEffect, useRef, useState } from "react";
 
 export default function Chat({ text = true, audio = true, onMessageReceived, dialogOptions, props = {}, children, ...hookProps }: ChatProps) {
   const { peerId, ...childrenOptions } = useChat({
@@ -34,17 +34,17 @@ export default function Chat({ text = true, audio = true, onMessageReceived, dia
   }, [dialog, remotePeers, messages]);
 
   return (
-    <div className="rpc-main rpc-font" {...props}>
+    <div className={`${styles["main-container"]} ${styles["font"]}`} {...props}>
       {typeof children === "function" ? (
         children(childrenOptions)
       ) : (
         <>
           {text && (
-            <div className="rpc-dialog-container">
+            <div className={styles["dialog-container"]}>
               {dialog ? (
                 <BiSolidMessageX title="Close chat" onClick={() => setDialog(false)} />
               ) : (
-                <div className="rpc-notification">
+                <div className={styles["notification"]}>
                   <BiSolidMessageDetail
                     title="Open chat"
                     onClick={() => {
@@ -52,14 +52,14 @@ export default function Chat({ text = true, audio = true, onMessageReceived, dia
                       setDialog(true);
                     }}
                   />
-                  {notification && <span className="rpc-badge" />}
+                  {notification && <span className={styles["badge"]} />}
                 </div>
               )}
-              <dialog ref={dialogRef} className={`${dialog ? "rpc-dialog" : ""} rpc-position-${dialogOptions?.position || "center"}`} style={dialogOptions?.style}>
-                <div className="rpc-heading">Chat</div>
-                <hr className="rpc-hr" />
+              <dialog ref={dialogRef} className={`${dialog ? styles["dialog"] : ""} ${styles[`position-${dialogOptions?.position || "center"}`]}`} style={dialogOptions?.style}>
+                <div className={styles["heading"]}>Chat</div>
+                <hr className={styles["hr"]} />
                 <div>
-                  <div ref={containerRef} className="rpc-message-container">
+                  <div ref={containerRef} className={styles["message-container"]}>
                     {messages.map(({ id, name, text }, i) => (
                       <div key={i}>
                         <strong>{id === peerId ? "You" : name}: </strong>
@@ -67,9 +67,9 @@ export default function Chat({ text = true, audio = true, onMessageReceived, dia
                       </div>
                     ))}
                   </div>
-                  <hr className="rpc-hr" />
+                  <hr className={styles["hr"]} />
                   <form
-                    className="rpc-input-container"
+                    className={styles["input-container"]}
                     onSubmit={(e) => {
                       e.preventDefault();
                       const text = inputRef.current?.value;
@@ -79,8 +79,8 @@ export default function Chat({ text = true, audio = true, onMessageReceived, dia
                       }
                     }}
                   >
-                    <input ref={inputRef} className="rpc-input rpc-font" placeholder="Enter a message" />
-                    <button type="submit" className="rpc-button">
+                    <input ref={inputRef} className={`${styles["input"]} ${styles["font"]}`} placeholder="Enter a message" />
+                    <button type="submit" className={styles["button"]}>
                       <GrSend title="Send message" />
                     </button>
                   </form>
@@ -89,7 +89,7 @@ export default function Chat({ text = true, audio = true, onMessageReceived, dia
             </div>
           )}
           {audio && (
-            <button className="rpc-button" onClick={() => setAudio(!audioEnabled)}>
+            <button className={styles["button"]} onClick={() => setAudio(!audioEnabled)}>
               {audioEnabled ? <BsFillMicFill title="Turn mic off" /> : <BsFillMicMuteFill title="Turn mic on" />}
             </button>
           )}

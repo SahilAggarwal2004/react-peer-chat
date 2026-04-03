@@ -218,7 +218,7 @@ function Chat({ text = true, audio = true, onMessageReceived, dialogOptions, pro
   }, [dialog, remotePeers, messages]);
 
   return (
-    <div className="rpc-main rpc-font" {...props}>
+    <div className="rpc-main-container rpc-font" {...props}>
       {typeof children === "function" ? (
         children({ remotePeers, messages, sendMessage, audio: audioEnabled, setAudio })
       ) : (

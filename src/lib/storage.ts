@@ -1,12 +1,13 @@
 import { isSetStateFunction } from "@/lib/react";
 import type { Listener, VoidFunction } from "@/types";
 import type { SetStateAction } from "react";
+import { addPrefix } from "./utils";
 
 const listeners = new Map<string, Set<Listener>>();
 
 export function clearChat() {
-  removeStorage("rpc-remote-peer", false);
-  removeStorage("rpc-messages", false);
+  removeStorage(addPrefix("remote-peer"), false);
+  removeStorage(addPrefix("messages"), false);
 }
 
 const getStorageInstance = (local: boolean) => (local ? localStorage : sessionStorage);

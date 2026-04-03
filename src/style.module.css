@@ -1,22 +1,22 @@
-.rpc-font {
+.font {
   font-family: "Trebuchet MS", "Lucida Sans Unicode", "Lucida Grande", "Lucida Sans", Arial, sans-serif;
 }
 
-.rpc-main {
+.main-container {
   display: flex;
   align-items: center;
   column-gap: 0.5rem;
 }
 
-.rpc-dialog-container {
+.dialog-container {
   position: relative;
 }
 
-.rpc-notification {
+.notification {
   position: relative;
 }
 
-.rpc-notification .rpc-badge {
+.notification .badge {
   background-color: red;
   position: absolute;
   top: 0;
@@ -26,7 +26,7 @@
   border-radius: 100%;
 }
 
-.rpc-dialog {
+.dialog {
   position: absolute;
   background-color: black;
   color: white;
@@ -35,52 +35,52 @@
   font-size: small;
 }
 
-.rpc-position-left {
+.position-left {
   left: 0.6rem;
   translate: -100%;
 }
 
-.rpc-position-center {
+.position-center {
   left: 0.5rem;
   translate: -50%;
 }
 
-.rpc-position-right {
+.position-right {
   left: 0.3rem;
 }
 
-.rpc-hr {
+.hr {
   margin: 0.25rem 0;
   border-color: rgba(255, 255, 255, 0.7);
 }
 
-.rpc-message-container {
+.message-container {
   height: 7rem;
   overflow-y: scroll;
   padding-inline: 0.5rem;
   margin-bottom: 0.25rem;
 }
 
-.rpc-message-container::-webkit-scrollbar {
+.message-container::-webkit-scrollbar {
   width: 2.5px;
 }
 
-.rpc-message-container::-webkit-scrollbar-track {
+.message-container::-webkit-scrollbar-track {
   background: gray;
 }
 
-.rpc-message-container::-webkit-scrollbar-thumb {
+.message-container::-webkit-scrollbar-thumb {
   background-color: white;
 }
 
-.rpc-heading {
+.heading {
   text-align: center;
   font-size: medium;
   font-weight: bold;
   padding-inline: 0.5rem;
 }
 
-.rpc-input-container {
+.input-container {
   display: flex;
   width: 15rem;
   max-width: 90vw;
@@ -88,7 +88,7 @@
   padding: 0.25rem 0.5rem;
 }
 
-.rpc-input {
+.input {
   color: white;
   width: 100%;
   background-color: black;
@@ -98,24 +98,24 @@
   padding: 0.3rem 0.25rem;
 }
 
-.rpc-input::placeholder {
+.input::placeholder {
   color: rgba(255, 255, 255, 0.7);
 }
 
-.rpc-input:focus {
+.input:focus {
   outline: 2px solid white;
 }
 
-.rpc-button {
+.button {
   all: unset;
   display: flex;
 }
 
-.rpc-icon-container {
+.icon-container {
   display: flex;
   align-items: center;
 }
 
-.rpc-invert {
+.invert {
   filter: invert(100%);
 }
