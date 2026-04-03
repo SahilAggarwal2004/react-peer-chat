@@ -1,5 +1,15 @@
 # Changelog
 
+## [0.13.0](https://github.com/SahilAggarwal2004/react-peer-chat/compare/v0.12.0...v0.13.0) (2026-04-03)
+
+### Features
+
+* Add @ianvs/prettier-plugin-sort-imports.  ([b2b8cda](https://github.com/SahilAggarwal2004/react-peer-chat/commit/b2b8cdaf6901b61261da89ed9e9907c375f8fe9b))
+
+### Code Refactoring
+
+* Use CSS Modules for safer class name usage.  ([6370c69](https://github.com/SahilAggarwal2004/react-peer-chat/commit/6370c69305341ae15fe278274e4a5acd0a9feaa7))
+
 ## [0.12.0](https://github.com/SahilAggarwal2004/react-peer-chat/compare/v0.11.11...v0.12.0) (2026-03-14)
 
 ### ⚠ BREAKING CHANGES
